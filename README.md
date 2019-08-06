@@ -1,5 +1,7 @@
 # gcping
 
+[![Build Status](https://travis-ci.com/GoogleCloudPlatform/gcping.svg?branch=master)](https://travis-ci.com/GoogleCloudPlatform/gcping)
+
 gcping is a command line tools that reports latency to
 Google Cloud regions. It is inspired by [gcping.com](https://gcping.com).
 
