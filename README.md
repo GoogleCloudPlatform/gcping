@@ -5,6 +5,23 @@
 gcping is a command line tools that reports latency to
 Google Cloud regions. It is inspired by [gcping.com](https://gcping.com).
 
+```
+gcping [options...]
+
+Options:
+-n   Number of requests to be made to each region.
+     By default 10; can't be negative.
+-c   Max number of requests to be made at any time.
+     By default 10; can't be negative or zero.
+-t   Timeout. By default, no timeout.
+     Examples: "500ms", "1s", "1s500ms".
+
+-csv CSV output; disables verbose output.
+-v   Verbose output.
+
+Need a website version? See gcping.com
+```
+
 An example output:
 
 ```
