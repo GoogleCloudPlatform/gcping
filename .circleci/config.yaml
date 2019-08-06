@@ -7,7 +7,7 @@ jobs:
     docker:
       - image: circleci/golang:1.12
 
-    working_directory: /go/src/github.com/googlecloudplatform/gcping
+    working_directory: /go/src/github.com/GoogleCloudPlatform/gcping
     steps:
       - checkout
 
