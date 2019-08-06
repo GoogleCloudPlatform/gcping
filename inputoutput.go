@@ -33,7 +33,7 @@ func (i *input) HTTP() {
 			return err
 		}
 		if res.StatusCode != http.StatusOK {
-			return fmt.Errorf("status code: %v", res.StatusCode)
+			return fmt.Errorf("status code: %d", res.StatusCode)
 		}
 		return nil
 	})
@@ -46,7 +46,7 @@ func (i *input) benchmark(fn func() error) {
 
 	start := time.Now()
 	err := fn()
-	duration := time.Now().Sub(start)
+	duration := time.Since(start)
 
 	o := output{
 		region:   i.region,
