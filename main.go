@@ -21,7 +21,6 @@ import (
 	"net/http"
 	"os"
 	"sort"
-	"sync"
 	"time"
 )
 
@@ -97,18 +96,13 @@ func main() {
 }
 
 func start() {
-	var wg sync.WaitGroup
 	for worker := 0; worker < concurrency; worker++ {
-		wg.Add(1)
 		go func() {
-			defer wg.Done()
-
 			for m := range inputs {
 				m.HTTP()
 			}
 		}()
 	}
-	wg.Wait()
 }
 
 func report() {
