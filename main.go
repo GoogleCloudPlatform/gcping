@@ -116,17 +116,12 @@ func report() {
 	for i := 0; i < number*len(endpoints); i++ {
 		o := <-outputs
 
-		var a output
-		var ok bool
-		if a, ok = m[o.region]; ok {
-			a.duration += o.duration
-		} else {
-			a = output{
-				region:   o.region,
-				duration: o.duration,
-			}
-		}
+		a := m[o.region]
+
+		a.region = o.region
+		a.duration += o.duration
 		a.errors += o.errors
+
 		m[o.region] = a
 	}
 	averages := make([]output, 0, len(m))
