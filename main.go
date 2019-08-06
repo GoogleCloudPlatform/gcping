@@ -123,6 +123,7 @@ func report() {
 		a.errors += o.errors
 		m[o.region] = a
 	}
+	close(outputs)
 	averages := make([]output, 0, len(m))
 	for _, t := range m {
 		t.duration = t.duration / time.Duration(number)
