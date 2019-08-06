@@ -25,7 +25,7 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "hello")
 	})
-	port := os.Getenv("PORT")
+	port := os.Getenv("PORT") // makes it portable to Cloud Run
 	if port == "" {
 		port = "80"
 	}
