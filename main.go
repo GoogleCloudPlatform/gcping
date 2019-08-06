@@ -21,7 +21,6 @@ import (
 	"net/http"
 	"os"
 	"sort"
-	"sync"
 	"time"
 )
 
@@ -84,7 +83,7 @@ func main() {
 		Timeout: timeout,
 	}
 
-	go start()
+	go start(concurrency)
 	inputs = make(chan input, concurrency)
 	outputs = make(chan output, number*len(endpoints))
 	for i := 0; i < number; i++ {
@@ -96,19 +95,15 @@ func main() {
 	report()
 }
 
-func start() {
-	var wg sync.WaitGroup
-	for worker := 0; worker < concurrency; worker++ {
-		wg.Add(1)
+func start(j int) {
+	sem := make(chan struct{}, j)
+	for m := range inputs {
+		sem <- struct{}{}
 		go func() {
-			defer wg.Done()
-
-			for m := range inputs {
-				m.HTTP()
-			}
+			m.HTTP()
+			<-sem
 		}()
 	}
-	wg.Wait()
 }
 
 func report() {
