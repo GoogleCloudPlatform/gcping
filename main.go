@@ -84,31 +84,30 @@ func main() {
 		Timeout: timeout,
 	}
 
-	go start()
+	var wg sync.WaitGroup
+	go start(&wg)
 	inputs = make(chan input, concurrency)
 	outputs = make(chan output, number*len(endpoints))
 	for i := 0; i < number; i++ {
 		for r, e := range endpoints {
+			wg.Add(1)
 			inputs <- input{region: r, endpoint: e}
 		}
 	}
+	wg.Wait()
 	close(inputs)
 	report()
 }
 
-func start() {
-	var wg sync.WaitGroup
+func start(wg *sync.WaitGroup) {
 	for worker := 0; worker < concurrency; worker++ {
-		wg.Add(1)
 		go func() {
-			defer wg.Done()
-
 			for m := range inputs {
 				m.HTTP()
+				wg.Done()
 			}
 		}()
 	}
-	wg.Wait()
 }
 
 func report() {
