@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"os"
 	"sort"
+	"text/tabwriter"
 	"time"
 )
 
@@ -127,13 +128,15 @@ func report() {
 	sorter := &outputSorter{averages: averages}
 	sort.Sort(sorter)
 
+	tr := tabwriter.NewWriter(os.Stdout, 3, 2, 2, ' ', 0)
 	for i, a := range averages {
-		fmt.Printf("%2d. [%v] %v", i+1, a.region, a.duration)
+		fmt.Fprintf(tr, "%2d.\t[%v]\t%v", i+1, a.region, a.duration)
 		if a.errors > 0 {
-			fmt.Printf(" (%d errors)", a.errors)
+			fmt.Fprintf(tr, "\t(%d errors)", a.errors)
 		}
-		fmt.Println()
+		fmt.Fprintln(tr)
 	}
+	tr.Flush()
 }
 
 func usage() {
