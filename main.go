@@ -132,9 +132,9 @@ func report() {
 	})
 
 	if top {
-		t := averages[0].region
+		t := all[0].region
 		if t == "global" {
-			t = averages[1].region
+			t = all[1].region
 		}
 		fmt.Print(t)
 		return
