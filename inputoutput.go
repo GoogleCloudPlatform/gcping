@@ -71,12 +71,18 @@ type output struct {
 	region    string
 	durations []time.Duration
 	errors    int
+
+	med time.Duration // median of durations; calculated on first call to median()
 }
 
-func (o output) median() time.Duration {
-	// Sort durations and pick the middle one.
-	sort.Slice(o.durations, func(i, j int) bool {
-		return o.durations[i] < o.durations[j]
-	})
-	return o.durations[len(o.durations)/2]
+func (o *output) median() time.Duration {
+	if o.med == 0 {
+		// Sort durations and pick the middle one.
+		sort.Slice(o.durations, func(i, j int) bool {
+			return o.durations[i] < o.durations[j]
+		})
+		o.med = o.durations[len(o.durations)/2]
+	}
+	return o.med
+
 }
