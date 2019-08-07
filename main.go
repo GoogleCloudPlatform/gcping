@@ -51,6 +51,7 @@ var endpoints = map[string]string{
 }
 
 var (
+	top         bool
 	number      int // number of requests for each region
 	concurrency int
 	timeout     time.Duration
@@ -64,6 +65,7 @@ var (
 )
 
 func main() {
+	flag.BoolVar(&top, "top", false, "")
 	flag.IntVar(&number, "n", 10, "")
 	flag.IntVar(&concurrency, "c", 10, "")
 	flag.DurationVar(&timeout, "t", time.Duration(0), "")
@@ -129,6 +131,15 @@ func report() {
 		return all[i].median() < all[j].median()
 	})
 
+	if top {
+		t := averages[0].region
+		if t == "global" {
+			t = averages[1].region
+		}
+		fmt.Print(t)
+		return
+	}
+
 	tr := tabwriter.NewWriter(os.Stdout, 3, 2, 2, ' ', 0)
 	for i, a := range all {
 		fmt.Fprintf(tr, "%2d.\t[%v]\t%v", i+1, a.region, a.median())
@@ -154,6 +165,7 @@ Options:
      By default 10; can't be negative or zero.
 -t   Timeout. By default, no timeout.
      Examples: "500ms", "1s", "1s500ms".
+-top If true, only the top (non-global) region is printed.
 
 -csv CSV output; disables verbose output.
 -v   Verbose output.
