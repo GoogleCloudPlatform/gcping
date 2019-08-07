@@ -114,23 +114,24 @@ func report() {
 		a := m[o.region]
 
 		a.region = o.region
-		a.duration += o.duration
+		a.durations = append(a.durations, o.durations[0])
 		a.errors += o.errors
 
 		m[o.region] = a
 	}
-	averages := make([]output, 0, len(m))
+	all := make([]output, 0, len(m))
 	for _, t := range m {
-		t.duration = t.duration / time.Duration(number)
-		averages = append(averages, t)
+		all = append(all, t)
 	}
 
-	sorter := &outputSorter{averages: averages}
-	sort.Sort(sorter)
+	// sort all by median duration.
+	sort.Slice(all, func(i, j int) bool {
+		return all[i].median() < all[j].median()
+	})
 
 	tr := tabwriter.NewWriter(os.Stdout, 3, 2, 2, ' ', 0)
-	for i, a := range averages {
-		fmt.Fprintf(tr, "%2d.\t[%v]\t%v", i+1, a.region, a.duration)
+	for i, a := range all {
+		fmt.Fprintf(tr, "%2d.\t[%v]\t%v", i+1, a.region, a.median())
 		if a.errors > 0 {
 			fmt.Fprintf(tr, "\t(%d errors)", a.errors)
 		}

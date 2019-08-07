@@ -17,6 +17,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"sort"
 	"time"
 )
 
@@ -49,8 +50,8 @@ func (i *input) benchmark(fn func() error) {
 	duration := time.Since(start)
 
 	o := output{
-		region:   i.region,
-		duration: duration,
+		region:    i.region,
+		durations: []time.Duration{duration},
 	}
 	if err != nil {
 		o.errors++
@@ -67,26 +68,21 @@ func (i *input) benchmark(fn func() error) {
 }
 
 type output struct {
-	region   string
-	duration time.Duration
-	errors   int
+	region    string
+	durations []time.Duration
+	errors    int
+
+	med time.Duration // median of durations; calculated on first call to median()
 }
 
-type outputSorter struct {
-	averages []output
-}
+func (o *output) median() time.Duration {
+	if o.med == 0 {
+		// Sort durations and pick the middle one.
+		sort.Slice(o.durations, func(i, j int) bool {
+			return o.durations[i] < o.durations[j]
+		})
+		o.med = o.durations[len(o.durations)/2]
+	}
+	return o.med
 
-// Len is part of sort.Interface.
-func (s *outputSorter) Len() int {
-	return len(s.averages)
-}
-
-// Swap is part of sort.Interface.
-func (s *outputSorter) Swap(i, j int) {
-	s.averages[i], s.averages[j] = s.averages[j], s.averages[i]
-}
-
-// Less is part of sort.Interface.
-func (s *outputSorter) Less(i, j int) bool {
-	return s.averages[i].duration < s.averages[j].duration
 }
