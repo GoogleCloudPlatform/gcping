@@ -130,7 +130,7 @@ func report() {
 	})
 
 	tr := tabwriter.NewWriter(os.Stdout, 3, 2, 2, ' ', 0)
-	for i, a := range averages {
+	for i, a := range all {
 		fmt.Fprintf(tr, "%2d.\t[%v]\t%v", i+1, a.region, a.median())
 		if a.errors > 0 {
 			fmt.Fprintf(tr, "\t(%d errors)", a.errors)
