@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <meta name="description" content="Measure latency to Google Compute Engine regions">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <title>GCP ping</title>
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" type="text/css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+<style>
+body, input {
+  font-family: 'Roboto', sans-serif;
+  background-color: #EFEFEF;
+  color: #485656;
+}
+
+.mdl-grid {
+  max-width: 1000px;
+}
+
+.mdl-data-table {
+  border: 0 transparent solid;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.mdl-data-table td, .mdl-data-table th, .mdl-data-table td div {
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mdl-data-table .top td:last-child {
+  background-color: #DEEDC8;
+}
+
+.mdl-data-table .top td:last-child > div:after {
+  background-color: #92C456;
+  bottom: 0;
+  content: ' ';
+  position: absolute;
+  right: 0;
+  width: 5px;
+  top: 0;
+}
+
+.mdl-data-table th {
+  color: white;
+  line-height: 30px;
+}
+
+.mdl-data-table th:last-child {
+  padding-right: 8px;
+  width: 40%;
+}
+
+ @media (max-width: 479px) {
+  .mdl-data-table th:last-child {
+    width: 40%;
+  }
+}
+
+.mdl-data-table thead {
+  background-color: #5F7D8C;
+}
+
+.mdl-data-table tbody tr:hover {
+  background-color: inherit;
+}
+
+a, a:visited {
+  color: #01BCD4;
+  text-decoration: none;
+}
+
+#pingimg {
+  display: none;
+  visibility: hidden;
+}
+
+.ribbon {
+  background-color: #283238;
+  left: 0;
+  height: 40vh;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 0;
+}
+
+h1 {
+  color: white;
+  font-size: 26px;
+  margin-top: 45px;
+}
+
+h1 a, h1 a:visited {
+  color: white;
+  font-weight: inherit;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 14px;
+}
+
+p {
+  margin-bottom: 4px;
+}
+
+#stopstart {
+  background-color: #01BCD4;
+  color: white;
+  cursor: pointer;
+  height: 48px;
+  min-width: 48px;
+  position: absolute;
+  right: 24px;
+  top: -16px;
+  width: 48px;
+  z-index: 10;
+}
+
+@media (max-width: 679px) {
+  #stopstart {
+    height: 36px;
+    min-width: 36px;
+    right: 18px;
+    top: -10px;
+    width: 36px
+  }
+}
+
+.startstop-cell {
+  margin-bottom: 0;
+  margin-top: 0;
+  position: relative;
+}
+
+.results-cell {
+  min-height: 30vh;
+}
+
+.results-cell .region {
+  font-size: 11px;
+}
+
+#tweet-logo {
+  height: 30px;
+  width: 30px;
+}
+</style>
+</head>
+<body>
+  <div class="mdl-layout mdl-js-layout">
+    <div class="ribbon"></div>
+    <main class="mdl-layout__content">
+      <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--6-col mdl-cell--1-offset-tablet mdl-cell--3-offset-desktop">
+          <h1>Measure your latency to <a target="_blank" href="https://cloud.google.com/compute/docs/regions-zones/regions-zones">GCP regions</a></h1>
+        </div>
+        <div class="mdl-cell startstop-cell mdl-cell--6-col mdl-cell--1-offset-tablet mdl-cell--3-offset-desktop">
+          <button id="stopstart" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect">
+            <i class="material-icons">stop</i>
+          </button>
+        </div>
+        <div class="mdl-cell results-cell mdl-cell--6-col mdl-cell--1-offset-tablet mdl-cell--3-offset-desktop">
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-color-text--grey-800">
+            <thead>
+              <tr>
+                <th>REGION</th>
+                <th>MEDIAN LATENCY</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="2">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="about-content mdl-cell mdl-cell--6-col mdl-cell--1-offset-tablet mdl-cell--3-offset-desktop">
+          <center><a id="tweet-link" href="https://twitter.com/share" target="_blank"><img id="tweet-logo" src="twitter.png" alt="Tweet your latencies"></img></a></center>
+          <h2>How does this work?</h2>
+          <p>Your browser makes HTTP requests to <code>f1-micro</code> instances in each region. The median time between request and response is shown.</p>
+          <p>The <b>global</b> row uses a <a target="_blank" href="https://cloud.google.com/load-balancing/">Global HTTP Load Balancer</a> to route requests to the nearest healthy instance.</p>
+          <p>This is not an official Google project. <a target="_blank" href="https://github.com/GoogleCloudPlatform/gcping">Source available on GitHub</a>.</p>
+
+          <img id="pingimg"></img>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+<script src="config.js"></script>
+<script src="descs.js"></script>
+<script type="text/javascript">
+// TODO: Show regions on a map, with lines overlayed according to ping times.
+// TODO: Add an option to contribute times and JS geolocation info to a public BigQuery dataset.
+// TODO: Re-add pings for GCS.
+// TODO: Add pings for GAE, GCF, GCR(?), etc.
+// TODO: Add pings for Cloud CDN (backed by GCE or GCS).
+
+const _MAX_RESULTS = 20; // Only consider most recent results.
+let _KEYS = [];
+let idx = 0;
+let _URLS_REVERSE = {}; // reverse of _URLS
+let results = {};
+for (k in _URLS) {
+  _KEYS.push(k);
+  _URLS_REVERSE[_URLS[k]] = k;
+  results[k] = [];
+}
+
+function median(arr) {
+  if (arr.length == 0) { return 0; }
+  let copy = arr.slice(0);
+  copy.sort();
+  return copy[Math.floor(copy.length/2)];
+}
+
+document.addEventListener('nextping', function() {
+  let id = _KEYS[idx];
+  idx = (idx+1)%_KEYS.length; // wrap around
+  let url = _URLS[id];
+
+  let img = document.getElementById('pingimg');
+  let start = new Date().getTime();
+  img.onload = function() {
+    let took = new Date().getTime()-start;
+    results[id].push(took);
+    if (results[id].length > _MAX_RESULTS) {
+      results[id].shift();
+    }
+    let a = median(results[id]);
+    let out = document.getElementById(id+'-result');
+    updateTable();
+    if (!stopped) {
+      document.dispatchEvent(new Event('nextping'));
+    }
+  };
+  img.onerror = img.onload;
+  img.src = url;
+});
+
+function updateTable() {
+  let medians = [];
+  for (k in results) {
+    medians.push([k, median(results[k])]);
+  }
+  medians.sort(function(a, b) {
+    if (a[1] < b[1]) { return -1; }
+    if (a[1] > b[1]) { return 1; }
+    return 0;
+  });
+
+  let html = '';
+  let tweet = 'My lowest-latency #GCP regions via gcping.com:';
+  let place = 0;
+  let top = 0;
+  for (var i = 0; i < medians.length; i++) {
+    let region = medians[i][0];
+    let latency = medians[i][1];
+    if (latency == 0) { continue; }
+    if (i == 0 && region === 'global') { top++; }
+    if (region != 'global') { place++; }
+    var cls = (i == top) ? 'top' : '';
+    var desc = _DESCS[region] || '';
+    html += '<tr class="'+cls+'"><td class="regiondesc">'+desc+'<div class="region">'+region+'</div></td>' +
+      '<td class="result" id="'+region+'"><div>'+latency+'ms</div></td></tr>';
+
+    if (place <= 3 && region != 'global') {
+      tweet += '\n'+region+' ('+latency+'ms)';
+    }
+  }
+  document.getElementsByTagName('tbody')[0].innerHTML = html;
+  document.getElementById('tweet-link').href = 'https://twitter.com/share?text='+encodeURIComponent(tweet);
+}
+
+let stopped = true;
+let ss = document.getElementById('stopstart');
+let st;
+ss.onclick = function() {
+  if (stopped) {
+    console.log('starting');
+    stopped = false;
+    ss.children[0].innerText = 'stop';
+    document.dispatchEvent(new Event('nextping'));
+    st = setTimeout(ss.onclick, 30000); // stop after 30s.
+  } else {
+    console.log('stopping');
+    stopped = true;
+    clearTimeout(st); // cancel the stop timeout, as it is stopped.
+    ss.children[0].innerText = 'play_arrow';
+  }
+};
+
+// Pre-load an image for each URL, then start pinging with results recorded.
+// This speeds up subsequent requests. Otherwise, the first request to each IP
+// takes double the RTT because it needs to establish a connection
+let images = Object.values(_URLS);
+let image;
+let remaining = images.length;
+for (let i = 0; i < images.length; i++) {
+  image = new Image();
+  image.onerror = function () {
+    remaining--;
+    if (remaining <= 0) {
+      ss.onclick();
+    }
+  };
+  image.src = images[i];
+}
+</script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-93495535-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</html>
