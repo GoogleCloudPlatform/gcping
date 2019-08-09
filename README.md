@@ -52,11 +52,11 @@ $ gcping
 
 ## Installation
 
-* Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64
+* Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64_0.0.1
   ```
-  $ curl https://storage.googleapis.com/gcping-release/gcping_linux_amd64 > gcping && chmod +x gcping
+  $ curl https://storage.googleapis.com/gcping-release/gcping_linux_amd64_0.0.1 > gcping && chmod +x gcping
   ```
-* Mac 64-bit: https://storage.googleapis.com/gcping-release/gcping_darwin_amd64
-* Windows 64-bit: https://storage.googleapis.com/gcping-release/gcping_windows_amd64
+* Mac 64-bit: https://storage.googleapis.com/gcping-release/gcping_darwin_amd64_0.0.1
+* Windows 64-bit: https://storage.googleapis.com/gcping-release/gcping_windows_amd64_0.0.1
 
 Note: This is not an official Google product.
