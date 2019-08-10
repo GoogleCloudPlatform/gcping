@@ -19,6 +19,7 @@ Options:
 
 -csv CSV output; disables verbose output.
 -v   Verbose output.
+-multicloud to ping all gcp and aws regions
 
 Need a website version? See gcping.com
 ```
