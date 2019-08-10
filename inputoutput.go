@@ -28,7 +28,7 @@ type input struct {
 
 func (i *input) HTTP() {
 	i.benchmark(func() error {
-		req, _ := http.NewRequest("GET", "http://"+i.endpoint+"/ping", nil)
+		req, _ := http.NewRequest("GET", i.endpoint, nil)
 		res, err := client.Do(req)
 		if err != nil {
 			return err
