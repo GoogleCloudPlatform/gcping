@@ -24,29 +24,78 @@ import (
 	"time"
 )
 
+var endpoints = map[string]string{}
+
 // TODO(jbd): Add more zones.
-var endpoints = map[string]string{
-	"global":                  "35.186.221.153",
-	"asia-east1":              "104.155.201.52",
-	"asia-east2":              "35.220.162.209",
-	"asia-northeast1":         "104.198.86.148",
-	"asia-northeast2":         "34.97.196.51",
-	"asia-south1":             "35.200.186.152",
-	"asia-southeast1":         "35.185.179.198",
-	"australia-southeast1":    "35.189.6.113",
-	"europe-north1":           "35.228.170.201",
-	"europe-west1":            "104.199.82.109",
-	"europe-west2":            "35.189.67.146",
-	"europe-west3":            "35.198.78.172",
-	"europe-west4":            "35.204.93.82",
-	"europe-west6":            "34.65.3.254",
-	"northamerica-northeast1": "35.203.57.164",
-	"southamerica-east1":      "35.198.10.68",
-	"us-central1":             "104.197.165.8",
-	"us-east1":                "104.196.161.21",
-	"us-east4":                "35.186.168.152",
-	"us-west1":                "104.199.116.74",
-	"us-west2":                "35.236.45.25",
+var gcpendpoints = map[string]string{
+	"global":                  "http://35.186.221.153/ping",
+	"asia-east1":              "http://104.155.201.52/ping",
+	"asia-east2":              "http://35.220.162.209/ping",
+	"asia-northeast1":         "http://104.198.86.148/ping",
+	"asia-northeast2":         "http://34.97.196.51/ping",
+	"asia-south1":             "http://35.200.186.152/ping",
+	"asia-southeast1":         "http://35.185.179.198/ping",
+	"australia-southeast1":    "http://35.189.6.113/ping",
+	"europe-north1":           "http://35.228.170.201/ping",
+	"europe-west1":            "http://104.199.82.109/ping",
+	"europe-west2":            "http://35.189.67.146/ping",
+	"europe-west3":            "http://35.198.78.172/ping",
+	"europe-west4":            "http://35.204.93.82/ping",
+	"europe-west6":            "http://34.65.3.254/ping",
+	"northamerica-northeast1": "http://35.203.57.164/ping",
+	"southamerica-east1":      "http://35.198.10.68/ping",
+	"us-central1":             "http://104.197.165.8/ping",
+	"us-east1":                "http://104.196.161.21/ping",
+	"us-east4":                "http://35.186.168.152/ping",
+	"us-west1":                "http://104.199.116.74/ping",
+	"us-west2":                "http://35.236.45.25/ping",
+}
+
+var mutlicloudendpoints = map[string]string{
+	"global":                  "http://35.186.221.153/ping",
+	"asia-east1":              "http://104.155.201.52/ping",
+	"asia-east2":              "http://35.220.162.209/ping",
+	"asia-northeast1":         "http://104.198.86.148/ping",
+	"asia-northeast2":         "http://34.97.196.51/ping",
+	"asia-south1":             "http://35.200.186.152/ping",
+	"asia-southeast1":         "http://35.185.179.198/ping",
+	"australia-southeast1":    "http://35.189.6.113/ping",
+	"europe-north1":           "http://35.228.170.201/ping",
+	"europe-west1":            "http://104.199.82.109/ping",
+	"europe-west2":            "http://35.189.67.146/ping",
+	"europe-west3":            "http://35.198.78.172/ping",
+	"europe-west4":            "http://35.204.93.82/ping",
+	"europe-west6":            "http://34.65.3.254/ping",
+	"northamerica-northeast1": "http://35.203.57.164/ping",
+	"southamerica-east1":      "http://35.198.10.68/ping",
+	"us-central1":             "http://104.197.165.8/ping",
+	"us-east1":                "http://104.196.161.21/ping",
+	"us-east4":                "http://35.186.168.152/ping",
+	"us-west1":                "http://104.199.116.74/ping",
+	"us-west2":                "http://35.236.45.25/ping",
+	"aws-us-east1":            "http://dynamodb.us-east-1.amazonaws.com/",
+	"aws-us-east2":            "http://dynamodb.us-east-2.amazonaws.com/",
+	"aws-us-west1":            "http://dynamodb.us-west-1.amazonaws.com/",
+	"aws-us-west2":            "http://dynamodb.us-east-2.amazonaws.com/",
+	"aws-ap-east-1":           "http://dynamodb.ap-east-1.amazonaws.com/",
+	"aws-ap-south-1":          "http://dynamodb.ap-south-1.amazonaws.com/",
+	"aws-ap-northeast-3":      "http://dynamodb.ap-northeast-3.amazonaws.com/",
+	"aws-ap-northeast-2":      "http://dynamodb.ap-northeast-2.amazonaws.com/",
+	"aws-ap-southeast-1":      "http://dynamodb.ap-southeast-1.amazonaws.com/",
+	"aws-ap-southeast-2":      "http://dynamodb.ap-southeast-2.amazonaws.com/",
+	"aws-ap-northeast-1":      "http://dynamodb.ap-northeast-1.amazonaws.com/",
+	"aws-ca-central-1":        "http://dynamodb.ca-central-1.amazonaws.com/",
+	"aws-cn-north-1":          "http://dynamodb.cn-north-1.amazonaws.com.cn/",
+	"aws-cn-northwest-1":      "http://dynamodb.cn-northwest-1.amazonaws.com.cn/",
+	"aws-eu-central-1":        "http://dynamodb.eu-central-1.amazonaws.com/",
+	"aws-eu-west-1":           "http://dynamodb.eu-west-1.amazonaws.com/",
+	"aws-eu-west-2":           "http://dynamodb.eu-west-2.amazonaws.com/",
+	"aws-eu-west-3":           "http://dynamodb.eu-west-3.amazonaws.com/",
+	"aws-eu-north-1":          "http://dynamodb.eu-north-1.amazonaws.com/",
+	"aws-me-south-1":          "http://dynamodb.me-south-1.amazonaws.com/",
+	"aws-sa-east-1":           "http://dynamodb.sa-east-1.amazonaws.com/",
+	"aws-us-gov-east-1":       "http://dynamodb.us-gov-east-1.amazonaws.com/",
+	"aws-us-gov-west-1":       "http://dynamodb.us-gov-west-1.amazonaws.com/",
 }
 
 var (
@@ -55,6 +104,7 @@ var (
 	timeout     time.Duration
 	csv         bool
 	verbose     bool
+	multicloud  bool
 	// TODO(jbd): Add payload options such as body size.
 
 	client  *http.Client // TODO(jbd): One client per worker?
@@ -68,6 +118,8 @@ func main() {
 	flag.DurationVar(&timeout, "t", time.Duration(0), "")
 	flag.BoolVar(&verbose, "v", false, "")
 	flag.BoolVar(&csv, "csv", false, "")
+	//add flag for multicloud
+	flag.BoolVar(&multicloud, "multicloud", false, "")
 
 	flag.Usage = usage
 	flag.Parse()
@@ -78,7 +130,11 @@ func main() {
 	if csv {
 		verbose = false // if output is CSV, no need for verbose output
 	}
-
+	if multicloud {
+		endpoints = mutlicloudendpoints //use multicloud endpoints map
+	} else {
+		endpoints = gcpendpoints //use default gcping endpoints
+	}
 	client = &http.Client{
 		Timeout: timeout,
 	}
