@@ -1,6 +1,6 @@
 ifeq ($(origin version), undefined)
 	version := latest
-endif 
+endif
 
 release:
 	GOOS=windows GOARCH=amd64 go build -o ./bin/gcping_windows_amd64_$(version)
