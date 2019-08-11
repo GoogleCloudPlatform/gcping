@@ -314,14 +314,15 @@ Options:
 -c   Max number of requests to be made at any time.
      By default 10; can't be negative or zero.
 -t   Timeout. By default, no timeout.
+
      Examples: "500ms", "1s", "1s500ms".
 
--top If true, only the top (non-global) region is printed.
-=======
--aws use only aws regions
--azure use only azure regions. Recommend to limit number of req to < 10
--mc all your clouds are belong to us
->>>>>>> update options usage text
+-top If true, only the top (non-global) region is printed
+	 
+-aws     Use only aws regions
+-azure   Use only azure regions. Recommend to limit number of req to < 10
+-mc      All your clouds are belong to us (multicloud)
+
 
 -csv CSV output; disables verbose output.
 -v   Verbose output.
