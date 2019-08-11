@@ -16,9 +16,9 @@ Options:
 -t   Timeout. By default, no timeout.
      Examples: "500ms", "1s", "1s500ms".
 
--csv CSV output; disables verbose output.
--v   Verbose output.
--multicloud to ping all gcp and aws regions
+-aws     Use only aws regions
+-azure   Use only azure regions. Recommend to limit number of req to < 10
+-mc      All your clouds are belong to us (multicloud)
 
 Need a website version? See gcping.com
 ```
@@ -51,7 +51,9 @@ $ gcping
 ```
 
 ## Installation
+gcping multicloud 
 
+gcping official
 * Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64
   ```
   $ curl https://storage.googleapis.com/gcping-release/gcping_linux_amd64 > gcping && chmod +x gcping
