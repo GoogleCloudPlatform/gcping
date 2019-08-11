@@ -300,6 +300,9 @@ Options:
      By default 10; can't be negative or zero.
 -t   Timeout. By default, no timeout.
      Examples: "500ms", "1s", "1s500ms".
+-aws use only aws regions
+-azure use only azure regions. Recommend to limit number of req to < 10
+-multicloud all your clouds are belong to us
 
 -csv CSV output; disables verbose output.
 -v   Verbose output.
