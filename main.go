@@ -204,7 +204,7 @@ func main() {
 	flag.BoolVar(&verbose, "v", false, "")
 	flag.BoolVar(&csv, "csv", false, "")
 	//add flag for multicloud
-	flag.BoolVar(&multicloud, "multicloud", false, "")
+	flag.BoolVar(&multicloud, "mc", false, "")
 	//add flag for azure
 	flag.BoolVar(&azure, "azure", false, "")
 	//add flag for aws
@@ -299,10 +299,11 @@ Options:
 -c   Max number of requests to be made at any time.
      By default 10; can't be negative or zero.
 -t   Timeout. By default, no timeout.
-     Examples: "500ms", "1s", "1s500ms".
--aws use only aws regions
--azure use only azure regions. Recommend to limit number of req to < 10
--multicloud all your clouds are belong to us
+	 Examples: "500ms", "1s", "1s500ms".
+	 
+-aws     Use only aws regions
+-azure   Use only azure regions. Recommend to limit number of req to < 10
+-mc      All your clouds are belong to us (multicloud)
 
 -csv CSV output; disables verbose output.
 -v   Verbose output.
