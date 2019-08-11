@@ -17,9 +17,9 @@ Options:
      Examples: "500ms", "1s", "1s500ms".
 -top If true, only the top (non-global) region is printed.
 
--csv CSV output; disables verbose output.
--v   Verbose output.
--multicloud to ping all gcp and aws regions
+-aws     Use only aws regions
+-azure   Use only azure regions. Recommend to limit number of req to < 10
+-mc      All your clouds are belong to us (multicloud)
 
 Need a website version? See gcping.com
 ```
@@ -52,8 +52,10 @@ $ gcping
 ```
 
 ## Installation
+gcping multicloud 
 
 * Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64_0.0.1
+=======
   ```
   $ curl https://storage.googleapis.com/gcping-release/gcping_linux_amd64_0.0.1 > gcping && chmod +x gcping
   ```
