@@ -32,7 +32,8 @@ func (i *input) HTTP() {
 		if err != nil {
 			return err
 		}
-		if res.StatusCode != http.StatusOK {
+		//azure blob endpoints always 400 or 403 (weird) w/out query uri and no known /ping or /health available
+		if res.StatusCode != http.StatusOK && res.StatusCode != 400 && res.StatusCode != 403 {
 			return fmt.Errorf("status code: %v", res.StatusCode)
 		}
 		return nil
