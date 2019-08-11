@@ -52,6 +52,8 @@ $ gcping
 
 ## Installation
 gcping multicloud 
+cheap place to store a binary for anyone not wanting to build it
+* Mac 64-bit https://drive.google.com/open?id=1uPbk7oBKvJsaMHSlMYaTvbdnlotad7Pr
 
 gcping official
 * Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64
