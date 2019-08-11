@@ -53,50 +53,112 @@ var gcpendpoints = map[string]string{
 }
 
 var mutlicloudendpoints = map[string]string{
-	"global":                  "http://35.186.221.153/ping",
-	"asia-east1":              "http://104.155.201.52/ping",
-	"asia-east2":              "http://35.220.162.209/ping",
-	"asia-northeast1":         "http://104.198.86.148/ping",
-	"asia-northeast2":         "http://34.97.196.51/ping",
-	"asia-south1":             "http://35.200.186.152/ping",
-	"asia-southeast1":         "http://35.185.179.198/ping",
-	"australia-southeast1":    "http://35.189.6.113/ping",
-	"europe-north1":           "http://35.228.170.201/ping",
-	"europe-west1":            "http://104.199.82.109/ping",
-	"europe-west2":            "http://35.189.67.146/ping",
-	"europe-west3":            "http://35.198.78.172/ping",
-	"europe-west4":            "http://35.204.93.82/ping",
-	"europe-west6":            "http://34.65.3.254/ping",
-	"northamerica-northeast1": "http://35.203.57.164/ping",
-	"southamerica-east1":      "http://35.198.10.68/ping",
-	"us-central1":             "http://104.197.165.8/ping",
-	"us-east1":                "http://104.196.161.21/ping",
-	"us-east4":                "http://35.186.168.152/ping",
-	"us-west1":                "http://104.199.116.74/ping",
-	"us-west2":                "http://35.236.45.25/ping",
-	"aws-us-east1":            "http://dynamodb.us-east-1.amazonaws.com/",
-	"aws-us-east2":            "http://dynamodb.us-east-2.amazonaws.com/",
-	"aws-us-west1":            "http://dynamodb.us-west-1.amazonaws.com/",
-	"aws-us-west2":            "http://dynamodb.us-east-2.amazonaws.com/",
-	"aws-ap-east-1":           "http://dynamodb.ap-east-1.amazonaws.com/",
-	"aws-ap-south-1":          "http://dynamodb.ap-south-1.amazonaws.com/",
-	"aws-ap-northeast-3":      "http://dynamodb.ap-northeast-3.amazonaws.com/",
-	"aws-ap-northeast-2":      "http://dynamodb.ap-northeast-2.amazonaws.com/",
-	"aws-ap-southeast-1":      "http://dynamodb.ap-southeast-1.amazonaws.com/",
-	"aws-ap-southeast-2":      "http://dynamodb.ap-southeast-2.amazonaws.com/",
-	"aws-ap-northeast-1":      "http://dynamodb.ap-northeast-1.amazonaws.com/",
-	"aws-ca-central-1":        "http://dynamodb.ca-central-1.amazonaws.com/",
-	"aws-cn-north-1":          "http://dynamodb.cn-north-1.amazonaws.com.cn/",
-	"aws-cn-northwest-1":      "http://dynamodb.cn-northwest-1.amazonaws.com.cn/",
-	"aws-eu-central-1":        "http://dynamodb.eu-central-1.amazonaws.com/",
-	"aws-eu-west-1":           "http://dynamodb.eu-west-1.amazonaws.com/",
-	"aws-eu-west-2":           "http://dynamodb.eu-west-2.amazonaws.com/",
-	"aws-eu-west-3":           "http://dynamodb.eu-west-3.amazonaws.com/",
-	"aws-eu-north-1":          "http://dynamodb.eu-north-1.amazonaws.com/",
-	"aws-me-south-1":          "http://dynamodb.me-south-1.amazonaws.com/",
-	"aws-sa-east-1":           "http://dynamodb.sa-east-1.amazonaws.com/",
-	"aws-us-gov-east-1":       "http://dynamodb.us-gov-east-1.amazonaws.com/",
-	"aws-us-gov-west-1":       "http://dynamodb.us-gov-west-1.amazonaws.com/",
+	"global":                    "http://35.186.221.153/ping",
+	"asia-east1":                "http://104.155.201.52/ping",
+	"asia-east2":                "http://35.220.162.209/ping",
+	"asia-northeast1":           "http://104.198.86.148/ping",
+	"asia-northeast2":           "http://34.97.196.51/ping",
+	"asia-south1":               "http://35.200.186.152/ping",
+	"asia-southeast1":           "http://35.185.179.198/ping",
+	"australia-southeast1":      "http://35.189.6.113/ping",
+	"europe-north1":             "http://35.228.170.201/ping",
+	"europe-west1":              "http://104.199.82.109/ping",
+	"europe-west2":              "http://35.189.67.146/ping",
+	"europe-west3":              "http://35.198.78.172/ping",
+	"europe-west4":              "http://35.204.93.82/ping",
+	"europe-west6":              "http://34.65.3.254/ping",
+	"northamerica-northeast1":   "http://35.203.57.164/ping",
+	"southamerica-east1":        "http://35.198.10.68/ping",
+	"us-central1":               "http://104.197.165.8/ping",
+	"us-east1":                  "http://104.196.161.21/ping",
+	"us-east4":                  "http://35.186.168.152/ping",
+	"us-west1":                  "http://104.199.116.74/ping",
+	"us-west2":                  "http://35.236.45.25/ping",
+	"aws-us-east1":              "http://dynamodb.us-east-1.amazonaws.com/",
+	"aws-us-east2":              "http://dynamodb.us-east-2.amazonaws.com/",
+	"aws-us-west1":              "http://dynamodb.us-west-1.amazonaws.com/",
+	"aws-us-west2":              "http://dynamodb.us-east-2.amazonaws.com/",
+	"aws-ap-east-1":             "http://dynamodb.ap-east-1.amazonaws.com/",
+	"aws-ap-south-1":            "http://dynamodb.ap-south-1.amazonaws.com/",
+	"aws-ap-northeast-3":        "http://dynamodb.ap-northeast-3.amazonaws.com/",
+	"aws-ap-northeast-2":        "http://dynamodb.ap-northeast-2.amazonaws.com/",
+	"aws-ap-southeast-1":        "http://dynamodb.ap-southeast-1.amazonaws.com/",
+	"aws-ap-southeast-2":        "http://dynamodb.ap-southeast-2.amazonaws.com/",
+	"aws-ap-northeast-1":        "http://dynamodb.ap-northeast-1.amazonaws.com/",
+	"aws-ca-central-1":          "http://dynamodb.ca-central-1.amazonaws.com/",
+	"aws-cn-north-1":            "http://dynamodb.cn-north-1.amazonaws.com.cn/",
+	"aws-cn-northwest-1":        "http://dynamodb.cn-northwest-1.amazonaws.com.cn/",
+	"aws-eu-central-1":          "http://dynamodb.eu-central-1.amazonaws.com/",
+	"aws-eu-west-1":             "http://dynamodb.eu-west-1.amazonaws.com/",
+	"aws-eu-west-2":             "http://dynamodb.eu-west-2.amazonaws.com/",
+	"aws-eu-west-3":             "http://dynamodb.eu-west-3.amazonaws.com/",
+	"aws-eu-north-1":            "http://dynamodb.eu-north-1.amazonaws.com/",
+	"aws-me-south-1":            "http://dynamodb.me-south-1.amazonaws.com/",
+	"aws-sa-east-1":             "http://dynamodb.sa-east-1.amazonaws.com/",
+	"aws-us-gov-east-1":         "http://dynamodb.us-gov-east-1.amazonaws.com/",
+	"aws-us-gov-west-1":         "http://dynamodb.us-gov-west-1.amazonaws.com/",
+	"azure-us-central":          "http://centralus.blob.core.windows.net/",
+	"azure-southafrica-north":   "http://southafricanorth.blob.core.windows.net/",
+	"azure-uae-north":           "http://uaenorth.blob.core.windows.net/",
+	"azurefrance-central":       "http://francecentral.blob.core.windows.net/",
+	"azure-uk-west":             "http://ukwest.blob.core.windows.net/",
+	"azure-uk-south":            "http://uksouth.blob.core.windows.net/",
+	"azure-europe-west":         "http://westeurope.blob.core.windows.net/",
+	"azure-europe-north":        "http://northeurope.blob.core.windows.net/",
+	"azure-australia-central2":  "http://australiacentral2.blob.core.windows.net/",
+	"azure-australia-central":   "http://australiacentral.blob.core.windows.net/",
+	"azure-korea-south":         "http://koreasouth.blob.core.windows.net/",
+	"azure-korea-central":       "http://koreacentral.blob.core.windows.net/",
+	"azure-india-west":          "http://westindia.blob.core.windows.net/",
+	"azure-india-central":       "http://centralindia.blob.core.windows.net/",
+	"azure-india-south":         "http://southindia.blob.core.windows.net/",
+	"azure-australia-southeast": "http://australiasoutheast.blob.core.windows.net/",
+	"azure-australia-east":      "http://australiaeast.blob.core.windows.net/",
+	"azure-japan-east":          "http://japaneast.blob.core.windows.net/",
+	"azure-japan-west":          "http://japanwest.blob.core.windows.net/",
+	"azure-asia-southeast":      "http://southeastasia.blob.core.windows.net/",
+	"azure-asia-east":           "http://eastasia.blob.core.windows.net/",
+	"azure-us-west2":            "http://westus2.blob.core.windows.net/",
+	"azure-us-westcentral":      "http://westcentralus.blob.core.windows.net/",
+	"azure-canada-east":         "http://canadaeast.blob.core.windows.net/",
+	"azure-canada-central":      "http://canadacentral.blob.core.windows.net/",
+	"azure-brazil-south":        "http://brazilsouth.blob.core.windows.net/",
+	"azure-us-southcentral":     "http://southcentralus.blob.core.windows.net/",
+	"azure-us-nourthcentral":    "http://northcentralus.blob.core.windows.net/",
+	"azure-us-west":             "http://westus.blob.core.windows.net/",
+	"azure-us-east2":            "http://eastus2.blob.core.windows.net/",
+	"azure-us-east":             "http://eastus.blob.core.windows.net/",
+}
+
+var azureendpoints = map[string]string{
+	"azure-us-central":          "http://centralus.blob.core.windows.net/",
+	"azure-southafrica-north":   "http://southafricanorth.blob.core.windows.net/",
+	"azure-uae-north":           "http://unitedarabemirates.blob.core.windows.net/",
+	"azurefrance-central":       "http://francecentral.blob.core.windows.net/",
+	"azure-uk-west":             "http://ukwest.blob.core.windows.net/",
+	"azure-uk-south":            "http://uksouth.blob.core.windows.net/",
+	"azure-europe-west":         "http://westeurope.blob.core.windows.net/",
+	"azure-europe-north":        "http://northeurope.blob.core.windows.net/",
+	"azure-australia-central2":  "http://australiacentral2.blob.core.windows.net/",
+	"azure-korea":               "http://korea.blob.core.windows.net/",
+	"azure-india-west":          "http://westindia.blob.core.windows.net/",
+	"azure-india-central":       "http://centralindia.blob.core.windows.net/",
+	"azure-australia-southeast": "http://australiasoutheast.blob.core.windows.net/",
+	"azure-australia-east":      "http://australiaeast.blob.core.windows.net/",
+	"azure-japan-east":          "http://japaneast.blob.core.windows.net/",
+	"azure-japan-west":          "http://japanwest.blob.core.windows.net/",
+	"azure-asia-southeast":      "http://southeastasia.blob.core.windows.net/",
+	"azure-asia-east":           "http://eastasia.blob.core.windows.net/",
+	"azure-us-west2":            "http://uswest2.blob.core.windows.net/",
+	"azure-us-westcentral":      "http://westcentralus.blob.core.windows.net/",
+	"azure-canada-east":         "http://canadaeast.blob.core.windows.net/",
+	"azure-canada-central":      "http://canadacentral.blob.core.windows.net/",
+	"azure-brazil-south":        "http://brazil.blob.core.windows.net/",
+	"azure-us-southcentral":     "http://southcentralus.blob.core.windows.net/",
+	"azure-us-nourthcentral":    "http://northcentralus.blob.core.windows.net/",
+	"azure-us-west":             "http://westus.blob.core.windows.net/",
+	"azure-us-east2":            "http://eastus2.blob.core.windows.net/",
+	"azure-us-east":             "http://eastus.blob.core.windows.net/",
 }
 
 var (
@@ -107,6 +169,7 @@ var (
 	csv         bool
 	verbose     bool
 	multicloud  bool
+	azure       bool
 	// TODO(jbd): Add payload options such as body size.
 
 	client  *http.Client // TODO(jbd): One client per worker?
@@ -123,6 +186,8 @@ func main() {
 	flag.BoolVar(&csv, "csv", false, "")
 	//add flag for multicloud
 	flag.BoolVar(&multicloud, "multicloud", false, "")
+	//add flag for azure
+	flag.BoolVar(&azure, "azure", false, "")
 
 	flag.Usage = usage
 	flag.Parse()
@@ -135,9 +200,12 @@ func main() {
 	}
 	if multicloud {
 		endpoints = mutlicloudendpoints //use multicloud endpoints map
+	} else if azure {
+		endpoints = azureendpoints //use azure only endpoints
 	} else {
-		endpoints = gcpendpoints //use default gcping endpoints
+		endpoints = gcpendpoints //use original gcp endpoints
 	}
+
 	client = &http.Client{
 		Timeout: timeout,
 	}
