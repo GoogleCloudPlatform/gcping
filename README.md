@@ -13,6 +13,7 @@ Options:
      By default 10; can't be negative.
 -c   Max number of requests to be made at any time.
      By default 10; can't be negative or zero.
+-r   Report latency for an individual region.
 -t   Timeout. By default, no timeout.
      Examples: "500ms", "1s", "1s500ms".
 -top If true, only the top (non-global) region is printed.
