@@ -160,7 +160,31 @@ var azureendpoints = map[string]string{
 	"azure-us-east2":            "http://eastus2.blob.core.windows.net/",
 	"azure-us-east":             "http://eastus.blob.core.windows.net/",
 }
-
+var awsendpoints = map[string]string{
+	"aws-us-east1":       "http://dynamodb.us-east-1.amazonaws.com/",
+	"aws-us-east2":       "http://dynamodb.us-east-2.amazonaws.com/",
+	"aws-us-west1":       "http://dynamodb.us-west-1.amazonaws.com/",
+	"aws-us-west2":       "http://dynamodb.us-east-2.amazonaws.com/",
+	"aws-ap-east-1":      "http://dynamodb.ap-east-1.amazonaws.com/",
+	"aws-ap-south-1":     "http://dynamodb.ap-south-1.amazonaws.com/",
+	"aws-ap-northeast-3": "http://dynamodb.ap-northeast-3.amazonaws.com/",
+	"aws-ap-northeast-2": "http://dynamodb.ap-northeast-2.amazonaws.com/",
+	"aws-ap-southeast-1": "http://dynamodb.ap-southeast-1.amazonaws.com/",
+	"aws-ap-southeast-2": "http://dynamodb.ap-southeast-2.amazonaws.com/",
+	"aws-ap-northeast-1": "http://dynamodb.ap-northeast-1.amazonaws.com/",
+	"aws-ca-central-1":   "http://dynamodb.ca-central-1.amazonaws.com/",
+	"aws-cn-north-1":     "http://dynamodb.cn-north-1.amazonaws.com.cn/",
+	"aws-cn-northwest-1": "http://dynamodb.cn-northwest-1.amazonaws.com.cn/",
+	"aws-eu-central-1":   "http://dynamodb.eu-central-1.amazonaws.com/",
+	"aws-eu-west-1":      "http://dynamodb.eu-west-1.amazonaws.com/",
+	"aws-eu-west-2":      "http://dynamodb.eu-west-2.amazonaws.com/",
+	"aws-eu-west-3":      "http://dynamodb.eu-west-3.amazonaws.com/",
+	"aws-eu-north-1":     "http://dynamodb.eu-north-1.amazonaws.com/",
+	"aws-me-south-1":     "http://dynamodb.me-south-1.amazonaws.com/",
+	"aws-sa-east-1":      "http://dynamodb.sa-east-1.amazonaws.com/",
+	"aws-us-gov-east-1":  "http://dynamodb.us-gov-east-1.amazonaws.com/",
+	"aws-us-gov-west-1":  "http://dynamodb.us-gov-west-1.amazonaws.com/",
+}
 var (
 	top         bool
 	number      int // number of requests for each region
@@ -170,6 +194,7 @@ var (
 	verbose     bool
 	multicloud  bool
 	azure       bool
+	aws         bool
 	// TODO(jbd): Add payload options such as body size.
 
 	client  *http.Client // TODO(jbd): One client per worker?
@@ -188,6 +213,8 @@ func main() {
 	flag.BoolVar(&multicloud, "multicloud", false, "")
 	//add flag for azure
 	flag.BoolVar(&azure, "azure", false, "")
+	//add flag for aws
+	flag.BoolVar(&aws, "aws", false, "")
 
 	flag.Usage = usage
 	flag.Parse()
@@ -202,8 +229,10 @@ func main() {
 		endpoints = mutlicloudendpoints //use multicloud endpoints map
 	} else if azure {
 		endpoints = azureendpoints //use azure only endpoints
+	} else if aws {
+		endpoints = awsendpoints //use aws only endpoints
 	} else {
-		endpoints = gcpendpoints //use original gcp endpoints
+		endpoints = gcpendpoints //original gcp endpoints
 	}
 
 	client = &http.Client{
