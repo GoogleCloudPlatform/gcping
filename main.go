@@ -315,6 +315,7 @@ Options:
      By default 10; can't be negative or zero.
 -t   Timeout. By default, no timeout.
 
+
      Examples: "500ms", "1s", "1s500ms".
 
 -top If true, only the top (non-global) region is printed

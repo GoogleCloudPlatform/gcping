@@ -52,12 +52,8 @@ $ gcping
 ```
 
 ## Installation
-gcping multicloud 
-cheap place to store a binary for anyone not wanting to build it
-* Mac 64-bit https://drive.google.com/open?id=1uPbk7oBKvJsaMHSlMYaTvbdnlotad7Pr
 
 * Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64_0.0.1
-=======
   ```
   $ curl https://storage.googleapis.com/gcping-release/gcping_linux_amd64_0.0.1 > gcping && chmod +x gcping
   ```
@@ -65,3 +61,7 @@ cheap place to store a binary for anyone not wanting to build it
 * Windows 64-bit: https://storage.googleapis.com/gcping-release/gcping_windows_amd64_0.0.1
 
 Note: This is not an official Google product.
+
+#Installation of gcping w/multicloud
+gcping multicloud
+* Mac 64-bit https://drive.google.com/open?id=1uPbk7oBKvJsaMHSlMYaTvbdnlotad7Pr
