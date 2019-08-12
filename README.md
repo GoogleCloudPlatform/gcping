@@ -17,9 +17,6 @@ Options:
      Examples: "500ms", "1s", "1s500ms".
 -top If true, only the top (non-global) region is printed.
 
--aws     Use only aws regions
--azure   Use only azure regions. Recommend to limit number of req to < 10
--mc      All your clouds are belong to us (multicloud)
 
 Need a website version? See gcping.com
 ```
@@ -62,6 +59,11 @@ $ gcping
 
 Note: This is not an official Google product.
 
-#Installation of gcping w/multicloud
-gcping multicloud
+##Installation of experimental gcping w/multicloud
 * Mac 64-bit https://drive.google.com/open?id=1uPbk7oBKvJsaMHSlMYaTvbdnlotad7Pr
+* Included all existing options plus these to support AWS, Azure and Combined Benchmark
+```
+-aws     Use only aws regions
+-azure   Use only azure regions. Recommend to limit number of req to < 10
+-mc      All your clouds are belong to us (multicloud)
+```
