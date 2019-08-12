@@ -60,7 +60,7 @@ $ gcping
 Note: This is not an official Google product.
 
 ## Installation of gcping w/multicloud (Experimental)
-* Mac 64-bit https://drive.google.com/open?id=1uPbk7oBKvJsaMHSlMYaTvbdnlotad7Pr
+* Mac 64-bit https://drive.google.com/open?id=1BrEoP1Lzxjvp4A7S2w1RyQKLkImhcJoT
 * Includes all existing options plus these to support AWS, Azure, and Combined Benchmarks
 ```
 -aws     Use only aws regions
