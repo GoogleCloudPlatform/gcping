@@ -59,7 +59,7 @@ $ gcping
 
 Note: This is not an official Google product.
 
-##Installation of experimental gcping w/multicloud
+## Installation of experimental gcping w/multicloud
 * Mac 64-bit https://drive.google.com/open?id=1uPbk7oBKvJsaMHSlMYaTvbdnlotad7Pr
 * Included all existing options plus these to support AWS, Azure and Combined Benchmark
 ```
