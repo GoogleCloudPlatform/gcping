@@ -59,9 +59,9 @@ $ gcping
 
 Note: This is not an official Google product.
 
-## Installation of experimental gcping w/multicloud
+## Installation of gcping w/multicloud (Experimental)
 * Mac 64-bit https://drive.google.com/open?id=1uPbk7oBKvJsaMHSlMYaTvbdnlotad7Pr
-* Included all existing options plus these to support AWS, Azure and Combined Benchmark
+* Includes all existing options plus these to support AWS, Azure, and Combined Benchmarks
 ```
 -aws     Use only aws regions
 -azure   Use only azure regions. Recommend to limit number of req to < 10
