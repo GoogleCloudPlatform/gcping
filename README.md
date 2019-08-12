@@ -17,6 +17,8 @@ Options:
      Examples: "500ms", "1s", "1s500ms".
 -top If true, only the top (non-global) region is printed.
 
+-csv CSV output; disables verbose output.	
+-v   Verbose output.
 
 Need a website version? See gcping.com
 ```
