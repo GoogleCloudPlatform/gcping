@@ -13,6 +13,7 @@ Options:
      By default 10; can't be negative.
 -c   Max number of requests to be made at any time.
      By default 10; can't be negative or zero.
+-r   Report latency for an individual region.
 -t   Timeout. By default, no timeout.
      Examples: "500ms", "1s", "1s500ms".
 -top If true, only the top (non-global) region is printed.
@@ -48,6 +49,11 @@ $ gcping
 19.  [australia-southeast1]     425.679503ms
 20.  [asia-southeast1]          454.494659ms
 21.  [asia-south1]              573.022571ms
+```
+
+```
+$ gcping -r us-east1
+ 1.  [us-east1]  502.068712ms
 ```
 
 ## Installation

@@ -57,12 +57,22 @@ var (
 	timeout     time.Duration
 	csv         bool
 	verbose     bool
+	region      string
 	// TODO(jbd): Add payload options such as body size.
 
 	client  *http.Client // TODO(jbd): One client per worker?
 	inputs  chan input
 	outputs chan output
 )
+
+// calcOutputSize calculates the actual output size.
+func calcOutputSize() int {
+	outputSize := number * len(endpoints)
+	if region != "" {
+		outputSize = number
+	}
+	return outputSize
+}
 
 func main() {
 	flag.BoolVar(&top, "top", false, "")
@@ -71,6 +81,7 @@ func main() {
 	flag.DurationVar(&timeout, "t", time.Duration(0), "")
 	flag.BoolVar(&verbose, "v", false, "")
 	flag.BoolVar(&csv, "csv", false, "")
+	flag.StringVar(&region, "r", "", "")
 
 	flag.Usage = usage
 	flag.Parse()
@@ -82,16 +93,30 @@ func main() {
 		verbose = false // if output is CSV, no need for verbose output
 	}
 
+	if region != "" {
+		if _, found := endpoints[region]; !found {
+			fmt.Printf("region %q is not supported or does not exist\n", region)
+			os.Exit(1)
+		}
+	}
+
 	client = &http.Client{
 		Timeout: timeout,
 	}
 
 	go start()
+
 	inputs = make(chan input, concurrency)
-	outputs = make(chan output, number*len(endpoints))
+	outputSize := calcOutputSize()
+	outputs = make(chan output, outputSize)
 	for i := 0; i < number; i++ {
-		for r, e := range endpoints {
-			inputs <- input{region: r, endpoint: e}
+		if region != "" {
+			e, _ := endpoints[region]
+			inputs <- input{region: region, endpoint: e}
+		} else {
+			for r, e := range endpoints {
+				inputs <- input{region: r, endpoint: e}
+			}
 		}
 	}
 	close(inputs)
@@ -109,8 +134,9 @@ func start() {
 }
 
 func report() {
+	outputSize := calcOutputSize()
 	m := make(map[string]output)
-	for i := 0; i < number*len(endpoints); i++ {
+	for i := 0; i < outputSize; i++ {
 		o := <-outputs
 
 		a := m[o.region]
@@ -163,6 +189,7 @@ Options:
      By default 10; can't be negative.
 -c   Max number of requests to be made at any time.
      By default 10; can't be negative or zero.
+-r   Report latency for an individual region.
 -t   Timeout. By default, no timeout.
      Examples: "500ms", "1s", "1s500ms".
 -top If true, only the top (non-global) region is printed.
