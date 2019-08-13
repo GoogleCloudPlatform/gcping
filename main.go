@@ -65,6 +65,15 @@ var (
 	outputs chan output
 )
 
+// calcOutputSize calculates the actual output size.
+func calcOutputSize() int {
+	outputSize := number * len(endpoints)
+	if region != "" {
+		outputSize = number
+	}
+	return outputSize
+}
+
 func main() {
 	flag.BoolVar(&top, "top", false, "")
 	flag.IntVar(&number, "n", 10, "")
@@ -98,7 +107,8 @@ func main() {
 	go start()
 
 	inputs = make(chan input, concurrency)
-	outputs = make(chan output, number*len(endpoints))
+	outputSize := calcOutputSize()
+	outputs = make(chan output, outputSize)
 	for i := 0; i < number; i++ {
 		if region != "" {
 			e, _ := endpoints[region]
@@ -124,12 +134,7 @@ func start() {
 }
 
 func report() {
-	// Calculate the actual output size.
-	outputSize := number * len(endpoints)
-	if region != "" {
-		outputSize = number
-	}
-
+	outputSize := calcOutputSize()
 	m := make(map[string]output)
 	for i := 0; i < outputSize; i++ {
 		o := <-outputs

@@ -51,6 +51,11 @@ $ gcping
 21.  [asia-south1]              573.022571ms
 ```
 
+```
+$ gcping -r us-east1
+ 1.  [us-east1]  502.068712ms
+```
+
 ## Installation
 
 * Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64_0.0.1
