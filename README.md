@@ -53,7 +53,12 @@ $ gcping
 
 ```
 $ gcping -r us-east1
- 1.  [us-east1]  502.068712ms
+502.068712ms
+```
+
+```
+$ gcping -top
+us-west2
 ```
 
 ## Installation

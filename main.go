@@ -20,8 +20,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"sort"
-	"text/tabwriter"
 	"time"
 )
 
@@ -60,19 +58,8 @@ var (
 	region      string
 	// TODO(jbd): Add payload options such as body size.
 
-	client  *http.Client // TODO(jbd): One client per worker?
-	inputs  chan input
-	outputs chan output
+	client *http.Client // TODO(jbd): One client per worker?
 )
-
-// calcOutputSize calculates the actual output size.
-func calcOutputSize() int {
-	outputSize := number * len(endpoints)
-	if region != "" {
-		outputSize = number
-	}
-	return outputSize
-}
 
 func main() {
 	flag.BoolVar(&top, "top", false, "")
@@ -104,77 +91,17 @@ func main() {
 		Timeout: timeout,
 	}
 
-	go start()
+	w := &worker{concurrency: concurrency}
+	go w.start()
 
-	inputs = make(chan input, concurrency)
-	outputSize := calcOutputSize()
-	outputs = make(chan output, outputSize)
-	for i := 0; i < number; i++ {
-		if region != "" {
-			e, _ := endpoints[region]
-			inputs <- input{region: region, endpoint: e}
-		} else {
-			for r, e := range endpoints {
-				inputs <- input{region: r, endpoint: e}
-			}
-		}
+	switch {
+	case region != "":
+		w.reportRegion(region)
+	case top:
+		w.reportTop()
+	default:
+		w.reportAll()
 	}
-	close(inputs)
-	report()
-}
-
-func start() {
-	for worker := 0; worker < concurrency; worker++ {
-		go func() {
-			for m := range inputs {
-				m.HTTP()
-			}
-		}()
-	}
-}
-
-func report() {
-	outputSize := calcOutputSize()
-	m := make(map[string]output)
-	for i := 0; i < outputSize; i++ {
-		o := <-outputs
-
-		a := m[o.region]
-
-		a.region = o.region
-		a.durations = append(a.durations, o.durations[0])
-		a.errors += o.errors
-
-		m[o.region] = a
-	}
-	all := make([]output, 0, len(m))
-	for _, t := range m {
-		all = append(all, t)
-	}
-
-	// sort all by median duration.
-	sort.Slice(all, func(i, j int) bool {
-		return all[i].median() < all[j].median()
-	})
-
-	if top {
-		t := all[0].region
-		if t == "global" {
-			t = all[1].region
-		}
-		fmt.Print(t)
-		return
-	}
-
-	tr := tabwriter.NewWriter(os.Stdout, 3, 2, 2, ' ', 0)
-	for i, a := range all {
-		fmt.Fprintf(tr, "%2d.\t[%v]\t%v", i+1, a.region, a.median())
-		if a.errors > 0 {
-			fmt.Fprintf(tr, "\t(%d errors)", a.errors)
-		}
-		fmt.Fprintln(tr)
-	}
-	tr.Flush()
 }
 
 func usage() {
