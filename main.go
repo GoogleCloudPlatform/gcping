@@ -91,7 +91,7 @@ func main() {
 		Timeout: timeout,
 	}
 
-	w := &worker{concurrency: concurrency}
+	w := &worker{}
 	go w.start()
 
 	switch {

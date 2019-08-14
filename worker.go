@@ -91,13 +91,12 @@ func (o *output) median() time.Duration {
 }
 
 type worker struct {
-	inputs      chan input
-	outputs     chan output
-	concurrency int
+	inputs  chan input
+	outputs chan output
 }
 
 func (w *worker) start() {
-	for worker := 0; worker < w.concurrency; worker++ {
+	for worker := 0; worker < concurrency; worker++ {
 		go func() {
 			for m := range w.inputs {
 				o := m.HTTP()
@@ -134,7 +133,7 @@ func (w *worker) sortOutput() []output {
 
 func (w *worker) reportAll() {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(""))
+	w.outputs = make(chan output, w.size(region))
 	for i := 0; i < number; i++ {
 		for r, e := range endpoints {
 			w.inputs <- input{region: r, endpoint: e}
@@ -156,7 +155,7 @@ func (w *worker) reportAll() {
 
 func (w *worker) reportTop() {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(""))
+	w.outputs = make(chan output, w.size(region))
 	for i := 0; i < number; i++ {
 		for r, e := range endpoints {
 			w.inputs <- input{region: r, endpoint: e}
