@@ -97,7 +97,7 @@ func usage() {
 var usageText = `gcping [options...]
 
 Options:
--l	 List supported regions.
+-l   List supported regions.
 -n   Number of requests to be made to each region.
      By default 10; can't be negative.
 -c   Max number of requests to be made at any time.
