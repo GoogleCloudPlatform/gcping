@@ -15,19 +15,43 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 )
 
+// greetHandler responds with an HTTP 200 status code and a message when the service is running.
+func greetHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write([]byte("hello"))
+}
+
+// pingHandler responds with an HTTP 200 status code and a message when the service is running.
+func pingHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write([]byte("pong"))
+}
+
+// setupHandlers sets the routes for the server.
+func setupHandlers() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", greetHandler)
+	mux.HandleFunc("/ping", pingHandler)
+	return mux
+}
+
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "hello")
-	})
+	mux := setupHandlers()
 	port := os.Getenv("PORT") // makes it portable to Cloud Run
 	if port == "" {
 		port = "80"
 	}
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Printf("Server listening on *:%s", port)
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
