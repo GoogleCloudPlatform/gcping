@@ -23,31 +23,6 @@ import (
 	"time"
 )
 
-// TODO(jbd): Add more zones.
-var endpoints = map[string]string{
-	"global":                  "35.186.221.153",
-	"asia-east1":              "104.155.201.52",
-	"asia-east2":              "35.220.162.209",
-	"asia-northeast1":         "104.198.86.148",
-	"asia-northeast2":         "34.97.196.51",
-	"asia-south1":             "35.200.186.152",
-	"asia-southeast1":         "35.185.179.198",
-	"australia-southeast1":    "35.189.6.113",
-	"europe-north1":           "35.228.170.201",
-	"europe-west1":            "104.199.82.109",
-	"europe-west2":            "35.189.67.146",
-	"europe-west3":            "35.198.78.172",
-	"europe-west4":            "35.204.93.82",
-	"europe-west6":            "34.65.3.254",
-	"northamerica-northeast1": "35.203.57.164",
-	"southamerica-east1":      "35.198.10.68",
-	"us-central1":             "104.197.165.8",
-	"us-east1":                "104.196.161.21",
-	"us-east4":                "35.186.168.152",
-	"us-west1":                "104.199.116.74",
-	"us-west2":                "35.236.45.25",
-}
-
 var (
 	top         bool
 	number      int // number of requests for each region
@@ -56,6 +31,7 @@ var (
 	csv         bool
 	verbose     bool
 	region      string
+	list        bool
 	// TODO(jbd): Add payload options such as body size.
 
 	client *http.Client // TODO(jbd): One client per worker?
@@ -64,6 +40,7 @@ var (
 func main() {
 	flag.IntVar(&concurrency, "c", 10, "")
 	flag.BoolVar(&csv, "csv", false, "")
+	flag.BoolVar(&list, "l", false, "")
 	flag.IntVar(&number, "n", 10, "")
 	flag.StringVar(&region, "r", "", "")
 	flag.DurationVar(&timeout, "t", time.Duration(0), "")
@@ -78,6 +55,14 @@ func main() {
 	}
 	if csv {
 		verbose = false // if output is CSV, no need for verbose output
+	}
+
+	if list {
+		regions := getSortedRegions()
+		for _, region := range regions {
+			fmt.Println(region)
+		}
+		os.Exit(0)
 	}
 
 	if region != "" {
@@ -112,6 +97,7 @@ func usage() {
 var usageText = `gcping [options...]
 
 Options:
+-l	 List supported regions.
 -n   Number of requests to be made to each region.
      By default 10; can't be negative.
 -c   Max number of requests to be made at any time.
