@@ -20,7 +20,7 @@ import (
 	"os"
 )
 
-// greetHandler responds with an HTTP 200 status code and a message when the service is running.
+// greetHandler handles the index page.
 func greetHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
@@ -31,14 +31,14 @@ func greetHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("hello"))
 }
 
-// pingHandler responds with an HTTP 200 status code and a message when the service is running.
+// pingHandler handles the ping-pong interaction.
 func pingHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte("pong"))
 }
 
-// setupHandlers sets the routes for the server.
+// setupHandlers configures the routes for the server.
 func setupHandlers() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", greetHandler)
