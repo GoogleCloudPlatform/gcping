@@ -62,13 +62,13 @@ var (
 )
 
 func main() {
-	flag.BoolVar(&top, "top", false, "")
-	flag.IntVar(&number, "n", 10, "")
 	flag.IntVar(&concurrency, "c", 10, "")
-	flag.DurationVar(&timeout, "t", time.Duration(0), "")
-	flag.BoolVar(&verbose, "v", false, "")
 	flag.BoolVar(&csv, "csv", false, "")
+	flag.IntVar(&number, "n", 10, "")
 	flag.StringVar(&region, "r", "", "")
+	flag.DurationVar(&timeout, "t", time.Duration(0), "")
+	flag.BoolVar(&top, "top", false, "")
+	flag.BoolVar(&verbose, "v", false, "")
 
 	flag.Usage = usage
 	flag.Parse()
