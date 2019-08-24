@@ -54,7 +54,7 @@ var (
 	concurrency int
 	timeout     time.Duration
 	csv         bool
-	reportcsv   bool
+	csvCum      bool
 	verbose     bool
 	region      string
 	// TODO(jbd): Add payload options such as body size.
@@ -69,7 +69,7 @@ func main() {
 	flag.DurationVar(&timeout, "t", time.Duration(0), "")
 	flag.BoolVar(&verbose, "v", false, "")
 	flag.BoolVar(&csv, "csv", false, "")
-	flag.BoolVar(&reportcsv, "reportcsv", false, "")
+	flag.BoolVar(&csvCum, "csv-cum", false, "")
 	flag.StringVar(&region, "r", "", "")
 
 	flag.Usage = usage
@@ -101,7 +101,7 @@ func main() {
 		w.reportRegion(region)
 	case top:
 		w.reportTop()
-	case reportcsv:
+	case csvCum:
 		w.reportCSV()
 	default:
 		w.reportAll()
@@ -116,18 +116,18 @@ func usage() {
 var usageText = `gcping [options...]
 
 Options:
--n         Number of requests to be made to each region.
-           By default 10; can't be negative.
--c         Max number of requests to be made at any time.
-           By default 10; can't be negative or zero.
--r         Report latency for an individual region.
--t         Timeout. By default, no timeout.
-           Examples: "500ms", "1s", "1s500ms".
--top       If true, only the top (non-global) region is printed.
--reportcsv report in CSV format; disables default report.
+-n       Number of requests to be made to each region.
+         By default 10; can't be negative.
+-c       Max number of requests to be made at any time.
+         By default 10; can't be negative or zero.
+-r       Report latency for an individual region.
+-t       Timeout. By default, no timeout.
+         Examples: "500ms", "1s", "1s500ms".
+-top     If true, only the top (non-global) region is printed.
+-csv-cum If true, cumulative value is printed in CSV; disables default report.
 
--csv       CSV output; disables verbose output.
--v         Verbose output.
+-csv     CSV output; disables verbose output.
+-v       Verbose output.
 
 Need a website version? See gcping.com
 `
