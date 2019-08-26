@@ -153,6 +153,23 @@ func (w *worker) reportAll() {
 	tr.Flush()
 }
 
+func (w *worker) reportCSV() {
+	w.inputs = make(chan input, concurrency)
+	w.outputs = make(chan output, w.size(region))
+	for i := 0; i < number; i++ {
+		for r, e := range endpoints {
+			w.inputs <- input{region: r, endpoint: e}
+		}
+	}
+	close(w.inputs)
+
+	sorted := w.sortOutput()
+	fmt.Println("region,latency_ns,errors")
+	for _, a := range sorted {
+		fmt.Printf("%v,%v,%v\n", a.region, a.median().Nanoseconds(), a.errors)
+	}
+}
+
 func (w *worker) reportTop() {
 	w.inputs = make(chan input, concurrency)
 	w.outputs = make(chan output, w.size(region))
