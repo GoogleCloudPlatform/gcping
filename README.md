@@ -7,8 +7,8 @@ Google Cloud regions. The webapp is hosted at [gcping.com](http://gcping.com).
 
 Note: This is not an official Google product.
 
-This began as a side project by @imjasonh who built the first versions of the
-webapp. Later @rakyll build the CLI version.
+This began as a side project by [@imjasonh][] who built the first versions of the
+webapp. Later [@rakyll][] build the CLI version.
 
 ```
 gcping [options...]
@@ -75,3 +75,5 @@ us-west2
 * Mac 64-bit: https://storage.googleapis.com/gcping-release/gcping_darwin_amd64_0.0.3
 * Windows 64-bit: https://storage.googleapis.com/gcping-release/gcping_windows_amd64_0.0.3
 
+[@imjasonh]: https://github.com/imjasonh
+[@rakyll]:   https://github.com/rakyll
