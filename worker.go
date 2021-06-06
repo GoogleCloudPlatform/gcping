@@ -21,6 +21,8 @@ import (
 	"sort"
 	"text/tabwriter"
 	"time"
+
+	"github.com/GoogleCloudPlatform/gcping/internal/config"
 )
 
 type input struct {
@@ -135,7 +137,7 @@ func (w *worker) reportAll() {
 	w.inputs = make(chan input, concurrency)
 	w.outputs = make(chan output, w.size(region))
 	for i := 0; i < number; i++ {
-		for r, e := range endpoints {
+		for r, e := range config.AllEndpoints {
 			w.inputs <- input{region: r, endpoint: e}
 		}
 	}
@@ -157,7 +159,7 @@ func (w *worker) reportCSV() {
 	w.inputs = make(chan input, concurrency)
 	w.outputs = make(chan output, w.size(region))
 	for i := 0; i < number; i++ {
-		for r, e := range endpoints {
+		for r, e := range config.AllEndpoints {
 			w.inputs <- input{region: r, endpoint: e}
 		}
 	}
@@ -174,7 +176,7 @@ func (w *worker) reportTop() {
 	w.inputs = make(chan input, concurrency)
 	w.outputs = make(chan output, w.size(region))
 	for i := 0; i < number; i++ {
-		for r, e := range endpoints {
+		for r, e := range config.AllEndpoints {
 			w.inputs <- input{region: r, endpoint: e}
 		}
 	}
@@ -193,7 +195,7 @@ func (w *worker) reportRegion(region string) {
 	w.inputs = make(chan input, concurrency)
 	w.outputs = make(chan output, w.size(region))
 	for i := 0; i < number; i++ {
-		e, _ := endpoints[region]
+		e, _ := config.AllEndpoints[region]
 		w.inputs <- input{region: region, endpoint: e}
 	}
 	close(w.inputs)
@@ -207,5 +209,5 @@ func (w *worker) size(region string) int {
 	if region != "" {
 		return number
 	}
-	return number * len(endpoints)
+	return number * len(config.AllEndpoints)
 }
