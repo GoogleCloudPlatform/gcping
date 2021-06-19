@@ -1,41 +1,13 @@
 body, input {
-    font-family: 'Roboto', sans-serif;
-    color: #fff;
-    background-color: #283238;
+  font-family: 'Roboto', sans-serif;
+  color: #fff;
+  background-color: #283238;
 }
-.zone-list{
-    display:flex;
-    flex-wrap:wrap;
-    align-items: center;
-    justify-content: flex-start;
+body,html{
+  height:100%;
 }
-.zone-container{
-    width:100%;
-    max-width:250px;
-    padding:20px;
-    background:#fff;
-    color:#aaa;
-    border:1px solid #ccc;
-    margin:10px 5px;
-    position: relative;
-}
-.zone-container .zone-latency{
-    position: absolute;
-    right:0;
-    top:0;
-    padding:5px 10px;
-    color:#fff;
-}
-.zone-container.fast .zone-latency{
-    background-color: rgb(182, 252, 182);
-}
-.zone-container.fastest .zone-latency{
-    font-weight:bold;
-    background-color:#0f0;
-}
-.zone-container.slow .zone-latency{
-    background-color: rgb(255, 197, 159);
-}
-.zone-container.very-slow .zone-latency{
-    background-color: rgb(255, 60, 53);
+#map {
+  width:100%;
+  min-height:900px;
+  background:#ccc;
 }
