@@ -35,8 +35,14 @@ function fetchZones() {
       let gcpZone = { region: zone.Region, label: zone.RegionName, pingUrl: zone.URL };
       zones[gcpZone.region] = gcpZone;
 
-      await updateRegionOnMap(gcpZone.region);
+      if(gcpZone.region!==GLOBAL_REGION_KEY)
+        await updateRegionOnMap(gcpZone.region);
       await fetchZoneLatency(gcpZone.region);
+      if(gcpZone.region!==GLOBAL_REGION_KEY){
+        updateRegionOnMap(gcpZone.region);
+        addRegionToList(gcpZone.region);
+      }
+        
 
       if(gcpZone.region===GLOBAL_REGION_KEY){
         document.getElementById("globalRegion").innerText=`${zones[gcpZone.region].latency} ms`;
@@ -68,8 +74,6 @@ function fetchZoneLatency(region) {
     }).then((resp) => {
       const latency = new Date().getTime() - start;
       zones[region].latency = latency;
-
-      updateRegionOnMap(region);
 
       resolve(latency);
     });
@@ -182,3 +186,45 @@ function getMarkerImage(region){
     return "/images/marker-red.svg";
   }
 }
+
+function getZoneClass(region){
+  const latency=zones[region].latency;
+
+  if(latency===undefined){
+    return "";
+  }
+  else if(latency<=100){
+    return "fast";
+  }
+  else if(latency>100 && latency<300){
+    return "average";
+  }
+  else{
+    return "slow";
+  }
+}
+
+function addRegionToList(region){
+  const cls=getZoneClass(region);
+  document.getElementById("listContainer").innerHTML=document.getElementById("listContainer").innerHTML+`
+  <li class="mdl-list__item ${cls}">
+    <span class="mdl-list__item-primary-content list-zone-container">
+      <span class="region-name">${region}</span>
+      <span class="region-latency">${zones[region].latency}</span>
+    </span>
+  </li>
+  `;
+}
+
+document.getElementById("viewSwitch").addEventListener("change",function(e){
+  // map view
+  if(e.target.checked===true){
+    document.getElementById("map").style.display="block";
+    document.getElementById("list").style.display="none";
+  }
+  // list view
+  else{
+    document.getElementById("map").style.display="none";
+    document.getElementById("list").style.display="block";
+  }
+})

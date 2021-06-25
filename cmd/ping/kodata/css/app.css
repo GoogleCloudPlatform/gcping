@@ -5,6 +5,7 @@ body, input {
 }
 body,html{
   height:100%;
+  font-size:16px;
 }
 #map {
   width:100%;
@@ -13,6 +14,15 @@ body,html{
 }
 h1{
   text-align: center;
+  font-size:1.5rem;
+  font-weight:300;
+}
+h1 a{
+  color:rgb(255,64,129);
+  text-decoration: none;
+}
+h1 a:hover{
+  text-decoration: underline;
 }
 #stats{
   margin: 0px auto 20px;
@@ -23,7 +33,7 @@ h1{
   background:rgb(255,64,129);
   color:#fff;
   text-align: center;
-  font-size:32px;
+  font-size:1.3rem;
   padding:10px 20px;
 }
 #stats .content{
@@ -36,10 +46,55 @@ h1{
 #stats .content>div{
   display: flex;
   align-items: center;
+  margin-bottom:5px;
+}
+#stats .content label{
+  min-width:150px;
+  display: flex;
+  align-items: center;
 }
 #stats .content .material-icons{
   margin-right:5px;
 }
 #fastestRegion,#globalRegion,#analyzedRegions,#remainingRegions{
-  font-weight: bold;
+  font-weight: 400;
+}
+#listMapCtrl{
+  text-align: right;
+  margin:10px 0;
+  padding:0 20px;
+}
+#listMapCtrl label{
+  width: auto;
+  margin: 0 10px 0 5px;
+}
+#list{
+  display: none;
+}
+#list ul{
+  max-width:500px;
+  background: #fff;
+  margin: 0 auto;
+  padding-top:0;
+}
+.list-zone-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#list .heading{
+  background:rgb(255,64,129);
+  color:#fff;
+  text-align: center;
+  font-size:1.3rem;
+  padding:10px 20px;
+}
+#list li.fast{
+  color:rgb(16, 168, 2);
+}
+#list li.average{
+  color:rgb(252, 146, 53);
+}
+#list li.slow{
+  color:rgb(201, 38, 26);
 }
