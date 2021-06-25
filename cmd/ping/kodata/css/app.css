@@ -33,6 +33,13 @@ h1{
   font-size: 20px;
   line-height: 1.4;
 }
-#fastestRegion,#globalRegion{
+#stats .content>div{
+  display: flex;
+  align-items: center;
+}
+#stats .content .material-icons{
+  margin-right:5px;
+}
+#fastestRegion,#globalRegion,#analyzedRegions,#remainingRegions{
   font-weight: bold;
 }
