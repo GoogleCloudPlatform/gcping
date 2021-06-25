@@ -12,13 +12,17 @@ let map,
   zones = {},
   fastestZone = '',
   locations = getLocations(),
-  markers = {};
+  markers = {},
+  sortKey = 'latency',
+  sortOrder = "asc";
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 17.2667283, lng: 30.0585942 },
     zoom: 3,
     gestureHandling: "cooperative",
+    mapTypeControl: false,
+    streetViewControl: false
   });
 
   fetchZones();
@@ -205,15 +209,42 @@ function getZoneClass(region){
 }
 
 function addRegionToList(region){
-  const cls=getZoneClass(region);
-  document.getElementById("listContainer").innerHTML=document.getElementById("listContainer").innerHTML+`
-  <li class="mdl-list__item ${cls}">
-    <span class="mdl-list__item-primary-content list-zone-container">
-      <span class="region-name">${region}</span>
-      <span class="region-latency">${zones[region].latency}</span>
-    </span>
-  </li>
-  `;
+  updateZoneList();
+}
+
+function updateZoneList(){
+  const parent=document.getElementById("listContainer"),
+    list=getSortedListItems();
+  // clear
+  parent.querySelectorAll("li:not(.heading)").forEach((node)=>{
+    parent.removeChild(node);
+  });
+
+
+  list.forEach(el => {
+    if(el.region===GLOBAL_REGION_KEY)
+      return;
+
+    const cls=getZoneClass(el.region);
+    parent.innerHTML=parent.innerHTML+`
+    <li class="mdl-list__item ${cls}">
+      <span class="mdl-list__item-primary-content list-zone-container">
+        <span class="region-name">${el.region}</span>
+        <span class="region-latency">${zones[el.region].latency}</span>
+      </span>
+    </li>
+    `;
+  });
+  
+}
+
+function getSortedListItems(){
+  let curZones=Object.values(zones);
+  curZones.sort((a,b)=>{
+    return sortOrder==="asc" ? a[sortKey] - b[sortKey] : b[sortKey] - a[sortKey];
+  });
+
+  return curZones;
 }
 
 document.getElementById("viewSwitch").addEventListener("change",function(e){
@@ -227,4 +258,13 @@ document.getElementById("viewSwitch").addEventListener("change",function(e){
     document.getElementById("map").style.display="none";
     document.getElementById("list").style.display="block";
   }
-})
+});
+
+document.querySelector("body").addEventListener("click",function(e){
+  if(e.target.classList.contains("toggle-sort-order")){
+    sortOrder = (sortOrder === "asc" ? "desc" : "asc");
+    e.target.setAttribute("data-order",sortOrder);
+    updateZoneList();
+  }
+  
+});

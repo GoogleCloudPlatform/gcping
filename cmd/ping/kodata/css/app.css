@@ -6,6 +6,7 @@ body, input {
 body,html{
   height:100%;
   font-size:16px;
+  font-weight:300;
 }
 #map {
   width:100%;
@@ -89,12 +90,38 @@ h1 a:hover{
   font-size:1.3rem;
   padding:10px 20px;
 }
-#list li.fast{
+#list li:not(.heading,:last-child){
+  position: relative;
+  border-bottom: 1px solid #ccc;
+}
+.mdl-list__item{
+  font-weight: 300;
+}
+#list li:after{
+  content:'';
+  display: block;
+  position:absolute;
+  right:0;
+  top:0;
+  height:100%;
+  width:3px;
+}
+#list .heading .region-latency{
+  display: flex;
+  align-items: center;
+}
+#list li.fast .region-latency{
   color:rgb(16, 168, 2);
 }
-#list li.average{
+#list li.average .region-latency{
   color:rgb(252, 146, 53);
 }
-#list li.slow{
+#list li.slow .region-latency{
   color:rgb(201, 38, 26);
+}
+#list .toggle-sort-order{
+  cursor: pointer;
+}
+#list .toggle-sort-order[data-order="asc"]{
+  transform:rotateX(180deg);
 }

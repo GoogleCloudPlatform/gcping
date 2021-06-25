@@ -7,13 +7,9 @@
   <meta name="viewport" content="width=device-width, user-scalable=no">
   <title>GCP ping</title>
   <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-  <!-- <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css"> -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" type="text/css">
   <link rel="stylesheet" href="css/app.css" />
   <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-  <!-- <script defer src="https://unpkg.com/material-components-web@latest/dist/material-web.min.js"></script> -->
-  <!-- <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script> -->
-
 </head>
 <body>
   <div class="mdl-layout mdl-js-layout">
@@ -50,7 +46,11 @@
               <li class="heading mdl-list__item">
                 <span class="mdl-list__item-primary-content list-zone-container">
                   <span class="region-name">Region</span>
-                  <span class="region-latency">Latency(ms)</span>
+                  <span class="region-latency">Latency(ms)
+                    <span class="material-icons toggle-sort-order" data-order="asc">
+                      sort
+                    </span>
+                  </span>
                 </span>
               </li>
             </ul>
