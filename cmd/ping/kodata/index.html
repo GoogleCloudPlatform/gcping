@@ -15,9 +15,20 @@
   <div class="mdl-layout mdl-js-layout">
     <div class="ribbon"></div>
     <main class="mdl-layout__content">
-      <div class="mdl-grid">
-        <div class="mdl-cell mdl-cell--6-col mdl-cell--1-offset-tablet mdl-cell--3-offset-desktop">
+      <div>
+        <div>
           <h1>Measure your latency to <a target="_blank" href="https://cloud.google.com/compute/docs/regions-zones/regions-zones">GCP regions</a></h1>
+        </div>
+        <div id="stats">
+          <div class="heading">
+            Stats
+          </div>
+          <div class="content">
+            <div>Fastest: <span id="fastestRegion">-</span></div>
+            <div>Global: <span id="globalRegion">-</span></div>
+            <div>Analyzed: <span id="analyzedRegions">0</span></div>
+            <div>Remaining: <span id="remainingRegions">0</span></div>
+          </div>
         </div>
         <div id="map"></div>
       </div>
@@ -26,6 +37,6 @@
 </body>
 <script type="text/javascript" src="js/app.js"></script>
 <script async
-  src="https://maps.googleapis.com/maps/api/js?key=KEY&libraries=places&callback=initMap">
+  src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&libraries=places&callback=initMap">
 </script>
 </html>

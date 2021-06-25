@@ -11,3 +11,28 @@ body,html{
   min-height:900px;
   background:#ccc;
 }
+h1{
+  text-align: center;
+}
+#stats{
+  margin: 0px auto 20px;
+  width: 40%;
+  max-width: 400px;
+}
+#stats .heading{
+  background:rgb(255,64,129);
+  color:#fff;
+  text-align: center;
+  font-size:32px;
+  padding:10px 20px;
+}
+#stats .content{
+  padding: 0 10px;
+  background: #fff;
+  color: #444;
+  font-size: 20px;
+  line-height: 1.4;
+}
+#fastestRegion,#globalRegion{
+  font-weight: bold;
+}

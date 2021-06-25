@@ -1,6 +1,12 @@
 // TODO: Show regions on a map, with lines overlayed according to ping times.
 // TODO: Add an option to contribute times and JS geolocation info to a public BigQuery dataset.
 
+// These regions won't be plotted on the map
+const IGNORE_REGIONS_PLOT={
+  "global":true
+};
+
+const GLOBAL_REGION_KEY="global";
 
 let map,
   zones = {},
@@ -10,8 +16,9 @@ let map,
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 17.2667283, lng: 75.0585942 },
-    zoom: 3.5,
+    center: { lat: 17.2667283, lng: 30.0585942 },
+    zoom: 3,
+    gestureHandling: "cooperative",
   });
 
   fetchZones();
@@ -21,17 +28,32 @@ function fetchZones() {
   fetch("/endpoints").then((resp) => {
     return resp.json();
   }).then(async (endpoints) => {
+    let analyzedRegions=0,
+      totalRegions=Object.values(endpoints).length;
+
     for (zone of Object.values(endpoints)) {
       let gcpZone = { region: zone.Region, label: zone.RegionName, pingUrl: zone.URL };
       zones[gcpZone.region] = gcpZone;
 
-      // if(fastestZone==='' || zones[fastestZone].latency>gcpZone.latency)
-      //   fastestZone=gcpZone.region;
-
       await updateRegionOnMap(gcpZone.region);
-      // if(gcpZone.region==='asia-south1')
       await fetchZoneLatency(gcpZone.region);
+
+      if(gcpZone.region===GLOBAL_REGION_KEY){
+        document.getElementById("globalRegion").innerText=`${zones[gcpZone.region].latency} ms`;
+      }
+
+      if(gcpZone.region!==GLOBAL_REGION_KEY && (fastestZone==='' || zones[fastestZone].latency>gcpZone.latency)){
+        fastestZone=gcpZone.region;
+        document.getElementById("fastestRegion").innerText=`${gcpZone.region} (${zones[gcpZone.region].latency} ms)`;
+      }
+
+      analyzedRegions++;
+      document.getElementById("analyzedRegions").innerText=analyzedRegions;
+      document.getElementById("remainingRegions").innerText=totalRegions-analyzedRegions;
     }
+
+    // failsafe
+    document.getElementById("remainingRegions").innerText=0;
   });
 }
 
@@ -49,12 +71,16 @@ function fetchZoneLatency(region) {
 
       updateRegionOnMap(region);
 
-      resolve();
+      resolve(latency);
     });
   });
 }
 
 async function updateRegionOnMap(region) {
+
+  // if the region is in the ignore list we don't plot it
+  if(IGNORE_REGIONS_PLOT[region]!==undefined)
+    return;
 
   // if there is a marker present remove it
   if(markers[region]!==undefined){
