@@ -300,19 +300,6 @@ function getSortedListItems(){
   return curZones;
 }
 
-document.getElementById("viewSwitch").addEventListener("change",function(e){
-  // map view
-  if(e.target.checked===true){
-    document.getElementById("map").style.display="block";
-    document.getElementById("list").style.display="none";
-  }
-  // list view
-  else{
-    document.getElementById("map").style.display="none";
-    document.getElementById("list").style.display="block";
-  }
-});
-
 document.querySelector("body").addEventListener("click",function(e){
   if(e.target.classList.contains("toggle-sort-order")){
     sortOrder = (sortOrder === "asc" ? "desc" : "asc");
@@ -335,7 +322,7 @@ document.getElementById("rerunTest").addEventListener("click",function(){
   clearData();
 
   // clear the Global region score
-  document.getElementById("globalRegion").innerText=`${zone.latency} ms`;
+  document.getElementById("globalRegion").innerText=`- ms`;
 
   // restart the pinging process
   fetchPingData();

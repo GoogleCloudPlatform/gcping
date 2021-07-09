@@ -1,38 +1,25 @@
 body, input {
   font-family: 'Roboto', sans-serif;
-  color: #fff;
-  background-color: #283238;
 }
 body,html{
   height:100%;
   font-size:16px;
   font-weight:300;
 }
-#map {
-  width:100%;
-  min-height:900px;
-  background:#ccc;
-}
-h1{
-  text-align: center;
-  font-size:1.5rem;
-  font-weight:300;
-}
-h1 a{
-  color:rgb(255,64,129);
+.title-link{
   text-decoration: none;
 }
-h1 a:hover{
+.title-link:hover{
   text-decoration: underline;
 }
 #stats{
-  margin: 0px auto 20px;
+  margin: 20px auto;
   width: 40%;
   max-width: 400px;
+  border:1px solid #3f51b5;
+  padding-bottom:10px;
 }
 #stats .heading{
-  background:rgb(255,64,129);
-  color:#fff;
   text-align: center;
   font-size:1.3rem;
   padding:10px 20px;
@@ -41,13 +28,11 @@ h1 a:hover{
   padding: 0 10px;
   background: #fff;
   color: #444;
-  font-size: 20px;
-  line-height: 1.4;
 }
 #stats .content>div{
   display: flex;
   align-items: center;
-  margin-bottom:5px;
+  margin:5px 0;
 }
 #stats .content label{
   min-width:150px;
@@ -60,23 +45,23 @@ h1 a:hover{
 #fastestRegion,#globalRegion,#analyzedRegions,#remainingRegions{
   font-weight: 400;
 }
-#ctrls{
-  text-align: center;
+#runningCtrls{
+  text-align:center;
 }
 #runningCtrls button:not(.visible){
   display: none;
 }
-#listMapCtrl{
-  text-align: right;
-  margin:10px 0;
-  padding:0 20px;
+#stopTest .material-icons,
+#rerunTest .material-icons{
+  transform: scale(.8);
 }
-#listMapCtrl label{
-  width: auto;
-  margin: 0 10px 0 5px;
+.mdl-tabs__tab-bar{
+  border-bottom:none;
 }
-#list{
-  display: none;
+#map {
+  width:100%;
+  min-height:900px;
+  background:#ccc;
 }
 #list ul{
   max-width:500px;
@@ -130,4 +115,7 @@ h1 a:hover{
 }
 #list .toggle-sort-order[data-order="asc"]{
   transform:rotateX(180deg);
+}
+footer>div{
+  margin:auto;
 }
