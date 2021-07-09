@@ -60,6 +60,12 @@ h1 a:hover{
 #fastestRegion,#globalRegion,#analyzedRegions,#remainingRegions{
   font-weight: 400;
 }
+#ctrls{
+  text-align: center;
+}
+#runningCtrls button:not(.visible){
+  display: none;
+}
 #listMapCtrl{
   text-align: right;
   margin:10px 0;

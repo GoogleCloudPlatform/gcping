@@ -6,7 +6,9 @@ const IGNORE_REGIONS_PLOT={
   "global":true
 };
 
-const GLOBAL_REGION_KEY="global";
+const GLOBAL_REGION_KEY="global",
+  PING_TEST_RUNNING_STATUS="running",
+  PING_TEST_STOPPED_STATUS="stopped";
 
 let map,
   zones = {},
@@ -14,7 +16,8 @@ let map,
   locations = getLocations(),
   markers = {},
   sortKey = 'latency',
-  sortOrder = "asc";
+  sortOrder = "asc",
+  pingTestStatus = PING_TEST_RUNNING_STATUS;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
@@ -32,39 +35,71 @@ function fetchZones() {
   fetch("/endpoints").then((resp) => {
     return resp.json();
   }).then(async (endpoints) => {
-    let analyzedRegions=0,
-      totalRegions=Object.values(endpoints).length;
-
     for (zone of Object.values(endpoints)) {
       let gcpZone = { region: zone.Region, label: zone.RegionName, pingUrl: zone.URL };
       zones[gcpZone.region] = gcpZone;
+    }
+    fetchPingData();
+  });
+}
 
-      if(gcpZone.region!==GLOBAL_REGION_KEY)
-        await updateRegionOnMap(gcpZone.region);
-      await fetchZoneLatency(gcpZone.region);
-      if(gcpZone.region!==GLOBAL_REGION_KEY){
-        updateRegionOnMap(gcpZone.region);
-        addRegionToList(gcpZone.region);
-      }
-        
+function clearData(){
+  // clear the markers
+  Object.values(zones).forEach((zone)=>{
+    // clear the markers
+    removeMarker(zone.region);
 
-      if(gcpZone.region===GLOBAL_REGION_KEY){
-        document.getElementById("globalRegion").innerText=`${zones[gcpZone.region].latency} ms`;
-      }
+    //clear the latency
+    delete zone.latency;
+  });
 
-      if(gcpZone.region!==GLOBAL_REGION_KEY && (fastestZone==='' || zones[fastestZone].latency>gcpZone.latency)){
-        fastestZone=gcpZone.region;
-        document.getElementById("fastestRegion").innerText=`${gcpZone.region} (${zones[gcpZone.region].latency} ms)`;
-      }
+  // clear the data on the list view
+  updateZoneList();
+}
 
-      analyzedRegions++;
-      document.getElementById("analyzedRegions").innerText=analyzedRegions;
-      document.getElementById("remainingRegions").innerText=totalRegions-analyzedRegions;
+async function fetchPingData(){
+  let analyzedRegions=0,
+      zoneArr=Object.values(zones),
+      totalRegions=zoneArr.length;
+
+  for (zone of zoneArr) {
+    if(zone.region!==GLOBAL_REGION_KEY)
+      await updateRegionOnMap(zone.region);
+
+    await fetchZoneLatency(zone.region);
+
+    if(pingTestStatus==="stopped"){
+      // remove the intermediate marker
+      removeMarker(zone.region)
+      break;
     }
 
-    // failsafe
-    document.getElementById("remainingRegions").innerText=0;
-  });
+    if(zone.region!==GLOBAL_REGION_KEY){
+      updateRegionOnMap(zone.region);
+      addRegionToList(zone.region);
+    }
+    
+
+    if(zone.region===GLOBAL_REGION_KEY){
+      document.getElementById("globalRegion").innerText=`${zone.latency} ms`;
+    }
+
+    if(zone.region!==GLOBAL_REGION_KEY && (fastestZone==='' || zones[fastestZone].latency>zone.latency)){
+      fastestZone=zone.region;
+      document.getElementById("fastestRegion").innerText=`${zone.region} (${zone.latency} ms)`;
+    }
+
+    analyzedRegions++;
+    document.getElementById("analyzedRegions").innerText=analyzedRegions;
+    document.getElementById("remainingRegions").innerText=totalRegions-analyzedRegions;
+
+    if(pingTestStatus==="stopped"){
+      break;
+    }
+  }
+
+  // failsafe
+  document.getElementById("remainingRegions").innerText=0;
 }
 
 function fetchZoneLatency(region) {
@@ -90,11 +125,7 @@ async function updateRegionOnMap(region) {
   if(IGNORE_REGIONS_PLOT[region]!==undefined)
     return;
 
-  // if there is a marker present remove it
-  if(markers[region]!==undefined){
-    markers[region].setMap=null;
-    markers[region]=null;
-  }
+  removeMarker(region);
 
   const image=getMarkerImage(region),
     title=zones[region].latency === undefined ? zones[region].label : `${zones[region].label} ${zones[region].latency}ms`;
@@ -123,6 +154,14 @@ async function updateRegionOnMap(region) {
 
       markers[region] = marker;
     }
+  }
+}
+
+function removeMarker(region){
+  // if there is a marker present remove it
+  if(markers[region]!==undefined){
+    markers[region].setMap(null);
+    delete markers[region];
   }
 }
 
@@ -230,12 +269,26 @@ function updateZoneList(){
     <li class="mdl-list__item ${cls}">
       <span class="mdl-list__item-primary-content list-zone-container">
         <span class="region-name">${el.region}</span>
-        <span class="region-latency">${zones[el.region].latency}</span>
+        <span class="region-latency">${zones[el.region].latency ?? '-'}</span>
       </span>
     </li>
     `;
   });
   
+}
+
+// manual interupts to ongoing/stopped pings
+function updatePingTestState(curState){
+  pingTestStatus=curState;
+
+  // UI changes based on the current status
+  document.getElementById("runningCtrls").querySelector("button.visible").classList.remove("visible");
+  if(pingTestStatus===PING_TEST_RUNNING_STATUS){
+    document.getElementById("stopTest").classList.add("visible");
+  }
+  else if(pingTestStatus===PING_TEST_STOPPED_STATUS){
+    document.getElementById("rerunTest").classList.add("visible");
+  }
 }
 
 function getSortedListItems(){
@@ -267,4 +320,23 @@ document.querySelector("body").addEventListener("click",function(e){
     updateZoneList();
   }
   
+});
+
+// stop the ongoing test
+document.getElementById("stopTest").addEventListener("click",function(){
+  updatePingTestState(PING_TEST_STOPPED_STATUS);
+});
+
+// rerun the test
+document.getElementById("rerunTest").addEventListener("click",function(){
+  updatePingTestState(PING_TEST_RUNNING_STATUS);
+
+  // clear the currently fetched data
+  clearData();
+
+  // clear the Global region score
+  document.getElementById("globalRegion").innerText=`${zone.latency} ms`;
+
+  // restart the pinging process
+  fetchPingData();
 });
