@@ -41,6 +41,11 @@ variable "domain" {
 data "google_cloud_run_locations" "available" {
 }
 
+resource "google_service_account" "minimal" {
+  account_id = "minimal-service-account"
+  display_name = "Minimal Service Account"
+}
+
 ////// Cloud Run
 
 // Enable Cloud Run API.
@@ -69,6 +74,7 @@ resource "google_cloud_run_service" "regions" {
       }
     }
     spec {
+      service_account_name = google_service_account.minimal.email
       containers {
         image = var.image
         env {
