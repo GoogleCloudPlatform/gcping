@@ -48,6 +48,11 @@ var AllEndpoints = map[string]Endpoint{
 		Region:     "asia-south1",
 		RegionName: "Mumbai",
 	},
+	"asia-south2": {
+		URL:        "https://asia-south2-ezn5kimndq-em.a.run.app",
+		Region:     "asia-south2",
+		RegionName: "Delhi",
+	},
 	"asia-southeast1": {
 		URL:        "https://asia-southeast1-bmlfzs4h6a-as.a.run.app",
 		Region:     "asia-southeast1",
@@ -63,7 +68,12 @@ var AllEndpoints = map[string]Endpoint{
 		Region:     "australia-southeast1",
 		RegionName: "Sydney",
 	},
-	"europe-central": {
+	"australia-southeast2": {
+		URL:        "https://australia-southeast2-ezn5kimndq-km.a.run.app",
+		Region:     "australia-southeast2",
+		RegionName: "Melbourne",
+	},
+	"europe-central2": {
 		URL:        "https://europe-central2-ezn5kimndq-lm.a.run.app",
 		Region:     "europe-central",
 		RegionName: "",
