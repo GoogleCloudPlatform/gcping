@@ -58,10 +58,39 @@ body,html{
 .mdl-tabs__tab-bar{
   border-bottom:none;
 }
+#map-panel{
+  position: relative;
+}
 #map {
   width:100%;
   min-height:900px;
   background:#ccc;
+}
+#map-legend{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 300px;
+  background: rgba(0,0,0,0.08);
+}
+#map-legend .legend{
+  align-items:center;
+}
+#map-legend .legend-key{
+  display:block;
+  width:10px;
+  height:10px;
+  border-radius:3px;
+  margin-right:5px;
+}
+#map-legend .legend-key.key-green{
+  background:rgb(16, 168, 2);
+}
+#map-legend .legend-key.key-orange{
+  background:rgb(252, 146, 53);
+}
+#map-legend .legend-key.key-red{
+  background:rgb(201, 38, 26);
 }
 #list ul{
   max-width:500px;
@@ -118,4 +147,16 @@ body,html{
 }
 footer>div{
   margin:auto;
+}
+
+.mdl-dialog{
+  width:30%;
+  min-width:300px;
+}
+
+dialog a{
+  text-decoration: none;
+}
+dialog a:hover{
+  text-decoration: underline;
 }

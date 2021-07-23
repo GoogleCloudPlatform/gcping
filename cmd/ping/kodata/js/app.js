@@ -70,7 +70,7 @@ async function fetchPingData(){
 
     if(pingTestStatus==="stopped"){
       // remove the intermediate marker
-      removeMarker(zone.region)
+      removeMarker(zone.region);
       break;
     }
 
@@ -100,6 +100,8 @@ async function fetchPingData(){
 
   // failsafe
   document.getElementById("remainingRegions").innerText=0;
+
+  updatePingTestState(PING_TEST_STOPPED_STATUS);
 }
 
 function fetchZoneLatency(region) {
@@ -300,6 +302,21 @@ function getSortedListItems(){
   return curZones;
 }
 
+function registerDialog(){
+  let dialog = document.querySelector('dialog'),
+  showModalButton = document.querySelector('#how_it_works_link');
+
+  if (! dialog.showModal) {
+    dialogPolyfill.registerDialog(dialog);
+  }
+  showModalButton.addEventListener('click', function() {
+    dialog.showModal();
+  });
+  dialog.querySelector('.close').addEventListener('click', function() {
+    dialog.close();
+  });
+}
+
 document.querySelector("body").addEventListener("click",function(e){
   if(e.target.classList.contains("toggle-sort-order")){
     sortOrder = (sortOrder === "asc" ? "desc" : "asc");
@@ -324,6 +341,12 @@ document.getElementById("rerunTest").addEventListener("click",function(){
   // clear the Global region score
   document.getElementById("globalRegion").innerText=`- ms`;
 
+  // reset the fastest region
+  fastestZone='';
+  document.getElementById("fastestRegion").innerText="-";
+
   // restart the pinging process
   fetchPingData();
 });
+
+registerDialog();

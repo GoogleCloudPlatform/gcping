@@ -23,8 +23,23 @@
             class="title-link mdl-color-text--indigo">GCP regions</a></span>
         <div class="mdl-layout-spacer"></div>
         <nav class="mdl-navigation">
-          <a class="mdl-navigation__link" href="https://github.com/googleCloudPlatform/gcping"><i
-              class="material-icons">link</i>Github</a>
+          <a class="mdl-navigation__link" href="https://github.com/googleCloudPlatform/gcping">
+            <i class="material-icons">link</i>Github
+          </a>
+          <a class="mdl-navigation__link" href="#" id="how_it_works_link">
+            <i class="material-icons">help</i>How it works
+          </a>
+          <dialog class="mdl-dialog">
+            <div class="mdl-dialog__content">
+              <p>Your browser makes HTTPS requests to <a href="https://cloud.google.com/run" target="_blank">Google Cloud Run</a> services deployed to each region. The median time between request and response is shown.</p>
+              <p>The global row uses a <a href="https://cloud.google.com/load-balancing/" target="_blank">Global HTTPS Load Balancer</a> to route requests to the nearest service.</p>
+              <p>Note: This site is intended to show relative latency to each region, and should not be used to determine the absolute lowest latency possible, or your own network speed or other network conditions. Results are not scientific.</p>
+              <p>This is not an official Google project. <a href="https://github.com/googleCloudPlatform/gcping">Source available on GitHub</a>.</p>
+            </div>
+            <div class="mdl-dialog__actions mdl-dialog__actions">
+              <button type="button" class="mdl-button close">Close</button>
+            </div>
+          </dialog>
         </nav>
       </div>
     </header>
@@ -62,6 +77,17 @@
 
           <div class="mdl-tabs__panel is-active" id="map-panel">
             <div id="map"></div>
+            <div id="map-legend">
+              <div class="legend mdl-grid">
+                <div class="legend-key key-green"></div> <div class="value">Below 100ms</div>
+              </div>
+              <div class="legend mdl-grid">
+                <div class="legend-key key-orange"></div> <div class="value">Between 100ms and 300ms</div>
+              </div>
+              <div class="legend mdl-grid">
+                <div class="legend-key key-red"></div> <div class="value">More than 300ms</div>
+              </div>
+            </div>
           </div>
           <div class="mdl-tabs__panel" id="list-panel">
             <div id="list">
