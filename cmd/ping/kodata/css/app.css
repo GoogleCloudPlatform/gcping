@@ -10,6 +10,9 @@ body,html{
   text-decoration: underline;
   color:inherit;
 }
+.mdl-navigation__link .material-icons{
+  margin-right:5px;
+}
 #stats{
   margin: 20px auto;
   padding-bottom:10px;
@@ -27,8 +30,11 @@ body,html{
   margin:5px 0;
 }
 #stats .content .material-icons{
-  margin-right:5px;
   font-size: 6rem;
+}
+#stats .content .mdl-card__supporting-text{
+  padding:0;
+  width:100%;
 }
 #fastestRegion,#globalRegion,#analyzedRegions,#remainingRegions{
   font-weight: 400;
