@@ -22,6 +22,12 @@ provider "google-beta" {
   project = var.project
 }
 
+terraform {
+  backend "gcs" {
+    bucket  = "gcping-tf-state"
+  }
+}
+
 ////// Variables
 
 variable "image" {
