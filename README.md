@@ -8,6 +8,8 @@ To install the command line tool, see below.
 
 Note: This is not an official Google product.
 
+## CLI Usage
+
 ```
 gcping [options...]
 
@@ -66,12 +68,15 @@ us-west2
 
 ## Installation
 
+We build binaries for the following OS's and architectures:
+
 * Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64_latest
-
-```
-$ curl https://storage.googleapis.com/gcping-release/gcping_linux_amd64_0.0.3 > gcping && chmod +x gcping
-```
-
-* Mac 64-bit: https://storage.googleapis.com/gcping-release/gcping_darwin_amd64_latest
+* Mac 64-bit (x86): https://storage.googleapis.com/gcping-release/gcping_darwin_amd64_latest
 * Mac 64-bit (Apple Silicon): https://storage.googleapis.com/gcping-release/gcping_darwin_arm64_latest
 * Windows 64-bit: https://storage.googleapis.com/gcping-release/gcping_windows_amd64_latest
+
+Installation looks something like this (changing the URL for your system):
+
+```
+curl https://storage.googleapis.com/gcping-release/gcping_linux_amd64_latest > gcping && chmod +x gcping
+```
