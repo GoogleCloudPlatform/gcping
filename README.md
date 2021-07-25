@@ -4,11 +4,11 @@
 
 gcpping is both a command line tool and a webapp that reports median latency to
 Google Cloud regions. The webapp is hosted at [gcping.com](http://gcping.com).
+To install the command line tool, see below.
 
 Note: This is not an official Google product.
 
-This began as a side project by [@imjasonh][] who built the first versions of the
-webapp. Later [@rakyll][] build the CLI version.
+## CLI Usage
 
 ```
 gcping [options...]
@@ -68,12 +68,15 @@ us-west2
 
 ## Installation
 
-* Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64_0.0.3
-  ```
-  $ curl https://storage.googleapis.com/gcping-release/gcping_linux_amd64_0.0.3 > gcping && chmod +x gcping
-  ```
-* Mac 64-bit: https://storage.googleapis.com/gcping-release/gcping_darwin_amd64_0.0.3
-* Windows 64-bit: https://storage.googleapis.com/gcping-release/gcping_windows_amd64_0.0.3
+We build binaries for the following OS's and architectures:
 
-[@imjasonh]: https://github.com/imjasonh
-[@rakyll]:   https://github.com/rakyll
+* Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64_latest
+* Mac 64-bit (x86): https://storage.googleapis.com/gcping-release/gcping_darwin_amd64_latest
+* Mac 64-bit (Apple Silicon): https://storage.googleapis.com/gcping-release/gcping_darwin_arm64_latest
+* Windows 64-bit: https://storage.googleapis.com/gcping-release/gcping_windows_amd64_latest
+
+Installation looks something like this (changing the URL for your system):
+
+```
+curl https://storage.googleapis.com/gcping-release/gcping_linux_amd64_latest > gcping && chmod +x gcping
+```
