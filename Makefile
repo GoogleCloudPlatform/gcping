@@ -1,3 +1,7 @@
+ifeq ($(origin version), undefined)
+	version := dev
+endif
+
 release:
 	GOOS=windows GOARCH=amd64 go build -o ./bin/gcping_windows_amd64_$(version)
 	cp ./bin/gcping_windows_amd64_$(version) ./bin/gcping_windows_arm64_latest
