@@ -217,3 +217,15 @@ resource "google_compute_global_forwarding_rule" "https_redirect" {
   port_range = "80"
   ip_address = google_compute_global_address.global.address
 }
+
+// Create a bucket for CLI releases
+resource "google_storage_bucket" "releases" {
+  name = "gcping-release"
+  uniform_bucket_level_access = true
+}
+
+resource "google_storage_bucket_iam_member" "public_access" {
+  bucket = google_storage_bucket.releases.name
+  role = "roles/storage.objectViewer"
+  member = "allUsers"
+}
