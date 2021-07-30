@@ -32,6 +32,11 @@ body,html{
 #stats .content .material-icons{
   font-size: 6rem;
 }
+#stats .content #globalHelpIcon.material-icons{
+  font-size:1rem;
+  vertical-align: text-top;
+  cursor: pointer;
+}
 #stats .content .mdl-card__supporting-text{
   padding:0;
   width:100%;
