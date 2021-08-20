@@ -44,6 +44,12 @@ variable "domain" {
   default = "gcping.com"
 }
 
+variable "domain_alias" {
+  type    = string
+  default = "gcpping.com" // two p's
+}
+
+
 data "google_cloud_run_locations" "available" {
 }
 
@@ -158,8 +164,11 @@ resource "google_compute_managed_ssl_certificate" "global" {
   name = "global"
   managed {
     domains = [
-      "global.${var.domain}.",
+      "global.${var.domain}.", // TODO: remove this once the new cert is created
+      "*.${var.domain}.",
       "${var.domain}.",
+      "*.${var.domain_alias}.",
+      "${var.domain_alias}.",
     ]
   }
 }
