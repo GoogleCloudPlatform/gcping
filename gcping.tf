@@ -158,16 +158,30 @@ output "global" {
   value = google_compute_global_address.global.address
 }
 
+// TODO: Remove this resource once global_cert is deployed
 resource "google_compute_managed_ssl_certificate" "global" {
   provider = google-beta
 
   name = "global"
   managed {
     domains = [
-      "global.${var.domain}.", // TODO: remove this once the new cert is created
-      "*.${var.domain}.",
+      "global.${var.domain}",
+      "${var.domain}",
+    ]
+  }
+}
+
+resource "google_compute_managed_ssl_certificate" "global_cert" {
+  provider = google-beta
+
+  name = "global-cert"
+  managed {
+    domains = [
+      "www.${var.domain}.",
+      "global.${var.domain}.",
       "${var.domain}.",
-      "*.${var.domain_alias}.",
+      "www.${var.domain_alias}.",
+      "global.${var.domain_alias}.",
       "${var.domain_alias}.",
     ]
   }
