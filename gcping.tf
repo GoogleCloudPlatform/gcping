@@ -82,7 +82,7 @@ resource "google_cloud_run_service" "regions" {
         "autoscaling.knative.dev/maxScale" = "3" // Control costs.
         "run.googleapis.com/launch-stage"  = "BETA"
         // This gets added and causes diffs, but must be removed before adding a new service...
-        "run.googleapis.com/sandbox"       = "gvisor"
+        // "run.googleapis.com/sandbox"       = "gvisor"
       }
     }
     spec {
@@ -95,6 +95,13 @@ resource "google_cloud_run_service" "regions" {
         }
       }
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      // This gets added by the Cloud Run API post deploy and causes diffs, can be ignored...
+      template[0].metadata[0].annotations["run.googleapis.com/sandbox"],
+    ]
   }
 
   traffic {
