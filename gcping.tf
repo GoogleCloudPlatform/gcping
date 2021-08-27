@@ -22,6 +22,12 @@ provider "google-beta" {
   project = var.project
 }
 
+terraform {
+  backend "gcs" {
+    bucket  = "gcping-tf-state"
+  }
+}
+
 ////// Variables
 
 variable "image" {
@@ -37,6 +43,12 @@ variable "domain" {
   type    = string
   default = "gcping.com"
 }
+
+variable "domain_alias" {
+  type    = string
+  default = "gcpping.com" // two p's
+}
+
 
 data "google_cloud_run_locations" "available" {
 }
@@ -146,14 +158,31 @@ output "global" {
   value = google_compute_global_address.global.address
 }
 
+// TODO: Remove this resource once global_cert is deployed
 resource "google_compute_managed_ssl_certificate" "global" {
   provider = google-beta
 
   name = "global"
   managed {
     domains = [
+      "global.${var.domain}",
+      "${var.domain}",
+    ]
+  }
+}
+
+resource "google_compute_managed_ssl_certificate" "global_cert" {
+  provider = google-beta
+
+  name = "global-cert"
+  managed {
+    domains = [
+      "www.${var.domain}.",
       "global.${var.domain}.",
       "${var.domain}.",
+      "www.${var.domain_alias}.",
+      "global.${var.domain_alias}.",
+      "${var.domain_alias}.",
     ]
   }
 }
@@ -210,4 +239,16 @@ resource "google_compute_global_forwarding_rule" "https_redirect" {
   target     = google_compute_target_http_proxy.https_redirect.id
   port_range = "80"
   ip_address = google_compute_global_address.global.address
+}
+
+// Create a bucket for CLI releases
+resource "google_storage_bucket" "releases" {
+  name = "gcping-release"
+  uniform_bucket_level_access = true
+}
+
+resource "google_storage_bucket_iam_member" "public_access" {
+  bucket = google_storage_bucket.releases.name
+  role = "roles/storage.objectViewer"
+  member = "allUsers"
 }
