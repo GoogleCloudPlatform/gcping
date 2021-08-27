@@ -81,8 +81,6 @@ resource "google_cloud_run_service" "regions" {
       annotations = {
         "autoscaling.knative.dev/maxScale" = "3" // Control costs.
         "run.googleapis.com/launch-stage"  = "BETA"
-        // This gets added and causes diffs, but must be removed before adding a new service...
-        // "run.googleapis.com/sandbox"       = "gvisor"
       }
     }
     spec {
