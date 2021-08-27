@@ -3,6 +3,13 @@
 // These regions won't be plotted on the map
 const IGNORE_REGIONS_PLOT={
   "global":true
+},
+MARKER_PATHS={
+  "default":"/images/marker.svg",
+  "slow":"/images/marker-red.svg",
+  "medium":"/images/marker-orange.svg",
+  "fast":"/images/marker-green.svg",
+  "user":"/images/marker-user.svg"
 };
 
 const GLOBAL_REGION_KEY="global",
@@ -28,8 +35,10 @@ function initMap() {
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
-        initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        map.setCenter(initialLocation);
+        const currentLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+        map.setCenter(currentLocation);
+        addCurrentUserToMap(currentLocation);
     });
 }
 
@@ -169,16 +178,16 @@ function getMarkerImage(region){
   const latency=zones[region].latency;
 
   if(latency===undefined){
-    return "/images/marker.svg";
+    return MARKER_PATHS.default;
   }
   else if(latency<=100){
-    return "/images/marker-green.svg";
+    return MARKER_PATHS.fast;
   }
   else if(latency>100 && latency<300){
-    return "/images/marker-orange.svg";
+    return MARKER_PATHS.medium;
   }
   else{
-    return "/images/marker-red.svg";
+    return MARKER_PATHS.slow;
   }
 }
 
@@ -197,6 +206,16 @@ function getZoneClass(region){
   else{
     return "slow";
   }
+}
+
+function addCurrentUserToMap(loc){
+  // display the current user's location
+  new google.maps.Marker({
+    position: loc,
+    icon: MARKER_PATHS.user,
+    title: "This device",
+    map: map,
+  });
 }
 
 function addRegionToList(region){
