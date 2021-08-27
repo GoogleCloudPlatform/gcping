@@ -91,25 +91,11 @@
 
         <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
           <div class="mdl-tabs__tab-bar">
-            <a href="#map-panel" class="mdl-tabs__tab is-active">Map</a>
-            <a href="#list-panel" class="mdl-tabs__tab">List</a>
+            <a href="#list-panel" class="mdl-tabs__tab is-active">List</a>
+            <a href="#map-panel" class="mdl-tabs__tab">Map</a>
           </div>
 
-          <div class="mdl-tabs__panel is-active" id="map-panel">
-            <div id="map"></div>
-            <div id="map-legend">
-              <div class="legend mdl-grid">
-                <div class="legend-key key-green"></div> <div class="value">Below 100ms</div>
-              </div>
-              <div class="legend mdl-grid">
-                <div class="legend-key key-orange"></div> <div class="value">Between 100ms and 300ms</div>
-              </div>
-              <div class="legend mdl-grid">
-                <div class="legend-key key-red"></div> <div class="value">More than 300ms</div>
-              </div>
-            </div>
-          </div>
-          <div class="mdl-tabs__panel" id="list-panel">
+          <div class="mdl-tabs__panel is-active" id="list-panel">
             <div id="list">
               <ul class="demo-list-icon mdl-list" id="listContainer">
                 <li class="heading mdl-list__item mdl-color--indigo mdl-color-text--amber-50">
@@ -123,6 +109,20 @@
                   </span>
                 </li>
               </ul>
+            </div>
+          </div>
+          <div class="mdl-tabs__panel" id="map-panel">
+            <div id="map"></div>
+            <div id="map-legend">
+              <div class="legend mdl-grid">
+                <div class="legend-key key-green"></div> <div class="value">Below 100ms</div>
+              </div>
+              <div class="legend mdl-grid">
+                <div class="legend-key key-orange"></div> <div class="value">Between 100ms and 300ms</div>
+              </div>
+              <div class="legend mdl-grid">
+                <div class="legend-key key-red"></div> <div class="value">More than 300ms</div>
+              </div>
             </div>
           </div>
         </div>

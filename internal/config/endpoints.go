@@ -118,7 +118,7 @@ var AllEndpoints = map[string]Endpoint{
 		Region:     "europe-central2",
 		RegionName: "Warsaw",
 		Lat:        52.2329172,
-		Lng:        20.9911553
+		Lng:        20.9911553,
 	},
 	"europe-north1": {
 		URL:        "https://europe-north1-5tkroniexa-lz.a.run.app",
@@ -200,7 +200,7 @@ var AllEndpoints = map[string]Endpoint{
 		Region:     "us-east4",
 		RegionName: "North Virginia",
 		Lat:        32.817108,
-		Lng:        -96.94944799999999
+		Lng:        -96.94944799999999,
 	},
 	"us-west1": {
 		URL:        "https://us-west1-5tkroniexa-uw.a.run.app",
