@@ -226,7 +226,7 @@ function updateZoneList(){
   const parent=document.getElementById("listContainer"),
     list=getSortedListItems();
   // clear
-  parent.querySelectorAll("li:not(.heading)").forEach((node)=>{
+  parent.querySelectorAll("li:not(.row-heading)").forEach((node)=>{
     parent.removeChild(node);
   });
 
@@ -240,7 +240,11 @@ function updateZoneList(){
     <li class="mdl-list__item ${cls}">
       <span class="mdl-list__item-primary-content list-zone-container">
         <span class="region-name">${el.region}</span>
-        <span class="region-latency">${zones[el.region].latency ?? '-'}</span>
+        <span class="region-latency">
+          <span class="mdl-chip">
+            <span class="mdl-chip__text">${zones[el.region].latency ?? '-'}</span>
+          </span>
+        </span>
       </span>
     </li>
     `;

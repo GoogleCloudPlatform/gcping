@@ -16,11 +16,9 @@
 
 <body>
   <div class="mdl-layout mdl-js-layout">
-    <header class="mdl-layout__header mdl-color--blue-400">
+    <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
-        <span class="mdl-layout-title">Measure your latency to <a target="_blank"
-            href="https://cloud.google.com/compute/docs/regions-zones/regions-zones"
-            class="title-link">GCP regions</a></span>
+        <span class="mdl-layout-title">GCPing</span>
         <div class="mdl-layout-spacer"></div>
         <nav class="mdl-navigation">
           <a class="mdl-navigation__link" href="https://github.com/googleCloudPlatform/gcping">
@@ -42,22 +40,31 @@
           </dialog>
         </nav>
       </div>
+      <div aria-expanded="false" role="button" tabindex="0" class="drawer-btn mdl-layout__drawer-button">
+        <!-- <img src="/images/cloud-logo.svg" alt="Google Cloud Logo" id="logo" /> -->
+        <i class="material-icons" id="logoIcon">speed</i>
+      </div>
     </header>
     <main class="mdl-layout__content">
+      <div class="heading">
+        <span class="mdl-layout-title">Measure your latency to <a target="_blank"
+          href="https://cloud.google.com/compute/docs/regions-zones/regions-zones"
+          class="title-link">GCP regions</a></span>
+      </div>
       <div>
         <div id="stats" class="mdl-grid">
           <div class="content mdl-cell--12-col mdl-grid">
 
             <div class="mdl-card mdl-cell--3-col">
               <div class="mdl-card__title mdl-card--expand">
-                <h2 class="mdl-card__title-text"><span class="material-icons mdl-color-text--green-400">speed</span></h2>
+                <span class="material-icons speed-icon">speed</span>
               </div>
               <div class="mdl-card__supporting-text mdl-typography--text-center">Fastest: <span id="fastestRegion">-</span></div>
             </div>
 
             <div class="mdl-card mdl-cell--3-col">
               <div class="mdl-card__title mdl-card--expand">
-                <h2 class="mdl-card__title-text"><span class="material-icons mdl-color-text--amber-400">language</span></h2>
+                <span class="material-icons global-icon">language</span>
               </div>
               <div class="mdl-card__supporting-text mdl-typography--text-center"><i class="material-icons" id="globalHelpIcon">help</i>Global: <span id="globalRegion">-</span></div>
               <div class="mdl-tooltip mdl-tooltip--large" for="globalHelpIcon">
@@ -67,14 +74,14 @@
 
             <div class="mdl-card mdl-cell--3-col">
               <div class="mdl-card__title mdl-card--expand">
-                <h2 class="mdl-card__title-text"><span class="material-icons mdl-color-text--red-400">calculate</span></h2>
+                <span class="material-icons calc-icon">calculate</span>
               </div>
               <div class="mdl-card__supporting-text mdl-typography--text-center">Analyzed: <span id="analyzedRegions">0</span></div>
             </div>
 
             <div class="mdl-card mdl-cell--3-col">
               <div class="mdl-card__title mdl-card--expand">
-                <h2 class="mdl-card__title-text"><span class="material-icons mdl-color-text--indigo-400">hourglass_bottom</span></h2>
+                <span class="material-icons hourglass-icon">hourglass_bottom</span>
               </div>
               <div class="mdl-card__supporting-text mdl-typography--text-center">Remaining: <span id="remainingRegions">0</span></div>
             </div>
@@ -84,7 +91,7 @@
               class="visible mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--red-400 mdl-color-text--amber-50"> <i
               class="material-icons">block</i> Stop</button>
             <button id="rerunTest"
-              class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--indigo mdl-color-text--amber-50"> <i
+              class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"> <i
               class="material-icons">refresh</i> Restart</button>
           </div>
         </div>
@@ -98,7 +105,7 @@
           <div class="mdl-tabs__panel is-active" id="list-panel">
             <div id="list">
               <ul class="demo-list-icon mdl-list" id="listContainer">
-                <li class="heading mdl-list__item mdl-color--indigo mdl-color-text--amber-50">
+                <li class="row-heading mdl-list__item">
                   <span class="mdl-list__item-primary-content list-zone-container">
                     <span class="region-name">Region</span>
                     <span class="region-latency">Latency(ms)
