@@ -94,14 +94,12 @@ resource "google_cloud_run_service" "regions" {
       }
     }
   }
-
   lifecycle {
     ignore_changes = [
       // This gets added by the Cloud Run API post deploy and causes diffs, can be ignored...
       template[0].metadata[0].annotations["run.googleapis.com/sandbox"],
     ]
   }
-
   traffic {
     percent         = 100
     latest_revision = true
@@ -163,32 +161,26 @@ output "global" {
   value = google_compute_global_address.global.address
 }
 
-// TODO: Remove this resource once global_cert is deployed
+resource "random_id" "certificate" {
+  byte_length = 2
+  prefix      = "global-"
+}
+
 resource "google_compute_managed_ssl_certificate" "global" {
   provider = google-beta
 
-  name = "global"
-  managed {
-    domains = [
-      "global.${var.domain}",
-      "${var.domain}",
-    ]
-  }
-}
-
-resource "google_compute_managed_ssl_certificate" "global_cert" {
-  provider = google-beta
-
-  name = "global-cert"
+  name = random_id.certificate.hex
   managed {
     domains = [
       "www.${var.domain}.",
       "global.${var.domain}.",
       "${var.domain}.",
       "www.${var.domain_alias}.",
-      "global.${var.domain_alias}.",
       "${var.domain_alias}.",
     ]
+  }
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
