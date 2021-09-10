@@ -49,6 +49,10 @@ variable "domain_alias" {
   default = "gcpping.com" // two p's
 }
 
+variable "release_bucket" {
+  type    = string
+  default = "gcping-release"
+}
 
 data "google_cloud_run_locations" "available" {
 }
@@ -240,7 +244,7 @@ resource "google_compute_global_forwarding_rule" "https_redirect" {
 
 // Create a bucket for CLI releases
 resource "google_storage_bucket" "releases" {
-  name = "gcping-release"
+  name = "${var.release_bucket}"
   uniform_bucket_level_access = true
 }
 
