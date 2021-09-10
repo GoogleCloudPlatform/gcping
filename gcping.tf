@@ -44,6 +44,11 @@ variable "domain" {
   default = "gcping.com"
 }
 
+variable "domain_alias_flag" {
+  type    = bool
+  default = true
+}
+
 variable "domain_alias" {
   type    = string
   default = "gcpping.com" // two p's
@@ -53,6 +58,7 @@ variable "release_bucket" {
   type    = string
   default = "gcping-release"
 }
+
 
 data "google_cloud_run_locations" "available" {
 }
@@ -175,12 +181,16 @@ resource "google_compute_managed_ssl_certificate" "global" {
 
   name = random_id.certificate.hex
   managed {
-    domains = [
-      "www.${var.domain}.",
-      "global.${var.domain}.",
-      "${var.domain}.",
-      "www.${var.domain_alias}.",
-      "${var.domain_alias}.",
+    domains = var.domain_alias_flag ? [
+      "global.${var.domain}",
+      "www.${var.domain}",
+      "${var.domain}",
+      "www.${var.domain_alias}",
+      "${var.domain_alias}",
+    ] : [
+      "global.${var.domain}",
+      "www.${var.domain}",
+      "${var.domain}",
     ]
   }
   lifecycle {
