@@ -32,8 +32,13 @@ terraform {
 
 variable "image" {
   type = string
+  default = ""
 }
 
+variable "repository" {
+  type = string
+  default = "ping-b5e9c300f5e9cdafa118e623a88e6b97"
+}
 variable "project" {
   type    = string
   default = "gcping-devrel"
@@ -96,7 +101,7 @@ resource "google_cloud_run_service" "regions" {
     spec {
       service_account_name = google_service_account.minimal.email
       containers {
-        image = var.image
+        image = local.image
         env {
           name  = "REGION"
           value = each.key
@@ -183,6 +188,7 @@ locals {
       "global.${var.domain}",
       "${var.domain}",
     ]
+    image = var.image != "" ? var.image : "gcr.io/${var.project}/${var.repository}:latest"
 }
 
 resource "random_id" "certificate" {
