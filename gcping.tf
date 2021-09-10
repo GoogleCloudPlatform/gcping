@@ -36,7 +36,7 @@ variable "image" {
 
 variable "project" {
   type    = string
-  default = "gcping"
+  default = "gcping-devrel"
 }
 
 variable "domain" {
