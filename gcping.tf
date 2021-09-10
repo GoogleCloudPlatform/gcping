@@ -171,17 +171,8 @@ output "global" {
   value = google_compute_global_address.global.address
 }
 
-resource "random_id" "certificate" {
-  byte_length = 2
-  prefix      = "global-"
-}
-
-resource "google_compute_managed_ssl_certificate" "global" {
-  provider = google-beta
-
-  name = random_id.certificate.hex
-  managed {
-    domains = var.domain_alias_flag ? [
+locals {
+    managed_domains = var.domain_alias_flag ? [
       "www.${var.domain}",
       "global.${var.domain}",
       "${var.domain}",
@@ -192,6 +183,22 @@ resource "google_compute_managed_ssl_certificate" "global" {
       "global.${var.domain}",
       "${var.domain}",
     ]
+}
+
+resource "random_id" "certificate" {
+  byte_length = 2
+  prefix      = "global-"
+  keepers = {
+      domains = join(",", local.managed_domains)
+  }
+}
+
+resource "google_compute_managed_ssl_certificate" "global" {
+  provider = google-beta
+
+  name = random_id.certificate.hex
+  managed {
+    domains = local.managed_domains
   }
   lifecycle {
     create_before_destroy = true
