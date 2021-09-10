@@ -32,11 +32,16 @@ terraform {
 
 variable "image" {
   type = string
+  default = ""
 }
 
+variable "repository" {
+  type = string
+  default = "ping-b5e9c300f5e9cdafa118e623a88e6b97"
+}
 variable "project" {
   type    = string
-  default = "gcping"
+  default = "gcping-devrel"
 }
 
 variable "domain" {
@@ -44,9 +49,19 @@ variable "domain" {
   default = "gcping.com"
 }
 
+variable "domain_alias_flag" {
+  type    = bool
+  default = true
+}
+
 variable "domain_alias" {
   type    = string
   default = "gcpping.com" // two p's
+}
+
+variable "release_bucket" {
+  type    = string
+  default = "gcping-release"
 }
 
 
@@ -86,7 +101,7 @@ resource "google_cloud_run_service" "regions" {
     spec {
       service_account_name = google_service_account.minimal.email
       containers {
-        image = var.image
+        image = local.image
         env {
           name  = "REGION"
           value = each.key
@@ -161,9 +176,27 @@ output "global" {
   value = google_compute_global_address.global.address
 }
 
+locals {
+    managed_domains = var.domain_alias_flag ? [
+      "www.${var.domain}",
+      "global.${var.domain}",
+      "${var.domain}",
+      "www.${var.domain_alias}",
+      "${var.domain_alias}",
+    ] : [
+      "www.${var.domain}",
+      "global.${var.domain}",
+      "${var.domain}",
+    ]
+    image = var.image != "" ? var.image : "gcr.io/${var.project}/${var.repository}:latest"
+}
+
 resource "random_id" "certificate" {
   byte_length = 2
   prefix      = "global-"
+  keepers = {
+      domains = join(",", local.managed_domains)
+  }
 }
 
 resource "google_compute_managed_ssl_certificate" "global" {
@@ -171,13 +204,7 @@ resource "google_compute_managed_ssl_certificate" "global" {
 
   name = random_id.certificate.hex
   managed {
-    domains = [
-      "www.${var.domain}.",
-      "global.${var.domain}.",
-      "${var.domain}.",
-      "www.${var.domain_alias}.",
-      "${var.domain_alias}.",
-    ]
+    domains = local.managed_domains
   }
   lifecycle {
     create_before_destroy = true
@@ -240,7 +267,7 @@ resource "google_compute_global_forwarding_rule" "https_redirect" {
 
 // Create a bucket for CLI releases
 resource "google_storage_bucket" "releases" {
-  name = "gcping-release"
+  name = "${var.release_bucket}"
   uniform_bucket_level_access = true
 }
 
