@@ -182,14 +182,14 @@ resource "google_compute_managed_ssl_certificate" "global" {
   name = random_id.certificate.hex
   managed {
     domains = var.domain_alias_flag ? [
-      "global.${var.domain}",
       "www.${var.domain}",
+      "global.${var.domain}",
       "${var.domain}",
       "www.${var.domain_alias}",
       "${var.domain_alias}",
     ] : [
-      "global.${var.domain}",
       "www.${var.domain}",
+      "global.${var.domain}",
       "${var.domain}",
     ]
   }
