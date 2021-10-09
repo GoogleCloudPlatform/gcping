@@ -17,9 +17,9 @@
 // TODO: Show regions on a map, with lines overlayed according to ping times.
 // TODO: Add an option to contribute times and JS geolocation info to a public BigQuery dataset.
 
-const GLOBAL_REGION_KEY="global",
-  PING_TEST_RUNNING_STATUS="running",
-  PING_TEST_STOPPED_STATUS="stopped",
+const GLOBAL_REGION_KEY = "global",
+  PING_TEST_RUNNING_STATUS = "running",
+  PING_TEST_STOPPED_STATUS = "stopped",
   btnCtrl = document.getElementById('stopstart');
 
 /**
@@ -35,7 +35,8 @@ const GLOBAL_REGION_KEY="global",
  */
 let regions = {},
   results = [],
-  pingTestStatus = PING_TEST_RUNNING_STATUS;
+  pingTestStatus = PING_TEST_RUNNING_STATUS,
+  fastestRegionVisible = false;
 
 /**
  * Fetches the endpoints for different Cloud Run regions.
@@ -91,6 +92,7 @@ async function pingAllRegions(){
 
   // when all the region latencies have been fetched, let's update our status flag
   updatePingTestState(PING_TEST_STOPPED_STATUS);
+  displayFastest(true);
 }
 
 /**
@@ -136,7 +138,7 @@ function updateList(){
     cls ='';
 
   for (let i = 0; i < results.length; i++) {
-    cls = i ===0 ? 'top' : '';
+    cls = (i === 0 && fastestRegionVisible) ? 'top' : '';
     html += '<tr class="'+cls+'"><td class="regiondesc">'+regions[results[i]['key']]['label']+'<div class="region">'+results[i]['key']+'</div></td>' +
       '<td class="result" id="'+results[i]['key']+'"><div>'+results[i]['median']+' ms</div></td></tr>';
   }
@@ -182,6 +184,15 @@ function updateTweetLink(numRegions = 3){
   }
 
   document.getElementById('tweet-link').href = 'https://twitter.com/share?text='+encodeURIComponent(tweet);
+}
+
+/**
+ * Sets the visiblity for the fastest region indicator on the list(the green cell)
+ * @param {bool} isVisible Indicator to toggle visibility for the fastest region indicator
+ */
+function displayFastest(isVisible){
+  fastestRegionVisible = true;
+  updateList();
 }
 
 getEndpoints();
