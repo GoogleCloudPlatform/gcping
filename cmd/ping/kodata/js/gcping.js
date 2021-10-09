@@ -36,7 +36,8 @@ const GLOBAL_REGION_KEY = "global",
 let regions = {},
   results = [],
   pingTestStatus = PING_TEST_RUNNING_STATUS,
-  fastestRegionVisible = false;
+  fastestRegionVisible = false,
+  globalRegionProxy = '';
 
 /**
  * Fetches the endpoints for different Cloud Run regions.
@@ -108,8 +109,16 @@ function pingSingleRegion(regionKey){
     fetch(gcpZone.pingUrl,{
       mode: 'no-cors',
       cache: 'no-cache'
-    }).then((resp) => {
+    }).then(async (resp) => {
       const latency = new Date().getTime() - start;
+
+      // if we just pinged the global region, the response should contain
+      // the region that the Global Load Balancer uses to route the traffic.
+      if(regionKey === GLOBAL_REGION_KEY){
+        resp.text().then((val)=>{
+          globalRegionProxy = val.trim();
+        });
+      }
 
       resolve(latency);
     });
@@ -135,12 +144,14 @@ function updatePingTestState(status){
  */
 function updateList(){
   let html = '',
-    cls ='';
+    cls ='',
+    regionKey = '';
 
   for (let i = 0; i < results.length; i++) {
     cls = (i === 0 && fastestRegionVisible) ? 'top' : '';
-    html += '<tr class="'+cls+'"><td class="regiondesc">'+regions[results[i]['key']]['label']+'<div class="region">'+results[i]['key']+'</div></td>' +
-      '<td class="result" id="'+results[i]['key']+'"><div>'+results[i]['median']+' ms</div></td></tr>';
+    regionKey = getDisplayedRegionKey(results[i]['key']);
+    html += '<tr class="'+cls+'"><td class="regiondesc">'+regions[results[i]['key']]['label']+'<div class="region">'+regionKey+'</div></td>' +
+      '<td class="result"><div>'+results[i]['median']+' ms</div></td></tr>';
   }
 
   document.getElementsByTagName('tbody')[0].innerHTML = html;
@@ -195,6 +206,26 @@ function displayFastest(isVisible){
   updateList();
 }
 
+/**
+ * Helper function to deduce the region to be displayed in the list
+ * @param {string} regionKey 
+ * @returns 
+ */
+function getDisplayedRegionKey(regionKey){
+  // if the region is not global, return it as it is.
+  if(regionKey !== GLOBAL_REGION_KEY)
+    return regionKey;
+
+  // if the region is global and we have received the region that is used by the Gloabl Load Balancer
+  // we display that
+  if(globalRegionProxy.length > 0)
+    return '<em>→' + globalRegionProxy + '</em>';
+
+  // if the region is global and we don't have the routing region, we show "gloabl"
+  return 'global';
+}
+
+// start the process by fetching the endpoints
 getEndpoints();
 
 btnCtrl.addEventListener('click',function(){
