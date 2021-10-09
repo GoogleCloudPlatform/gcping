@@ -20,6 +20,7 @@
 const GLOBAL_REGION_KEY = "global",
   PING_TEST_RUNNING_STATUS = "running",
   PING_TEST_STOPPED_STATUS = "stopped",
+  INITIAL_ITERATIONS = 3,
   btnCtrl = document.getElementById('stopstart');
 
 /**
@@ -29,7 +30,8 @@ const GLOBAL_REGION_KEY = "global",
  *    "key": "",
  *    "label": "",
  *    "pingUrl": "",
- *    "latencies": []
+ *    "latencies": [],
+ *    "median": ""
  *  }
  * }
  */
@@ -52,48 +54,50 @@ function getEndpoints(){
         key: zone.Region, 
         label: zone.RegionName,
         pingUrl: zone.URL,
-        latencies: []
+        latencies: [],
+        median: ''
       };
 
       regions[gcpZone.key] = gcpZone;
-      results[gcpZone.key] = {'median':''};
     }
 
     // once we're done fetching all endpoints, let's start pinging
-    pingAllRegions();
+    pingAllRegions(INITIAL_ITERATIONS);
   });
 }
 
 /**
  * Ping all regions to fetch their latency
  */
-async function pingAllRegions(){
+async function pingAllRegions(iter){
   let regionsArr=Object.values(regions);
 
-  // reset the results
-  results=[];
+  for(let i = 0; i < iter; i++){
+    for (region of regionsArr) {
+      // Takes care of the stopped button
+      if(pingTestStatus === PING_TEST_STOPPED_STATUS){
+        break;
+      }
 
-  for (region of regionsArr) {
-    let latency = await pingSingleRegion(region.key);
+      let latency = await pingSingleRegion(region.key);
 
-    // add the latency to the array of latencies
-    // from where we can compute the median and populate the table
-    regions[region.key]['latencies'].push(latency);
-    results.push({"key": region.key, "median": getMedian(regions[region.key]['latencies'])});
+      // add the latency to the array of latencies
+      // from where we can compute the median and populate the table
+      regions[region.key]['latencies'].push(latency);
+      regions[region.key]['median'] = getMedian(regions[region.key]['latencies']);
 
-    sortResults();
-    updateList();
-    updateTweetLink();
-
-    // Takes care of the stopped button
-    if(pingTestStatus === PING_TEST_STOPPED_STATUS){
-      break;
+      addResult(region.key, latency);
+      updateList();
+      updateTweetLink();
     }
+
+    // start displaying the fastest region after at least 1 iteration is over.
+    // subsequent calls to this won't change anything
+    displayFastest(true);
   }
 
   // when all the region latencies have been fetched, let's update our status flag
   updatePingTestState(PING_TEST_STOPPED_STATUS);
-  displayFastest(true);
 }
 
 /**
@@ -149,9 +153,9 @@ function updateList(){
 
   for (let i = 0; i < results.length; i++) {
     cls = (i === 0 && fastestRegionVisible) ? 'top' : '';
-    regionKey = getDisplayedRegionKey(results[i]['key']);
-    html += '<tr class="'+cls+'"><td class="regiondesc">'+regions[results[i]['key']]['label']+'<div class="region">'+regionKey+'</div></td>' +
-      '<td class="result"><div>'+results[i]['median']+' ms</div></td></tr>';
+    regionKey = getDisplayedRegionKey(results[i]);
+    html += '<tr class="'+cls+'"><td class="regiondesc">'+regions[results[i]]['label']+'<div class="region">'+regionKey+'</div></td>' +
+      '<td class="result"><div>'+regions[results[i]]['median']+' ms</div></td></tr>';
   }
 
   document.getElementsByTagName('tbody')[0].innerHTML = html;
@@ -170,12 +174,39 @@ function getMedian(arr) {
 }
 
 /**
- * Simple sorting helper for the current result set
+ * Helper that adds the regionKey to it's proper position making the results array sorted
  */
-function sortResults(){
-  results = results.sort((a, b) =>{
-    return a['median'] - b['median'];
-  });
+function addResult(regionKey, latency){
+  if(!results.length){
+    results.push(regionKey);
+    return;
+  }
+
+  // remove any current values with the same regionKey
+  for(let i = 0; i < results.length; i++){
+    if(results[i] === regionKey){
+      results.splice(i, 1);
+      break;
+    }
+  }
+
+  // add the region to it's proper position
+  let addToPos = -1;
+  for(let i = 0; i < results.length; i++){
+    if(i === 0 && latency <= regions[results[i]].median){
+      addToPos = 0;
+      break;
+    }
+    else if(i === results.length - 1 && latency >= regions[results[i]].median){
+      addToPos = i;
+      break;
+    }
+    else if(latency > results[i] && latency <= results[i+1]){
+      addToPos = i;
+    }
+  }
+
+  results.splice(addToPos, 0, regionKey);
 }
 
 /**
@@ -228,10 +259,13 @@ function getDisplayedRegionKey(regionKey){
 // start the process by fetching the endpoints
 getEndpoints();
 
+/**
+ * Event listener for the button to start/stop the pinging
+ */
 btnCtrl.addEventListener('click',function(){
   let newStatus = pingTestStatus === PING_TEST_STOPPED_STATUS ? PING_TEST_RUNNING_STATUS : PING_TEST_STOPPED_STATUS;
   updatePingTestState(newStatus);
 
   if(newStatus === PING_TEST_RUNNING_STATUS)
-    pingAllRegions();
+    pingAllRegions(1);
 });
