@@ -17,118 +17,179 @@
 // TODO: Show regions on a map, with lines overlayed according to ping times.
 // TODO: Add an option to contribute times and JS geolocation info to a public BigQuery dataset.
 
-const _MAX_RESULTS = 20; // Only consider most recent results.
-let _ENDPOINTS = {};
-let _REGIONS = [];
-let IDX = 0;
-let RESULTS = {};
+const GLOBAL_REGION_KEY="global",
+  PING_TEST_RUNNING_STATUS="running",
+  PING_TEST_STOPPED_STATUS="stopped",
+  btnCtrl = document.getElementById('stopstart');
 
-function median(arr) {
+/**
+ * The `regions` obj is of the following format:
+ * {
+ *  "us-east1": {
+ *    "key": "",
+ *    "label": "",
+ *    "pingUrl": "",
+ *    "latencies": []
+ *  }
+ * }
+ */
+let regions = {},
+  results = [],
+  pingTestStatus = PING_TEST_RUNNING_STATUS;
+
+/**
+ * Fetches the endpoints for different Cloud Run regions.
+ * We will later send a request to these endpoints and measure the latency.
+ */
+function getEndpoints(){
+  fetch("/endpoints").then(function(resp) { 
+    return resp.json();
+  }).then(function(endpoints) {
+    for (zone of Object.values(endpoints)) {
+      let gcpZone = {
+        key: zone.Region, 
+        label: zone.RegionName,
+        pingUrl: zone.URL,
+        latencies: []
+      };
+
+      regions[gcpZone.key] = gcpZone;
+      results[gcpZone.key] = {'median':''};
+    }
+
+    // once we're done fetching all endpoints, let's start pinging
+    pingAllRegions();
+  });
+}
+
+/**
+ * Ping all regions to fetch their latency
+ */
+async function pingAllRegions(){
+  let regionsArr=Object.values(regions);
+
+  // reset the results
+  results=[];
+
+  for (region of regionsArr) {
+    let latency = await pingSingleRegion(region.key);
+
+    // add the latency to the array of latencies
+    // from where we can compute the median and populate the table
+    regions[region.key]['latencies'].push(latency);
+    results.push({"key": region.key, "median": getMedian(regions[region.key]['latencies'])});
+
+    sortResults();
+    updateList();
+    updateTweetLink();
+
+    // Takes care of the stopped button
+    if(pingTestStatus === PING_TEST_STOPPED_STATUS){
+      break;
+    }
+  }
+
+  // when all the region latencies have been fetched, let's update our status flag
+  updatePingTestState(PING_TEST_STOPPED_STATUS);
+}
+
+/**
+ * Computes the ping time for a single GCP region
+ * @param {string} regionKey The key of the GCP region, ex: us-east1
+ * @returns Promise
+ */
+function pingSingleRegion(regionKey){
+  return new Promise((resolve) => {
+    const gcpZone = regions[regionKey],
+      start = new Date().getTime();
+
+    fetch(gcpZone.pingUrl,{
+      mode: 'no-cors',
+      cache: 'no-cache'
+    }).then((resp) => {
+      const latency = new Date().getTime() - start;
+
+      resolve(latency);
+    });
+  });
+}
+
+/**
+ * Function to update the current status of pinging
+ * @param {string} status 
+ */
+function updatePingTestState(status){
+  pingTestStatus = status;
+  if(status === PING_TEST_RUNNING_STATUS){
+    btnCtrl.querySelector('.material-icons').innerText = 'stop'
+  }
+  else if( status === PING_TEST_STOPPED_STATUS){
+    btnCtrl.querySelector('.material-icons').innerText = 'play_arrow';
+  }
+}
+
+/**
+ * Updates the list view with the result set of regions and their latencies.
+ */
+function updateList(){
+  let html = '',
+    cls ='';
+
+  for (let i = 0; i < results.length; i++) {
+    cls = i ===0 ? 'top' : '';
+    html += '<tr class="'+cls+'"><td class="regiondesc">'+regions[results[i]['key']]['label']+'<div class="region">'+results[i]['key']+'</div></td>' +
+      '<td class="result" id="'+results[i]['key']+'"><div>'+results[i]['median']+' ms</div></td></tr>';
+  }
+
+  document.getElementsByTagName('tbody')[0].innerHTML = html;
+}
+
+/**
+ * Helper function to return median from a given array
+ * @param {*} arr Array of latencies
+ * @returns 
+ */
+function getMedian(arr) {
   if (arr.length == 0) { return 0; }
   let copy = arr.slice(0);
   copy.sort();
   return copy[Math.floor(copy.length/2)];
 }
 
-let GLOBAL_GOT = '';
-document.addEventListener('nextping', function() {
-  let r = _REGIONS[IDX];
-  IDX = (IDX+1)%_REGIONS.length; // wrap around
-  let url = _ENDPOINTS[r].URL + '/ping';
-
-  let start = new Date().getTime();
-  fetch(url).then((value) => {
-    if (!value.ok) {
-      console.log('fetch', value.url, value.ok, value.status);
-    }
-    value.text().then((resp) => {
-      if (r == 'global') {
-        console.log('global got', resp);
-        GLOBAL_GOT = resp.trim();
-      }
-    });
-    if (value.headers['X-First-Request'] == 'true') {
-      console.log('Discarding first request for', url);
-    } else {
-      let took = new Date().getTime()-start;
-      RESULTS[r].push(took);
-      if (RESULTS[r].length > _MAX_RESULTS) {
-        RESULTS[r].shift();
-      }
-      let a = median(RESULTS[r]);
-      let out = document.getElementById(r+'-result');
-      updateTable();
-    }
-    if (!stopped) {
-      document.dispatchEvent(new Event('nextping'));
-    }
+/**
+ * Simple sorting helper for the current result set
+ */
+function sortResults(){
+  results = results.sort((a, b) =>{
+    return a['median'] - b['median'];
   });
-});
+}
 
-function updateTable() {
-  let medians = [];
-  for (k in RESULTS) {
-    medians.push([k, median(RESULTS[k])]);
-  }
-  medians.sort(function(a, b) {
-    if (a[1] < b[1]) { return -1; }
-    if (a[1] > b[1]) { return 1; }
-    return 0;
-  });
-
-  let html = '';
+/**
+ * Updates the tweet link to contain `numRegions` num of fastest regions.
+ * @param {int} numRegions 
+ */
+function updateTweetLink(numRegions = 3){
   let tweet = 'My lowest-latency #GCP regions via gcping.com:';
-  let place = 0;
-  let top = 0;
-  for (var i = 0; i < medians.length; i++) {
-    let region = medians[i][0];
-    let latency = medians[i][1];
-    if (latency == 0) { continue; }
-    if (i == 0 && region === 'global') { top++; }
-    if (region != 'global') { place++; }
-    let regionsub = region;
-    if (region == 'global' && RESULTS[GLOBAL_GOT]) { regionsub = '<i>→'+GLOBAL_GOT+'</i>'; }
-    var cls = (i == top) ? 'top' : '';
-    var desc = (_ENDPOINTS[region] || {}).RegionName || '';
-    html += '<tr class="'+cls+'"><td class="regiondesc">'+desc+'<div class="region">'+regionsub+'</div></td>' +
-      '<td class="result" id="'+region+'"><div>'+latency+' ms</div></td></tr>';
 
-    if (place <= 3 && region != 'global') {
-      tweet += '\n'+region+' ('+latency+' ms)';
+  for(let i = 0; i < results.length; i++){
+    if(results[i]['key'] !== 'global'){
+      tweet += '\n'+results[i]['key']+' ('+results[i]['median']+' ms)';
+
+      if(--numRegions === 0)
+        break;
     }
   }
-  document.getElementsByTagName('tbody')[0].innerHTML = html;
+
   document.getElementById('tweet-link').href = 'https://twitter.com/share?text='+encodeURIComponent(tweet);
 }
 
-let stopped = true;
-let ss = document.getElementById('stopstart');
-let st;
-ss.onclick = function() {
-  if (stopped) {
-    console.log('starting');
-    stopped = false;
-    ss.children[0].innerText = 'stop';
-    document.dispatchEvent(new Event('nextping'));
-    st = setTimeout(ss.onclick, 30000); // stop after 30s.
-  } else {
-    console.log('stopping');
-    stopped = true;
-    clearTimeout(st); // cancel the stop timeout, as it is stopped.
-    ss.children[0].innerText = 'play_arrow';
-  }
-};
+getEndpoints();
 
-// Start pinging.
-fetch("/endpoints").then(function(resp) { 
-  return resp.json();
-}).then(function(endpoints) { 
-  _ENDPOINTS = endpoints;
-  Object.entries(endpoints).forEach(function (entry) {
-    let key = entry[0];
-    let value = entry[1];
-    _REGIONS.push(value.Region);
-    RESULTS[key] = [];
-  })
-  ss.onclick(); 
+btnCtrl.addEventListener('click',function(){
+  let newStatus = pingTestStatus === PING_TEST_STOPPED_STATUS ? PING_TEST_RUNNING_STATUS : PING_TEST_STOPPED_STATUS;
+  updatePingTestState(newStatus);
+
+  if(newStatus === PING_TEST_RUNNING_STATUS)
+    pingAllRegions();
 });
