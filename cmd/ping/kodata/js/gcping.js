@@ -149,10 +149,11 @@ function updatePingTestState(status){
 function updateList(){
   let html = '',
     cls ='',
-    regionKey = '';
+    regionKey = '',
+    fastestRegion = getFastestRegion();
 
   for (let i = 0; i < results.length; i++) {
-    cls = (i === 0 && fastestRegionVisible) ? 'top' : '';
+    cls = (results[i] === fastestRegion && fastestRegionVisible) ? 'top' : '';
     regionKey = getDisplayedRegionKey(results[i]);
     html += '<tr class="'+cls+'"><td class="regiondesc">'+regions[results[i]]['label']+'<div class="region">'+regionKey+'</div></td>' +
       '<td class="result"><div>'+regions[results[i]]['median']+' ms</div></td></tr>';
@@ -254,6 +255,19 @@ function getDisplayedRegionKey(regionKey){
 
   // if the region is global and we don't have the routing region, we show "gloabl"
   return 'global';
+}
+
+/**
+ * Gets the fastest region, excluding the global region
+ * @returns string
+ */
+function getFastestRegion(){
+  let found = false;
+  for(let i = 0; i < results.length; i++){
+    if(results[i] !== GLOBAL_REGION_KEY){
+      return results[i];
+    }
+  }
 }
 
 // start the process by fetching the endpoints
