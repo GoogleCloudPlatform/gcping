@@ -176,6 +176,7 @@ function getMedian(arr) {
 
 /**
  * Helper that adds the regionKey to it's proper position making the results array sorted
+ * TODO: Try and use an ordered map here to simply this
  */
 function addResult(regionKey, latency){
   if(!results.length){
@@ -191,23 +192,23 @@ function addResult(regionKey, latency){
     }
   }
 
-  // add the region to it's proper position
-  let addToPos = -1;
-  for(let i = 0; i < results.length; i++){
-    if(i === 0 && latency <= regions[results[i]].median){
-      addToPos = 0;
-      break;
-    }
-    else if(i === results.length - 1 && latency >= regions[results[i]].median){
-      addToPos = i;
-      break;
-    }
-    else if(latency > results[i] && latency <= results[i+1]){
-      addToPos = i;
-    }
+  // TODO: Probably use Binary search here to merge the following 2 blocks
+  if(latency < regions[results[0]].median){
+    results.unshift(regionKey);
+    return;
+  }
+  else if(latency > regions[results[results.length - 1]].median){
+    results.push(regionKey);
+    return;
   }
 
-  results.splice(addToPos, 0, regionKey);
+  // add the region to it's proper position
+  for(let i = 0; i < results.length - 1; i++){
+    if(latency >= regions[results[i]].median && latency <= regions[results[i+1]].median){
+      results.splice(i+1, 0, regionKey);
+      return;
+    }
+  }
 }
 
 /**
@@ -270,9 +271,6 @@ function getFastestRegion(){
   }
 }
 
-// start the process by fetching the endpoints
-getEndpoints();
-
 /**
  * Event listener for the button to start/stop the pinging
  */
@@ -283,3 +281,6 @@ btnCtrl.addEventListener('click',function(){
   if(newStatus === PING_TEST_RUNNING_STATUS)
     pingAllRegions(1);
 });
+
+// start the process by fetching the endpoints
+getEndpoints();
