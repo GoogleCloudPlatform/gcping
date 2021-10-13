@@ -20,7 +20,7 @@
 const GLOBAL_REGION_KEY = "global",
   PING_TEST_RUNNING_STATUS = "running",
   PING_TEST_STOPPED_STATUS = "stopped",
-  INITIAL_ITERATIONS = 3,
+  INITIAL_ITERATIONS = 10,
   btnCtrl = document.getElementById('stopstart');
 
 /**
