@@ -46,14 +46,14 @@ let regions = {},
  * We will later send a request to these endpoints and measure the latency.
  */
 function getEndpoints(){
-  fetch("/endpoints").then(function(resp) { 
+  fetch("/api/endpoints").then(function(resp) {
     return resp.json();
   }).then(function(endpoints) {
     for (zone of Object.values(endpoints)) {
       let gcpZone = {
-        key: zone.Region, 
+        key: zone.Region,
         label: zone.RegionName,
-        pingUrl: zone.URL,
+        pingUrl: zone.URL + "/api/ping",
         latencies: [],
         median: ''
       };
@@ -131,7 +131,7 @@ function pingSingleRegion(regionKey){
 
 /**
  * Function to update the current status of pinging
- * @param {string} status 
+ * @param {string} status
  */
 function updatePingTestState(status){
   pingTestStatus = status;
@@ -165,7 +165,7 @@ function updateList(){
 /**
  * Helper function to return median from a given array
  * @param {*} arr Array of latencies
- * @returns 
+ * @returns
  */
 function getMedian(arr) {
   if (arr.length == 0) { return 0; }
@@ -213,7 +213,7 @@ function addResult(regionKey, latency){
 
 /**
  * Updates the tweet link to contain `numRegions` num of fastest regions.
- * @param {int} numRegions 
+ * @param {int} numRegions
  */
 function updateTweetLink(numRegions = 3){
   let tweet = 'My lowest-latency #GCP regions via gcping.com:';
@@ -241,8 +241,8 @@ function displayFastest(isVisible){
 
 /**
  * Helper function to deduce the region to be displayed in the list
- * @param {string} regionKey 
- * @returns 
+ * @param {string} regionKey
+ * @returns
  */
 function getDisplayedRegionKey(regionKey){
   // if the region is not global, return it as it is.
