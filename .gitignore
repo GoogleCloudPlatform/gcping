@@ -6,3 +6,6 @@
 # Directories
 bin/
 .terraform/
+
+# Temp/env specific files
+.DS_Store
