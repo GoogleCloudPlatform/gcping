@@ -49,7 +49,6 @@ variable "domain" {
   default = "gcping.com"
 }
 
-
 variable "domain_alias_flag" {
   type    = bool
   default = true
@@ -135,16 +134,19 @@ output "services" {
 // Make each service invokable by all users.
 resource "google_cloud_run_service_iam_member" "allUsers" {
   for_each = google_cloud_run_service.regions
+
   service  = google_cloud_run_service.regions[each.key].name
   location = each.key
   role     = "roles/run.invoker"
   member   = "allUsers"
+
   depends_on = [google_cloud_run_service.regions]
 }
 
 // Create a regional network endpoint group (NEG) for each regional Cloud Run service.
 resource "google_compute_region_network_endpoint_group" "regions" {
   for_each = google_cloud_run_service.regions
+
   name                  = each.key
   network_endpoint_type = "SERVERLESS"
   region                = each.key
@@ -187,8 +189,7 @@ locals {
       "${var.domain}",
     ]
     image = var.image != "" ? var.image : "gcr.io/${var.project}/${var.repository}:latest"
-
-  regions = jsondecode(file("${path.module}/regions.json"))
+    regions = jsondecode(file("${path.module}/regions.json"))
 }
 
 resource "random_id" "certificate" {
