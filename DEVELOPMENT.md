@@ -10,6 +10,15 @@ Install
 the GCR repository you'd like to deploy to (e.g.,
 `KO_DOCKER_REPO=gcr.io/gcping`)
 
+The frontend requires [Node.js](https://nodejs.org/en/).
+
+### Installing Frontend Dependencies
+
+```
+$ cd web
+$ npm install
+```
+
 ### Deploy using Terraform
 
 ```
@@ -18,7 +27,8 @@ $ gcloud auth application-default login  # Used by Terraform
 ```
 
 ```
-$ terraform init
+$ terraform init # necessary only the first time
+$ npm run build  # generate the frontend
 $ terraform apply -var image=$(ko publish -P ./cmd/ping/)
 ```
 
@@ -28,19 +38,20 @@ HTTPS Load Balancer with Google-managed SSL certificate for
 
 ### Run frontend locally
 
-```
-docker run -p 8080:8080 $(KO_DOCKER_REPO=ko.local ko publish -P ./cmd/ping/)
-```
+First, start the Ping server with:
 
-And browse to http://localhost:8080/
-
-This connects to real regional backends and the global LB backend.
-
-### Regenerate list of URLs
-
-```
-./genconfig.sh
+``` shell
+# starts a server on localhost:8080
+go run ./cmd/ping/main.go
 ```
 
-This transforms Terraform output to a form usable by the JS frontend. If there
-are any changes, you need to redeploy to see them.
+Next, within the `web` directory, run:
+
+``` shell
+# starts a frontend server at localhost:1234
+npm start
+```
+
+The frontend server when run locally is configured to proxy all API requests to
+`localhost:8080`.
+

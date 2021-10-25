@@ -1,0 +1,17 @@
+{
+  "name": "gcping",
+  "version": "1.0.0",
+  "source": "src/index.html",
+  "targets": {
+    "default": {
+      "distDir": "../cmd/ping/kodata"
+    }
+  },
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0"
+  }
+}

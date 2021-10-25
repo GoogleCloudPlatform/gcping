@@ -9,3 +9,9 @@ bin/
 
 # Temp/env specific files
 .DS_Store
+
+# Frontend build artifacts
+/web/dist
+/web/node_modules
+/cmd/ping/kodata
+/web/.parcel-cache
