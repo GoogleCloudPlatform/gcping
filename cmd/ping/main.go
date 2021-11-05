@@ -47,7 +47,7 @@ func main() {
 	}
 	http.Handle("/", http.FileServer(http.Dir(kdp)))
 
-	http.HandleFunc("/endpoints", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/endpoints", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Cache-Control", "no-store")
 		w.Header().Add("Content-Type", "application/json;charset=utf-8")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
@@ -59,7 +59,7 @@ func main() {
 	})
 
 	// Serve /ping with region response.
-	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/ping", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Cache-Control", "no-store")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
