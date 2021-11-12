@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import React from "react";
+import React from 'react';
 
-const GLOBAL_REGION_KEY = "global";
+const GLOBAL_REGION_KEY = 'global';
 export default class ResultsContainer extends React.Component {
   getTableBody() {
-    let fastestRegion = this.getFastestRegionKey();
+    const fastestRegion = this.getFastestRegionKey();
 
     if (this.props.loading) {
       return (
@@ -30,8 +30,8 @@ export default class ResultsContainer extends React.Component {
     }
 
     return this.props.results.map((regionKey) => {
-      let cls = (regionKey === fastestRegion && this.props.fastestRegionVisible) ? 'top' : '',
-        displayedKey = this.getDisplayedRegionKey(regionKey);
+      const cls = (regionKey === fastestRegion && this.props.fastestRegionVisible) ? 'top' : '';
+      const displayedKey = this.getDisplayedRegionKey(regionKey);
 
       return (
         <tr className={cls} key={regionKey}>
@@ -49,7 +49,7 @@ export default class ResultsContainer extends React.Component {
 
   /**
    * Gets the fastest region, excluding the global region
-   * @returns string
+   * @return string
    */
   getFastestRegionKey() {
     for (let i = 0; i < this.props.results.length; i++) {
@@ -66,13 +66,15 @@ export default class ResultsContainer extends React.Component {
    */
   getDisplayedRegionKey(regionKey) {
     // if the region is not global, return it as it is.
-    if (regionKey !== GLOBAL_REGION_KEY)
+    if (regionKey !== GLOBAL_REGION_KEY) {
       return regionKey;
+    }
 
     // if the region is global and we have received the region that is used by the Gloabl Load Balancer
     // we display that
-    if (this.props.globalRegionProxy.length > 0)
+    if (this.props.globalRegionProxy.length > 0) {
       return (<em>→{this.props.globalRegionProxy}</em>);
+    }
 
     // if the region is global and we don't have the routing region, we show "gloabl"
     return 'global';
