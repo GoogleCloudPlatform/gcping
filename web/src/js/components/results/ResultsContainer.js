@@ -53,7 +53,7 @@ export default class ResultsContainer extends React.Component {
 
   /**
    * Gets the fastest region, excluding the global region
-   * @return string
+   * @return {string}
    */
   getFastestRegionKey() {
     for (let i = 0; i < this.props.results.length; i++) {
@@ -66,7 +66,7 @@ export default class ResultsContainer extends React.Component {
   /**
    * Helper function to deduce the region to be displayed in the list
    * @param {string} regionKey
-   * @returns
+   * @return {string}
    */
   getDisplayedRegionKey(regionKey) {
     // if the region is not global, return it as it is.

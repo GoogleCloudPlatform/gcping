@@ -27,7 +27,10 @@ export default class AboutContainer extends React.Component {
 
     for (let i = 0; i < this.props.results.length; i++) {
       if (this.props.results[i] !== GLOBAL_REGION_KEY) {
-        tweet += '\n' + this.props.results[i] + ' (' + this.props.regions[this.props.results[i]]['median'] + ' ms)';
+        const regionKey = this.props.results[i];
+        const median = this.props.regions[regionKey]['median'];
+
+        tweet += `\n${regionKey} (${median} ms)`;
 
         if (--numRegions === 0) {
           break;

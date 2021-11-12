@@ -80,15 +80,17 @@ export default class Main extends React.Component {
   }
 
   /**
-     * Ping all regions to fetch their latency
-     */
+   * Ping all regions to fetch their latency
+   * @param {number} iter Number of times to ping all regions
+   */
   async pingAllRegions(iter) {
     const regions = this.state.regions;
     const regionsArr = Object.values(regions);
 
     // using a for..of instead of a simple for loop
     // to make sure we respect the async operations before proceeding.
-    for (const i of new Array(iter)) {
+    // eslint-disable-next-line
+    for (const i of Array(iter)) {
       for (const region of regionsArr) {
         // Takes care of the stopped button
         if (this.state.runningStatus === PING_TEST_STOPPED_STATUS) {
@@ -127,10 +129,10 @@ export default class Main extends React.Component {
   }
 
   /**
-     * Computes the ping time for a single GCP region
-     * @param {string} regionKey The key of the GCP region, ex: us-east1
-     * @return Promise
-     */
+   * Computes the ping time for a single GCP region
+   * @param {string} regionKey The key of the GCP region, ex: us-east1
+   * @return {Promise}
+   */
   pingSingleRegion(regionKey) {
     return new Promise((resolve) => {
       const gcpZone = this.state.regions[regionKey];
@@ -173,8 +175,8 @@ export default class Main extends React.Component {
 
   /**
      * Helper function to return median from a given array
-     * @param {*} arr Array of latencies
-     * @returns
+     * @param {array} arr Array of latencies
+     * @return {number} The median of latencies
      */
   getMedian(arr) {
     if (arr.length == 0) {
@@ -186,10 +188,13 @@ export default class Main extends React.Component {
   }
 
   /**
-     * Helper that adds the regionKey to it's proper position
-     * making the results array sorted
-     * TODO: Try and use an ordered map here to simply this
-     */
+   * Helper that adds the regionKey to it's proper position
+   * making the results array sorted
+   * TODO: Try and use an ordered map here to simply this
+   * @param {string} regionKey The region we intend to add
+   * @param {string} latency The median latency of the region we wish to add
+   * @return {array} The sorted array of the regions
+   */
   getSortedResults(regionKey, latency) {
     const results = this.state.results;
     const regions = this.state.regions;
