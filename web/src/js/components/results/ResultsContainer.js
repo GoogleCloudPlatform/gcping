@@ -15,6 +15,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const GLOBAL_REGION_KEY = 'global';
 export default class ResultsContainer extends React.Component {
@@ -30,7 +31,10 @@ export default class ResultsContainer extends React.Component {
     }
 
     return this.props.results.map((regionKey) => {
-      const cls = (regionKey === fastestRegion && this.props.fastestRegionVisible) ? 'top' : '';
+      const cls = ( regionKey === fastestRegion &&
+                    this.props.fastestRegionVisible ) ?
+                    'top' :
+                    '';
       const displayedKey = this.getDisplayedRegionKey(regionKey);
 
       return (
@@ -70,20 +74,32 @@ export default class ResultsContainer extends React.Component {
       return regionKey;
     }
 
-    // if the region is global and we have received the region that is used by the Gloabl Load Balancer
-    // we display that
+    // if the region is global and we have received the region
+    // that is used by the Gloabl Load Balancer, we display that instead
     if (this.props.globalRegionProxy.length > 0) {
       return (<em>→{this.props.globalRegionProxy}</em>);
     }
 
-    // if the region is global and we don't have the routing region, we show "gloabl"
+    // if the region is global and we don't have the routing region,
+    // we show "gloabl"
     return 'global';
   }
 
   render() {
     return (
-      <div className="mdl-cell results-cell mdl-cell--6-col mdl-cell--1-offset-tablet mdl-cell--3-offset-desktop">
-        <table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-color-text--grey-800">
+      <div
+        className="mdl-cell
+                  results-cell
+                  mdl-cell--6-col
+                  mdl-cell--1-offset-tablet
+                  mdl-cell--3-offset-desktop"
+      >
+        <table
+          className="mdl-data-table
+                    mdl-js-data-table
+                    mdl-shadow--2dp
+                    mdl-color-text--grey-800"
+        >
           <thead className="sticky">
             <tr>
               <th>REGION</th>
@@ -98,3 +114,11 @@ export default class ResultsContainer extends React.Component {
     );
   }
 }
+
+ResultsContainer.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  results: PropTypes.array.isRequired,
+  regions: PropTypes.array.isRequired,
+  globalRegionProxy: PropTypes.string.isRequired,
+  fastestRegionVisible: PropTypes.bool.isRequired,
+};

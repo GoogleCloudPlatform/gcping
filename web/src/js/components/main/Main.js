@@ -86,7 +86,8 @@ export default class Main extends React.Component {
     const regions = this.state.regions;
     const regionsArr = Object.values(regions);
 
-    // using a for..of instead of a simple for loop to make sure we respect the async operations before proceeding.
+    // using a for..of instead of a simple for loop
+    // to make sure we respect the async operations before proceeding.
     for (const i of new Array(iter)) {
       for (const region of regionsArr) {
         // Takes care of the stopped button
@@ -99,13 +100,16 @@ export default class Main extends React.Component {
         // add the latency to the array of latencies
         // from where we can compute the median and populate the table
         regions[region.key]['latencies'].push(latency);
-        regions[region.key]['median'] = this.getMedian(regions[region.key]['latencies']);
+
+        const median = this.getMedian(regions[region.key]['latencies']);
+        regions[region.key]['median'] = median;
 
         this.setState({
           regions,
         }, ()=>{
+          const results = this.getSortedResults(region.key, median);
           this.setState({
-            results: this.getSortedResults(region.key, regions[region.key]['median']),
+            results,
           });
         });
       }
@@ -117,7 +121,8 @@ export default class Main extends React.Component {
       });
     }
 
-    // when all the region latencies have been fetched, let's update our status flag
+    // when all the region latencies have been fetched,
+    // let's update our status flag
     this.updateRunningStatus(PING_TEST_STOPPED_STATUS);
   }
 
@@ -181,7 +186,8 @@ export default class Main extends React.Component {
   }
 
   /**
-     * Helper that adds the regionKey to it's proper position making the results array sorted
+     * Helper that adds the regionKey to it's proper position
+     * making the results array sorted
      * TODO: Try and use an ordered map here to simply this
      */
   getSortedResults(regionKey, latency) {
@@ -212,7 +218,8 @@ export default class Main extends React.Component {
 
     // add the region to it's proper position
     for (let i = 0; i < results.length - 1; i++) {
-      if (latency >= regions[results[i]].median && latency <= regions[results[i+1]].median) {
+      if ( latency >= regions[results[i]].median &&
+          latency <= regions[results[i+1]].median) {
         results.splice(i+1, 0, regionKey);
         return results;
       }
@@ -224,11 +231,23 @@ export default class Main extends React.Component {
       <main className="mdl-layout__content">
         <div className="mdl-grid">
           <Heading />
-          <StartStopContainer runningStatus={this.state.runningStatus} toggleStatus={(status)=>{
-            this.updateRunningStatus(status);
-          }} />
-          <ResultsContainer loading={this.state.loading} regions={this.state.regions} results={this.state.results} fastestRegionVisible={this.state.fastestRegionVisible} globalRegionProxy={this.state.globalRegionProxy} />
-          <AboutContainer results={this.state.results} regions={this.state.regions} />
+          <StartStopContainer
+            runningStatus={this.state.runningStatus}
+            toggleStatus={(status)=>{
+              this.updateRunningStatus(status);
+            }}
+          />
+          <ResultsContainer
+            loading={this.state.loading}
+            regions={this.state.regions}
+            results={this.state.results}
+            fastestRegionVisible={this.state.fastestRegionVisible}
+            globalRegionProxy={this.state.globalRegionProxy}
+          />
+          <AboutContainer
+            results={this.state.results}
+            regions={this.state.regions}
+          />
         </div>
       </main>
     );

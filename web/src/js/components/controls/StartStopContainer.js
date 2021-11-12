@@ -15,6 +15,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 export default class StartStopContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +27,6 @@ export default class StartStopContainer extends React.Component {
   }
 
   onBtnClick() {
-    console.log('onBtnClick');
     this.props.toggleStatus(this.getNewStatus());
   }
 
@@ -36,11 +36,28 @@ export default class StartStopContainer extends React.Component {
 
   render() {
     return (
-      <div className="mdl-cell startstop-cell mdl-cell--6-col mdl-cell--1-offset-tablet mdl-cell--3-offset-desktop">
-        <button id="stopstart" className="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" onClick={this.onBtnClick} >
+      <div className="mdl-cell
+                      startstop-cell
+                      mdl-cell--6-col
+                      mdl-cell--1-offset-tablet
+                      mdl-cell--3-offset-desktop"
+      >
+        <button
+          id="stopstart"
+          className="mdl-button
+                    mdl-js-button
+                    mdl-button--fab
+                    mdl-js-ripple-effect"
+          onClick={this.onBtnClick}
+        >
           <i className="material-icons">{this.getBtnText()}</i>
         </button>
       </div>
     );
   }
 }
+
+StartStopContainer.propTypes = {
+  runningStatus: PropTypes.string.isRequired,
+  toggleStatus: PropTypes.func.isRequired,
+};
