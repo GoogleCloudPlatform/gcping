@@ -75,6 +75,13 @@ body, input {
     background-color: inherit;
   }
   
+  .sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+  }
+
   a, a:visited {
     color: #01BCD4;
     text-decoration: none;
