@@ -12,11 +12,12 @@ the GCR repository you'd like to deploy to (e.g.,
 
 The frontend requires [Node.js](https://nodejs.org/en/).
 
-### Installing Frontend Dependencies
+### Build the frontend
 
 ```
 $ cd web
 $ npm install
+$ npm run build  # generate the frontend
 ```
 
 ### Deploy using Terraform
@@ -28,7 +29,6 @@ $ gcloud auth application-default login  # Used by Terraform
 
 ```
 $ terraform init # necessary only the first time
-$ npm run build  # generate the frontend
 $ terraform apply -var image=$(ko publish -P ./cmd/ping/)
 ```
 
