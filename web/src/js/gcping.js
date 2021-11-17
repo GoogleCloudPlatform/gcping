@@ -87,7 +87,7 @@ async function pingAllRegions(iter) {
       // from where we can compute the median and populate the table
       regions[region.key]["latencies"].push(latency);
       regions[region.key]["median"] = getMedian(
-        regions[region.key]["latencies"],
+        regions[region.key]["latencies"]
       );
 
       addResult(region.key, latency);
