@@ -70,6 +70,8 @@ function getEndpoints() {
 
 /**
  * Ping all regions to fetch their latency
+ *
+ * @param {number} iter
  */
 async function pingAllRegions(iter) {
   const regionsArr = Object.values(regions);
@@ -87,7 +89,7 @@ async function pingAllRegions(iter) {
       // from where we can compute the median and populate the table
       regions[region.key]["latencies"].push(latency);
       regions[region.key]["median"] = getMedian(
-        regions[region.key]["latencies"]
+        regions[region.key]["latencies"],
       );
 
       addResult(region.key, latency);
@@ -107,7 +109,7 @@ async function pingAllRegions(iter) {
 /**
  * Computes the ping time for a single GCP region
  * @param {string} regionKey The key of the GCP region, ex: us-east1
- * @return Promise
+ * @return {Promise} Promise
  */
 function pingSingleRegion(regionKey) {
   return new Promise((resolve) => {
@@ -177,7 +179,7 @@ function updateList() {
 /**
  * Helper function to return median from a given array
  * @param {*} arr Array of latencies
- * @returns
+ * @return {*}
  */
 function getMedian(arr) {
   if (arr.length == 0) {
@@ -191,6 +193,8 @@ function getMedian(arr) {
 /**
  * Helper that adds the regionKey to it's proper position making the results array sorted
  * TODO: Try and use an ordered map here to simply this
+ * @param {string} regionKey
+ * @param {number} latency
  */
 function addResult(regionKey, latency) {
   if (!results.length) {
@@ -258,7 +262,7 @@ function displayFastest(isVisible) {
 /**
  * Helper function to deduce the region to be displayed in the list
  * @param {string} regionKey
- * @returns
+ * @return {string}
  */
 function getDisplayedRegionKey(regionKey) {
   // if the region is not global, return it as it is.
@@ -275,10 +279,9 @@ function getDisplayedRegionKey(regionKey) {
 
 /**
  * Gets the fastest region, excluding the global region
- * @return string
+ * @return {string}
  */
 function getFastestRegion() {
-  const found = false;
   for (let i = 0; i < results.length; i++) {
     if (results[i] !== GLOBAL_REGION_KEY) {
       return results[i];
