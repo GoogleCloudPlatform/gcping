@@ -4,12 +4,11 @@ module.exports = {
         'es2021': true,
     },
     'extends': [
-        //        "react-app",
-
+        // "react-app",
         // 'plugin:react/recommended',
         'google',
         "plugin:prettier/recommended",
-        "prettier/@typescript-eslint",
+        // "prettier/@typescript-eslint",
         // "prettier/react"
     ],
     'parserOptions': {
@@ -20,7 +19,7 @@ module.exports = {
         'sourceType': 'module',
     },
     'plugins': [
-        'react',
+        // 'react',
     ],
     'rules': {
         "require-jsdoc": ["error", {
