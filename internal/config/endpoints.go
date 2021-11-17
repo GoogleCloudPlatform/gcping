@@ -138,7 +138,7 @@ var AllEndpoints = map[string]Endpoint{
 		RegionName: "São Paulo",
 	},
 	"southamerica-west1": {
-		URL:        "https://southamerica-west1-5tkroniexa-tl.a.run.app/",
+		URL:        "https://southamerica-west1-5tkroniexa-tl.a.run.app",
 		Region:     "southamerica-west1",
 		RegionName: "Santiago",
 	},
