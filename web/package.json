@@ -11,7 +11,7 @@
     "start": "parcel",
     "build": "parcel build",
     "lint": "eslint src/",
-    "fix": "eslint --fix src/"
+    "fix": "prettier --write src/ && eslint --fix src/"
   },
   "devDependencies": {
     "eslint-config-google": "^0.14.0",
