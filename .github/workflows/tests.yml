@@ -30,3 +30,14 @@ jobs:
       run: go build -v ./...
     - name: Test
       run: go test -v ./...
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+   - uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - run: |
+        cd web
+        npm install
+        npm run lint
