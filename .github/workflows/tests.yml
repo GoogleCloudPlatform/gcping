@@ -41,3 +41,4 @@ jobs:
         cd web
         npm install
         npm run lint
+        git diff-files --quiet # check for clean state
