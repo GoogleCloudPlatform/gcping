@@ -15,6 +15,8 @@ $ gcloud auth login                      # Used by ko
 $ gcloud auth application-default login  # Used by Terraform
 ```
 - Run `terraform init` to fetch the Terraform state, etc.
+- In Cloud Shell, if you see errors about IPv6 addresses not resolve, run
+  `./bin/prefer-ipv4.sh`
 
 ## Build the frontend
 
