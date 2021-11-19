@@ -41,4 +41,5 @@ jobs:
         cd web
         npm install
         npm run lint
+        echo "Checking for clean state..."
         git diff-files --quiet # check for clean state
