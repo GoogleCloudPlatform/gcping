@@ -17,13 +17,3 @@ steps:
       - -c
       - |
         echo $(/ko publish ./cmd/ping) > ./ko_container.txt || exit 1
-  # Deploy container image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: /bin/bash
-    args:
-      - -c
-      - |
-        gcloud run deploy ko \
-        --image=$(cat ./ko_container.txt) \
-        --region=us-central1 \
-        --platform=managed
