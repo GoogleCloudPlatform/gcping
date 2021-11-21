@@ -1,0 +1,21 @@
+steps:
+  #  using our ko builder we will build our application that lives in ./cmd/ko
+  - name: gcr.io/$PROJECT_ID/ko
+    entrypoint: /bin/sh
+    env:
+      - 'KO_DOCKER_REPO=gcr.io/$PROJECT_ID'
+    # we write the result of ko publish to a txt file so we can persist the variable between steps
+    args:
+      - -c
+      - |
+        echo $(/ko publish ./cmd/ping) > ./ko_container.txt || exit 1
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: /bin/bash
+    args:
+      - -c
+      - |
+        gcloud run deploy ko \
+        --image=$(cat ./ko_container.txt) \
+        --region=us-central1 \
+        --platform=managed
