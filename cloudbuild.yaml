@@ -3,11 +3,11 @@ steps:
   - name: 'node'
     id: install
     entrypoint: 'npm'
-    args: ['install']
+    args: ['install', 'web/']
   - name: 'node'
     id: run-build
     entrypoint: 'npm'
-    args: ['run', 'build']
+    args: ['--prefix', 'web/', run', 'build']
   - name: gcr.io/$PROJECT_ID/ko
     entrypoint: /bin/sh
     env:
