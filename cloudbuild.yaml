@@ -17,3 +17,20 @@ steps:
       - -c
       - |
         echo $(/ko publish ./cmd/ping) > ./ko_container.txt || exit 1
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: /bin/bash
+    args:
+      - -c
+      - |
+        [[ ! -z $_PR_NUMBER ]] && gcloud run deploy gcping-pr-${_PR_NUMBER} \
+        --image=$(cat ./ko_container.txt) \
+        --region=us-central1 \
+        --platform=managed
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: /bin/bash
+    args:
+      - -c
+      - |
+        [[ ! -z $_PR_NUMBER ]] && gcloud run services add-iam-policy-binding gcping-pr-${_PR_NUMBER} \
+        --member="allUsers" \
+        --role="roles/run.invoker"
