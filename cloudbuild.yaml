@@ -33,5 +33,5 @@ steps:
       - |
         [[ ! -z $_PR_NUMBER ]] && gcloud run services add-iam-policy-binding gcping-pr-${_PR_NUMBER} \
         --member="allUsers" \
-        --role="roles/run.invoker"
+        --role="roles/run.invoker" \
         --region=us-central1
