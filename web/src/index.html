@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" type="image/png" href="images/icon.png" />
+    <meta
+      name="description"
+      content="Measure latency to Google Cloud regions"
+    />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>GCPing.com</title>
+    <link
+      rel="stylesheet"
+      href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
+    />
+    <link rel="stylesheet" href="css/gcping.css" />
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script defer src="js/gcping.js"></script>
+  </head>
+  <body>
+    <div class="mdl-layout mdl-js-layout">
+      <div class="ribbon"></div>
+      <main class="mdl-layout__content">
+        <div class="mdl-grid">
+          <div
+            class="
+              mdl-cell
+              mdl-cell--6-col
+              mdl-cell--1-offset-tablet
+              mdl-cell--3-offset-desktop
+            "
+          >
+            <h1>
+              Measure your latency to
+              <a
+                target="_blank"
+                href="https://cloud.google.com/compute/docs/regions-zones/regions-zones"
+                >Google Cloud regions</a
+              >
+            </h1>
+          </div>
+          <div
+            class="
+              mdl-cell
+              startstop-cell
+              mdl-cell--6-col
+              mdl-cell--1-offset-tablet
+              mdl-cell--3-offset-desktop
+            "
+          >
+            <button
+              id="stopstart"
+              class="
+                mdl-button mdl-js-button
+                mdl-button--fab
+                mdl-js-ripple-effect
+              "
+            >
+              <i class="material-icons">stop</i>
+            </button>
+          </div>
+          <div
+            class="
+              mdl-cell
+              results-cell
+              mdl-cell--6-col
+              mdl-cell--1-offset-tablet
+              mdl-cell--3-offset-desktop
+            "
+          >
+            <table
+              class="
+                mdl-data-table mdl-js-data-table
+                mdl-shadow--2dp
+                mdl-color-text--grey-800
+              "
+            >
+              <thead class="sticky">
+                <tr>
+                  <th>REGION</th>
+                  <th>MEDIAN LATENCY</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="2">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            class="
+              about-content
+              mdl-cell
+              mdl-cell--6-col
+              mdl-cell--1-offset-tablet
+              mdl-cell--3-offset-desktop
+            "
+          >
+            <center>
+              <a
+                id="tweet-link"
+                href="https://twitter.com/share"
+                target="_blank"
+                ><img
+                  id="tweet-logo"
+                  src="images/twitter.png"
+                  alt="Tweet your latencies"
+              /></a>
+            </center>
+            <h2>How does this work?</h2>
+            <p>
+              Your browser makes HTTPS requests to
+              <a target="_blank" href="https://cloud.google.com/run"
+                >Google Cloud Run</a
+              >
+              services deployed to each region. The median time between request
+              and response is shown.
+            </p>
+            <p>
+              The <b>global</b> row uses a
+              <a target="_blank" href="https://cloud.google.com/load-balancing/"
+                >Global HTTPS Load Balancer</a
+              >
+              to route requests to the nearest service.
+            </p>
+            <p>
+              <b>Note:</b> This site is intended to show <i>relative</i> latency
+              to each region, and should not be used to determine the absolute
+              lowest latency possible, or your own network speed or other
+              network conditions. Results are not scientific.
+            </p>
+            <p>
+              This is not an official Google project.
+              <a
+                target="_blank"
+                href="https://github.com/GoogleCloudPlatform/gcping"
+                >Source available on GitHub</a
+              >.
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

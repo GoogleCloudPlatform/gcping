@@ -1,0 +1,166 @@
+/**
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+body,
+input {
+  font-family: "Roboto", sans-serif;
+  background-color: #efefef;
+  color: #485656;
+}
+
+.mdl-grid {
+  max-width: 1000px;
+}
+
+.mdl-data-table {
+  border: 0 transparent solid;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.mdl-data-table td,
+.mdl-data-table th,
+.mdl-data-table td div {
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mdl-data-table .top td:last-child {
+  background-color: #deedc8;
+}
+
+.mdl-data-table .top td:last-child > div:after {
+  background-color: #92c456;
+  bottom: 0;
+  content: " ";
+  position: absolute;
+  right: 0;
+  width: 5px;
+  top: 0;
+}
+
+.mdl-data-table th {
+  color: white;
+  line-height: 30px;
+}
+
+.mdl-data-table th:last-child {
+  padding-right: 8px;
+  width: 40%;
+}
+
+@media (max-width: 479px) {
+  .mdl-data-table th:last-child {
+    width: 40%;
+  }
+}
+
+.mdl-data-table thead {
+  background-color: #5f7d8c;
+}
+
+.mdl-data-table tbody tr:hover {
+  background-color: inherit;
+}
+
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+}
+
+a,
+a:visited {
+  color: #01bcd4;
+  text-decoration: none;
+}
+
+.ribbon {
+  background-color: #283238;
+  left: 0;
+  height: 40vh;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 0;
+}
+
+h1 {
+  color: white;
+  font-size: 26px;
+  margin-top: 45px;
+}
+
+h1 a,
+h1 a:visited {
+  color: white;
+  font-weight: inherit;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 14px;
+}
+
+p {
+  margin-bottom: 4px;
+}
+
+#stopstart {
+  background-color: #01bcd4;
+  color: white;
+  cursor: pointer;
+  height: 48px;
+  min-width: 48px;
+  position: absolute;
+  right: 24px;
+  top: -16px;
+  width: 48px;
+  z-index: 10;
+}
+
+@media (max-width: 679px) {
+  #stopstart {
+    height: 36px;
+    min-width: 36px;
+    right: 18px;
+    top: -10px;
+    width: 36px;
+  }
+}
+
+.startstop-cell {
+  margin-bottom: 0;
+  margin-top: 0;
+  position: relative;
+}
+
+.results-cell {
+  min-height: 30vh;
+}
+
+.results-cell .region {
+  font-size: 11px;
+}
+
+#tweet-logo {
+  height: 30px;
+  width: 30px;
+}
