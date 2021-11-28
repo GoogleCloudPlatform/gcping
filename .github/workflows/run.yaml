@@ -1,3 +1,10 @@
+name: run
+
+on:
+  push:
+    branches:
+    - '*'
+
 jobs:
   job_id:
     # ...
