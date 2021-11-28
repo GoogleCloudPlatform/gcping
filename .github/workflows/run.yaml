@@ -1,0 +1,33 @@
+jobs:
+  job_id:
+    # ...
+
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    # Install gcloud, do not specify authentication.
+    - uses: 'google-github-actions/setup-gcloud@master'
+      with:
+        project_id: 'kr-gcping'
+
+    # Configure Workload Identity Federation via a credentials file.
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v0.4.0'
+      with:
+        workload_identity_provider: 'projects/793166746566/locations/global/workloadIdentityPools/my-pool'
+        service_account: 'my-service-account@kr-gcping.iam.gserviceaccount.com'
+
+    # Authenticate using the created credentials file.
+    #
+    # WARNING: The --cred-file flag is in preview and is subject to change.
+    - id: 'gcloud'
+      name: 'gcloud'
+      run: |-
+        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+
+        # Now you can run gcloud commands authenticated as the impersonated service account.
+        gcloud secrets versions access "latest" --secret "my-secret"
