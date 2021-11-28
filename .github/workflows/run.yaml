@@ -30,6 +30,7 @@ jobs:
       uses: 'google-github-actions/auth@v0.4.0'
       with:
         workload_identity_provider: 'projects/793166746566/locations/global/workloadIdentityPools/my-pool'
+        audience: 'projects/793166746566/locations/global/workloadIdentityPools/my-pool'
         service_account: 'my-service-account@kr-gcping.iam.gserviceaccount.com'
 
     # Authenticate using the created credentials file.
