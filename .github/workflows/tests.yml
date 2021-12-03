@@ -44,6 +44,7 @@ jobs:
         # It's easy to make changes to package.json and forget to run npm
         # install and then check in the resulting package-lock.json. This check
         # ensures that such mistakes don't make their way past the PR.
-        git status
         echo "Checking for clean package-lock.json..."
+        # Print a human friendly message
+        git status
         git diff-files --quiet # check for clean state
