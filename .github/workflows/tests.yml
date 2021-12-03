@@ -41,5 +41,8 @@ jobs:
         cd web
         npm install
         npm run lint
-        echo "Checking for clean state..."
+        # It's easy to make changes to package.json and forget to run npm
+        # install and then check in the resulting package-lock.json. This check
+        # ensures that such mistakes don't make their way past the PR.
+        echo "Checking for clean package-lock.json..."
         git diff-files --quiet # check for clean state
