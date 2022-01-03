@@ -19,5 +19,9 @@
     "eslint-plugin-prettier": "4.0.0",
     "parcel": "^2.0.0",
     "prettier": "2.4.1"
+  },
+  "dependencies": {
+    "@material/top-app-bar": "^13.0.0",
+    "@parcel/transformer-sass": "^2.0.1"
   }
 }
