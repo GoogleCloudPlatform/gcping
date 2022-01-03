@@ -15,6 +15,7 @@
  */
 
 @use "@material/top-app-bar/mdc-top-app-bar";
+@use "@material/dialog/mdc-dialog";
 
 :root{
   --mdc-theme-primary: rgb(26, 115, 232);
