@@ -17,7 +17,7 @@
 @use "@material/top-app-bar/mdc-top-app-bar";
 @use "@material/dialog/mdc-dialog";
 
-:root{
+:root {
   --mdc-theme-primary: rgb(26, 115, 232);
 }
 
@@ -28,10 +28,10 @@ input {
   color: #485656;
 }
 
-.app-bar-link{
+.app-bar-link {
   display: inline-flex;
   align-items: center;
-  margin:0 5px;
+  margin: 0 5px;
 }
 
 .mdl-grid {

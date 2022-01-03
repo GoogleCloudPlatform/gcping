@@ -17,26 +17,35 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
     />
-    <link rel="stylesheet" href="css/gcping.scss"/>
+    <link rel="stylesheet" href="css/gcping.scss" />
     <script defer src="js/gcping.js" type="module"></script>
   </head>
   <body>
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
       <div class="mdc-top-app-bar__row">
-        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+        <section
+          class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"
+        >
           <span class="mdc-top-app-bar__title">GCPing</span>
         </section>
-        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+        <section
+          class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end"
+          role="toolbar"
+        >
           <a
             target="_blank"
             href="https://github.com/GoogleCloudPlatform/gcping"
             class="app-bar-link"
-            ><i class="material-icons mdc-button__icon" aria-hidden="true">link</i> GitHub</a
+            ><i class="material-icons mdc-button__icon" aria-hidden="true"
+              >link</i
+            >
+            GitHub</a
           >
-          <a
-            href="#"
-            class="app-bar-link how-it-works-link"
-            ><i class="material-icons mdc-button__icon" aria-hidden="true">help_outline</i> How it works</a
+          <a href="#" class="app-bar-link how-it-works-link"
+            ><i class="material-icons mdc-button__icon" aria-hidden="true"
+              >help_outline</i
+            >
+            How it works</a
           >
         </section>
       </div>
@@ -115,33 +124,41 @@
             </center>
             <div class="mdc-dialog">
               <div class="mdc-dialog__container">
-                <div class="mdc-dialog__surface"
+                <div
+                  class="mdc-dialog__surface"
                   role="alertdialog"
                   aria-modal="true"
                   aria-labelledby="my-dialog-title"
-                  aria-describedby="my-dialog-content">
-                  <div class="mdc-dialog__content" id="how-it-works-dialog-content">
+                  aria-describedby="my-dialog-content"
+                >
+                  <div
+                    class="mdc-dialog__content"
+                    id="how-it-works-dialog-content"
+                  >
                     <h2>How does this work?</h2>
                     <p>
                       Your browser makes HTTPS requests to
                       <a target="_blank" href="https://cloud.google.com/run"
                         >Google Cloud Run</a
                       >
-                      services deployed to each region. The median time between request
-                      and response is shown.
+                      services deployed to each region. The median time between
+                      request and response is shown.
                     </p>
                     <p>
                       The <b>global</b> row uses a
-                      <a target="_blank" href="https://cloud.google.com/load-balancing/"
+                      <a
+                        target="_blank"
+                        href="https://cloud.google.com/load-balancing/"
                         >Global HTTPS Load Balancer</a
                       >
                       to route requests to the nearest service.
                     </p>
                     <p>
-                      <b>Note:</b> This site is intended to show <i>relative</i> latency
-                      to each region, and should not be used to determine the absolute
-                      lowest latency possible, or your own network speed or other
-                      network conditions. Results are not scientific.
+                      <b>Note:</b> This site is intended to show
+                      <i>relative</i> latency to each region, and should not be
+                      used to determine the absolute lowest latency possible, or
+                      your own network speed or other network conditions.
+                      Results are not scientific.
                     </p>
                     <p>
                       This is not an official Google project.
