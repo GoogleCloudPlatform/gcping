@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
+:root{
+  --mdc-theme-primary: rgb(26, 115, 232);
+}
+
 body,
 input {
   font-family: "Roboto", sans-serif;
   background-color: #efefef;
   color: #485656;
+}
+
+.app-bar-link{
+  display: inline-flex;
+  align-items: center;
+  margin:0 5px;
 }
 
 .mdl-grid {
@@ -87,7 +97,7 @@ input {
 
 a,
 a:visited {
-  color: #01bcd4;
+  color: inherit;
   text-decoration: none;
 }
 
