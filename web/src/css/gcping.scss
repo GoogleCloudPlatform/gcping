@@ -19,6 +19,7 @@
 
 :root {
   --mdc-theme-primary: rgb(26, 115, 232);
+  --icon-margin-horizontal: 5px;
 }
 
 body,
@@ -31,7 +32,18 @@ input {
 .app-bar-link {
   display: inline-flex;
   align-items: center;
-  margin: 0 5px;
+  margin: 0 10px;
+
+  .material-icons{
+    margin-right: var(--icon-margin-horizontal);
+  }
+}
+
+.subtitle{
+  font-weight: 400;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
 }
 
 .mdl-grid {
@@ -137,7 +149,7 @@ p {
 }
 
 #stopstart {
-  background-color: #01bcd4;
+  background-color: var(--mdc-theme-primary);
   color: white;
   cursor: pointer;
   height: 48px;
