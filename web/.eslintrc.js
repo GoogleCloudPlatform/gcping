@@ -7,4 +7,8 @@ module.exports = {
   parserOptions: {},
   plugins: [],
   rules: {},
+  parserOptions: {
+    ecmaVersion: 11,
+    sourceType: "module"
+  }
 };

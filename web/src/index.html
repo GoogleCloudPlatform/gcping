@@ -17,32 +17,43 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
     />
-    <link rel="stylesheet" href="css/gcping.css" />
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script defer src="js/gcping.js"></script>
+    <link rel="stylesheet" href="css/gcping.scss" />
+    <script defer src="js/gcping.js" type="module"></script>
   </head>
   <body>
-    <div class="mdl-layout mdl-js-layout">
-      <div class="ribbon"></div>
-      <main class="mdl-layout__content">
-        <div class="mdl-grid">
-          <div
-            class="
-              mdl-cell
-              mdl-cell--6-col
-              mdl-cell--1-offset-tablet
-              mdl-cell--3-offset-desktop
-            "
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+      <div class="mdc-top-app-bar__row">
+        <section
+          class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"
+        >
+          <span class="mdc-top-app-bar__title">GCPing</span>
+        </section>
+        <section
+          class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end"
+          role="toolbar"
+        >
+          <a
+            target="_blank"
+            href="https://github.com/GoogleCloudPlatform/gcping"
+            class="app-bar-link"
+            ><i class="material-icons mdc-button__icon" aria-hidden="true"
+              >link</i
+            >
+            GitHub</a
           >
-            <h1>
-              Measure your latency to
-              <a
-                target="_blank"
-                href="https://cloud.google.com/compute/docs/regions-zones/regions-zones"
-                >Google Cloud regions</a
-              >
-            </h1>
-          </div>
+          <a href="#" class="app-bar-link how-it-works-link"
+            ><i class="material-icons mdc-button__icon" aria-hidden="true"
+              >help_outline</i
+            >
+            How it works</a
+          >
+        </section>
+      </div>
+    </header>
+    <div class="mdl-layout mdl-js-layout">
+      <main class="mdl-layout__content mdc-top-app-bar--fixed-adjust">
+        <h5 class="subtitle">Measure your latency to Google Cloud regions</h5>
+        <div class="mdl-grid">
           <div
             class="
               mdl-cell
@@ -112,36 +123,57 @@
                   alt="Tweet your latencies"
               /></a>
             </center>
-            <h2>How does this work?</h2>
-            <p>
-              Your browser makes HTTPS requests to
-              <a target="_blank" href="https://cloud.google.com/run"
-                >Google Cloud Run</a
-              >
-              services deployed to each region. The median time between request
-              and response is shown.
-            </p>
-            <p>
-              The <b>global</b> row uses a
-              <a target="_blank" href="https://cloud.google.com/load-balancing/"
-                >Global HTTPS Load Balancer</a
-              >
-              to route requests to the nearest service.
-            </p>
-            <p>
-              <b>Note:</b> This site is intended to show <i>relative</i> latency
-              to each region, and should not be used to determine the absolute
-              lowest latency possible, or your own network speed or other
-              network conditions. Results are not scientific.
-            </p>
-            <p>
-              This is not an official Google project.
-              <a
-                target="_blank"
-                href="https://github.com/GoogleCloudPlatform/gcping"
-                >Source available on GitHub</a
-              >.
-            </p>
+            <div class="mdc-dialog">
+              <div class="mdc-dialog__container">
+                <div
+                  class="mdc-dialog__surface"
+                  role="alertdialog"
+                  aria-modal="true"
+                  aria-labelledby="my-dialog-title"
+                  aria-describedby="my-dialog-content"
+                >
+                  <div
+                    class="mdc-dialog__content"
+                    id="how-it-works-dialog-content"
+                  >
+                    <h2>How does this work?</h2>
+                    <p>
+                      Your browser makes HTTPS requests to
+                      <a target="_blank" href="https://cloud.google.com/run"
+                        >Google Cloud Run</a
+                      >
+                      services deployed to each region. The median time between
+                      request and response is shown.
+                    </p>
+                    <p>
+                      The <b>global</b> row uses a
+                      <a
+                        target="_blank"
+                        href="https://cloud.google.com/load-balancing/"
+                        >Global HTTPS Load Balancer</a
+                      >
+                      to route requests to the nearest service.
+                    </p>
+                    <p>
+                      <b>Note:</b> This site is intended to show
+                      <i>relative</i> latency to each region, and should not be
+                      used to determine the absolute lowest latency possible, or
+                      your own network speed or other network conditions.
+                      Results are not scientific.
+                    </p>
+                    <p>
+                      This is not an official Google project.
+                      <a
+                        target="_blank"
+                        href="https://github.com/GoogleCloudPlatform/gcping"
+                        >Source available on GitHub</a
+                      >.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="mdc-dialog__scrim"></div>
+            </div>
           </div>
         </div>
       </main>
