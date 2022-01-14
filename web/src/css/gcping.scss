@@ -128,7 +128,7 @@ input {
 }
 
 .mdl-data-table thead {
-  background-color: #5f7d8c;
+  background-color: var(--mdc-theme-primary);
 }
 
 .mdl-data-table tbody tr:hover {
