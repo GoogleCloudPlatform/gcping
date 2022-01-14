@@ -52,28 +52,18 @@
     </header>
     <div class="mdl-layout mdl-js-layout">
       <main class="mdl-layout__content mdc-top-app-bar--fixed-adjust">
-        <h5 class="subtitle">Measure your latency to Google Cloud regions</h5>
+        <div class="subtitle">
+          <h5>Measure your latency to Google Cloud regions</h5>
+          <button
+                id="stopstart"
+                class="mdc-button mdc-button--touch running"
+              >
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__label show-on-running"><i class="material-icons mdc-button__icon">stop</i> Stop</span>
+                <span class="mdc-button__label show-on-stopped"><i class="material-icons mdc-button__icon">restart_alt</i> Restart</span>
+          </button>
+        </div>
         <div class="mdl-grid">
-          <div
-            class="
-              mdl-cell
-              startstop-cell
-              mdl-cell--6-col
-              mdl-cell--1-offset-tablet
-              mdl-cell--3-offset-desktop
-            "
-          >
-            <button
-              id="stopstart"
-              class="
-                mdl-button mdl-js-button
-                mdl-button--fab
-                mdl-js-ripple-effect
-              "
-            >
-              <i class="material-icons">stop</i>
-            </button>
-          </div>
           <div
             class="
               mdl-cell

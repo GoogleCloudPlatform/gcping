@@ -22,7 +22,9 @@
     "prettier": "2.4.1"
   },
   "dependencies": {
+    "@material/button": "^13.0.0",
     "@material/dialog": "^13.0.0",
+    "@material/ripple": "^13.0.0",
     "@material/top-app-bar": "^13.0.0"
   }
 }
