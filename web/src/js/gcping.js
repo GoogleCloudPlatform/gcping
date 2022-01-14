@@ -144,9 +144,9 @@ function pingSingleRegion(regionKey) {
 function updatePingTestState(status) {
   pingTestStatus = status;
   if (status === PING_TEST_RUNNING_STATUS) {
-    btnCtrl.classList.add('running');
+    btnCtrl.classList.add("running");
   } else if (status === PING_TEST_STOPPED_STATUS) {
-    btnCtrl.classList.remove('running');
+    btnCtrl.classList.remove("running");
   }
 }
 

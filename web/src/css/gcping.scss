@@ -30,24 +30,33 @@ input {
   color: #485656;
 }
 
+.logo-container {
+  display: inline-flex;
+  align-items: center;
+
+  .logo {
+    margin-right: 10px;
+  }
+}
+
 .app-bar-link {
   display: inline-flex;
   align-items: center;
   margin: 0 10px;
 
-  .material-icons{
+  .material-icons {
     margin-right: var(--icon-margin-horizontal);
   }
 }
 
-.subtitle{
+.subtitle {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
   border-bottom: 1px solid #ccc;
 
-  h5{
+  h5 {
     font-weight: 400;
     margin: 1.5rem 0;
   }
@@ -56,23 +65,23 @@ input {
 #stopstart {
   --mdc-text-button-with-icon-icon-size: 1.5rem;
 
-  > span{
+  > span {
     display: inline-flex;
     align-items: center;
     font-size: 1.2rem;
     font-weight: 400;
   }
 
-  > span.show-on-running{
+  > span.show-on-running {
     display: none;
   }
 
-  &.running{
-    > span.show-on-running{
+  &.running {
+    > span.show-on-running {
       display: inline-flex;
     }
 
-    > span.show-on-stopped{
+    > span.show-on-stopped {
       display: none;
     }
   }
