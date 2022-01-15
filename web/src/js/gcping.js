@@ -18,6 +18,7 @@
 // TODO: Add an option to contribute times and JS geolocation info to a public BigQuery dataset.
 
 import { MDCDialog } from "@material/dialog";
+import {MDCDataTable} from '@material/data-table';
 
 const GLOBAL_REGION_KEY = "global";
 const PING_TEST_RUNNING_STATUS = "running";
@@ -163,14 +164,14 @@ function updateList() {
     cls = results[i] === fastestRegion && fastestRegionVisible ? "top" : "";
     regionKey = getDisplayedRegionKey(results[i]);
     html +=
-      '<tr class="' +
+      '<tr class="mdc-data-table__row ' +
       cls +
-      '"><td class="regiondesc">' +
+      '"><td class="mdc-data-table__cell regiondesc">' +
       regions[results[i]]["label"] +
-      '<div class="region">' +
+      '</td><td class="mdc-data-table__cell region">' +
       regionKey +
-      "</div></td>" +
-      '<td class="result"><div>' +
+      "</td>" +
+      '<td class="mdc-data-table__cell result"><div>' +
       regions[results[i]]["median"] +
       " ms</div></td></tr>";
   }
@@ -316,4 +317,6 @@ window.onload = function () {
       e.preventDefault();
       dialog.open();
     });
+
+  const dataTable = new MDCDataTable(document.querySelector('.mdc-data-table'));
 };

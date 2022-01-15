@@ -17,22 +17,40 @@
 @use "@material/top-app-bar/mdc-top-app-bar";
 @use "@material/dialog/mdc-dialog";
 @use "@material/button/styles";
+@use "@material/data-table/data-table";
+
+@include data-table.core-styles;
+@include data-table.theme-baseline;
 
 :root {
   --mdc-theme-primary: rgb(26, 115, 232);
+  --mdc-theme-secondary: rgba(0, 0, 0, 0.04);
+  --mdc-typography-body2-font-size: 13px;
+  --mdc-typography-body2-line-height: 1.5rem;
   --icon-margin-horizontal: 5px;
 }
 
 body,
 input {
   font-family: "Roboto", sans-serif;
-  background-color: #efefef;
   color: #485656;
+}
+
+.mdc-top-app-bar__row{
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+
+  .mdc-top-app-bar__section{
+    padding-left:0;
+    padding-right:0;
+  }
 }
 
 .logo-container {
   display: inline-flex;
   align-items: center;
+  padding: 0;
 
   .logo {
     margin-right: 10px;
@@ -53,7 +71,7 @@ input {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 5%;
   border-bottom: 1px solid #ccc;
 
   h5 {
@@ -87,52 +105,23 @@ input {
   }
 }
 
-.mdl-grid {
-  max-width: 1000px;
+.results-cell {
+  text-align: center;
 }
 
-.mdl-data-table {
-  border: 0 transparent solid;
-  table-layout: fixed;
-  width: 100%;
-}
+.mdc-data-table{
+  width: 90%;
+  margin: 20px auto;
 
-.mdl-data-table td,
-.mdl-data-table th,
-.mdl-data-table td div {
-  overflow: hidden;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  .mdc-data-table__row, .mdc-data-table__header-row{
+    height: auto;
+  }
+  .mdc-data-table__header-cell{
+    background-color: var(--mdc-theme-secondary);
+  }
 
-.mdl-data-table .top td:last-child {
-  background-color: #deedc8;
-}
-
-.mdl-data-table .top td:last-child > div:after {
-  background-color: #92c456;
-  bottom: 0;
-  content: " ";
-  position: absolute;
-  right: 0;
-  width: 5px;
-  top: 0;
-}
-
-.mdl-data-table th {
-  color: white;
-  line-height: 30px;
-}
-
-.mdl-data-table th:last-child {
-  padding-right: 8px;
-  width: 40%;
-}
-
-@media (max-width: 479px) {
-  .mdl-data-table th:last-child {
-    width: 40%;
+  .mdc-data-table__header-cell,.mdc-data-table__cell{
+    padding: 4px 16px;
   }
 }
 
@@ -187,14 +176,6 @@ h2 {
 
 p {
   margin-bottom: 4px;
-}
-
-.results-cell {
-  min-height: 30vh;
-}
-
-.results-cell .region {
-  font-size: 11px;
 }
 
 #tweet-logo {

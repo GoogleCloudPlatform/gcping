@@ -68,17 +68,29 @@
             >
           </button>
         </div>
-        <div class="mdl-grid">
+        <div class="mdc-grid">
           <div
             class="
-              mdl-cell
+              mdc-cell
               results-cell
-              mdl-cell--6-col
-              mdl-cell--1-offset-tablet
-              mdl-cell--3-offset-desktop
+              mdc-cell--8-col
             "
           >
-            <table
+          <div class="mdc-data-table">
+            <div class="mdc-data-table__table-container">
+              <table class="mdc-data-table__table" aria-label="Ping results">
+                <thead>
+                  <tr class="mdc-data-table__header-row">
+                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Location</th>
+                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Region</th>
+                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Median Latency</th>
+                  </tr>
+                </thead>
+                <tbody class="mdc-data-table__content"></tbody>
+              </table>
+            </div>
+          </div>
+            <!-- <table
               class="
                 mdl-data-table mdl-js-data-table
                 mdl-shadow--2dp
@@ -96,7 +108,7 @@
                   <td colspan="2">Loading...</td>
                 </tr>
               </tbody>
-            </table>
+            </table> -->
           </div>
           <div
             class="
