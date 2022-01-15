@@ -14,7 +14,7 @@
     "fix": "prettier --write src/ && eslint --fix src/"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.0.1",
+    "@parcel/transformer-sass": "^2.2.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "4.0.0",
@@ -22,9 +22,9 @@
     "prettier": "2.4.1"
   },
   "dependencies": {
-    "@material/button": "^13.0.0",
-    "@material/dialog": "^13.0.0",
-    "@material/ripple": "^13.0.0",
-    "@material/top-app-bar": "^13.0.0"
+    "@material/button": "13.0.0",
+    "@material/dialog": "13.0.0",
+    "@material/ripple": "13.0.0",
+    "@material/top-app-bar": "13.0.0"
   }
 }
