@@ -144,9 +144,9 @@ function pingSingleRegion(regionKey) {
 function updatePingTestState(status) {
   pingTestStatus = status;
   if (status === PING_TEST_RUNNING_STATUS) {
-    btnCtrl.querySelector(".material-icons").innerText = "stop";
+    btnCtrl.classList.add("running");
   } else if (status === PING_TEST_STOPPED_STATUS) {
-    btnCtrl.querySelector(".material-icons").innerText = "play_arrow";
+    btnCtrl.classList.remove("running");
   }
 }
 

@@ -16,6 +16,7 @@
 
 @use "@material/top-app-bar/mdc-top-app-bar";
 @use "@material/dialog/mdc-dialog";
+@use "@material/button/styles";
 
 :root {
   --mdc-theme-primary: rgb(26, 115, 232);
@@ -29,21 +30,61 @@ input {
   color: #485656;
 }
 
+.logo-container {
+  display: inline-flex;
+  align-items: center;
+
+  .logo {
+    margin-right: 10px;
+  }
+}
+
 .app-bar-link {
   display: inline-flex;
   align-items: center;
   margin: 0 10px;
 
-  .material-icons{
+  .material-icons {
     margin-right: var(--icon-margin-horizontal);
   }
 }
 
-.subtitle{
-  font-weight: 400;
-  padding-bottom: 20px;
+.subtitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
   border-bottom: 1px solid #ccc;
-  text-align: center;
+
+  h5 {
+    font-weight: 400;
+    margin: 1.5rem 0;
+  }
+}
+
+#stopstart {
+  --mdc-text-button-with-icon-icon-size: 1.5rem;
+
+  > span {
+    display: inline-flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 400;
+  }
+
+  > span.show-on-running {
+    display: none;
+  }
+
+  &.running {
+    > span.show-on-running {
+      display: inline-flex;
+    }
+
+    > span.show-on-stopped {
+      display: none;
+    }
+  }
 }
 
 .mdl-grid {
@@ -96,7 +137,7 @@ input {
 }
 
 .mdl-data-table thead {
-  background-color: #5f7d8c;
+  background-color: var(--mdc-theme-primary);
 }
 
 .mdl-data-table tbody tr:hover {
@@ -146,35 +187,6 @@ h2 {
 
 p {
   margin-bottom: 4px;
-}
-
-#stopstart {
-  background-color: var(--mdc-theme-primary);
-  color: white;
-  cursor: pointer;
-  height: 48px;
-  min-width: 48px;
-  position: absolute;
-  right: 24px;
-  top: -16px;
-  width: 48px;
-  z-index: 10;
-}
-
-@media (max-width: 679px) {
-  #stopstart {
-    height: 36px;
-    min-width: 36px;
-    right: 18px;
-    top: -10px;
-    width: 36px;
-  }
-}
-
-.startstop-cell {
-  margin-bottom: 0;
-  margin-top: 0;
-  position: relative;
 }
 
 .results-cell {
