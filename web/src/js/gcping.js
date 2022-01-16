@@ -18,7 +18,8 @@
 // TODO: Add an option to contribute times and JS geolocation info to a public BigQuery dataset.
 
 import { MDCDialog } from "@material/dialog";
-import {MDCDataTable} from '@material/data-table';
+import { MDCDataTable } from "@material/data-table";
+import { MDCTooltip } from "@material/tooltip";
 
 const GLOBAL_REGION_KEY = "global";
 const PING_TEST_RUNNING_STATUS = "running";
@@ -318,5 +319,11 @@ window.onload = function () {
       dialog.open();
     });
 
-  const dataTable = new MDCDataTable(document.querySelector('.mdc-data-table'));
+  // init data-table
+  new MDCDataTable(document.querySelector(".mdc-data-table"));
+
+  // init tooltips
+  [].map.call(document.querySelectorAll(".mdc-tooltip"), function (el) {
+    return new MDCTooltip(el);
+  });
 };
