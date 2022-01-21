@@ -255,7 +255,7 @@ function updateTweetLink(numRegions = 3) {
 
   for (let i = 0; i < results.length; i++) {
     if (results[i]["key"] !== "global") {
-      tweet += "\n" + results[i]["key"] + " (" + results[i]["median"] + " ms)";
+      tweet += "\n" + regions[results[i]]['key'] + " (" + regions[results[i]]["median"] + " ms)";
 
       if (--numRegions === 0) break;
     }
