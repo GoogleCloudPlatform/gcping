@@ -181,8 +181,10 @@ function updateList() {
       '<tr class="mdc-data-table__row ' +
       cls +
       '"><td class="mdc-data-table__cell regiondesc">' +
-      regions[results[i]]["label"] + 
-      '<div class="embedded_region d-none d-md-block">' + regionKey + '</div>' +
+      regions[results[i]]["label"] +
+      '<div class="embedded_region d-none d-md-block">' +
+      regionKey +
+      "</div>" +
       '</td><td class="mdc-data-table__cell region d-md-none">' +
       regionKey +
       "</td>" +

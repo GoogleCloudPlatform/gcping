@@ -37,19 +37,23 @@ body,
 input {
   font-family: "Roboto", sans-serif;
   color: #485656;
+  margin: 0;
 }
 
-.d-block{
-  display:block;
+.d-block {
+  display: block;
 }
-.d-flex{
+.d-flex {
   display: flex;
 }
-.d-none{
-  display:none;
+.d-none {
+  display: none;
 }
-.flex-align-center{
+.flex-align-center {
   align-items: center;
+}
+.flex-justify-center {
+  justify-content: center;
 }
 
 .mdc-top-app-bar__row {
@@ -93,6 +97,7 @@ input {
   h5 {
     font-weight: 400;
     margin: 1.5rem 0;
+    font-size: 1.2rem;
   }
 }
 
@@ -147,14 +152,6 @@ input {
   }
 }
 
-.mdl-data-table thead {
-  background-color: var(--mdc-theme-primary);
-}
-
-.mdl-data-table tbody tr:hover {
-  background-color: inherit;
-}
-
 .sticky {
   position: -webkit-sticky;
   position: sticky;
@@ -206,25 +203,25 @@ p {
 }
 
 /* Media queries */
-@media screen and (max-width: 425px){
-  .d-md-block{
-    display:block;
+@media screen and (max-width: 425px) {
+  .d-md-block {
+    display: block;
   }
-  .d-md-none{
-    display:none;
+  .d-md-none {
+    display: none;
   }
 
-  .subtitle{
+  .subtitle {
     flex-direction: column;
     text-align: center;
 
-    h5{
+    h5 {
       line-height: 1.5rem;
     }
   }
 
-  .mdc-data-table{
-    .embedded_region{
+  .mdc-data-table {
+    .embedded_region {
       font-style: italic;
     }
   }
