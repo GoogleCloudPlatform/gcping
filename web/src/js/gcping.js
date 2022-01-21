@@ -17,6 +17,8 @@
 // TODO: Show regions on a map, with lines overlayed according to ping times.
 // TODO: Add an option to contribute times and JS geolocation info to a public BigQuery dataset.
 
+import { MDCDialog } from "@material/dialog";
+
 const GLOBAL_REGION_KEY = "global";
 const PING_TEST_RUNNING_STATUS = "running";
 const PING_TEST_STOPPED_STATUS = "stopped";
@@ -142,9 +144,9 @@ function pingSingleRegion(regionKey) {
 function updatePingTestState(status) {
   pingTestStatus = status;
   if (status === PING_TEST_RUNNING_STATUS) {
-    btnCtrl.querySelector(".material-icons").innerText = "stop";
+    btnCtrl.classList.add("running");
   } else if (status === PING_TEST_STOPPED_STATUS) {
-    btnCtrl.querySelector(".material-icons").innerText = "play_arrow";
+    btnCtrl.classList.remove("running");
   }
 }
 
@@ -304,3 +306,14 @@ btnCtrl.addEventListener("click", function () {
 
 // start the process by fetching the endpoints
 getEndpoints();
+
+window.onload = function () {
+  // How it works btn
+  const dialog = new MDCDialog(document.querySelector(".mdc-dialog"));
+  document
+    .querySelector(".how-it-works-link")
+    .addEventListener("click", function (e) {
+      e.preventDefault();
+      dialog.open();
+    });
+};
