@@ -129,7 +129,7 @@ input {
     padding: 4px 16px;
   }
 
-  tbody tr:first-child td:first-child{
+  tbody tr.fastestRegion td:first-child{
     border-left: 4px solid var(--mdc-theme-success);
   }
 }
