@@ -27,6 +27,7 @@
 :root {
   --mdc-theme-primary: rgb(26, 115, 232);
   --mdc-theme-secondary: rgba(0, 0, 0, 0.04);
+  --mdc-theme-success: #09af00;
   --mdc-typography-body2-font-size: 13px;
   --mdc-typography-body2-line-height: 1.5rem;
   --icon-margin-horizontal: 5px;
@@ -126,6 +127,10 @@ input {
   .mdc-data-table__header-cell,
   .mdc-data-table__cell {
     padding: 4px 16px;
+  }
+
+  tbody tr:first-child td:first-child{
+    border-left: 4px solid var(--mdc-theme-success);
   }
 }
 
