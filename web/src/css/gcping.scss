@@ -22,7 +22,6 @@
 @use "@material/tooltip/styles" as tooltipStyles;
 
 @include data-table.core-styles;
-@include data-table.theme-baseline;
 
 :root {
   --mdc-theme-primary: rgb(26, 115, 232);
@@ -165,28 +164,6 @@ a:visited {
   text-decoration: none;
 }
 
-.ribbon {
-  background-color: #283238;
-  left: 0;
-  height: 40vh;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 0;
-}
-
-h1 {
-  color: white;
-  font-size: 26px;
-  margin-top: 45px;
-}
-
-h1 a,
-h1 a:visited {
-  color: white;
-  font-weight: inherit;
-}
-
 h2 {
   font-size: 22px;
   font-weight: 500;
@@ -200,6 +177,17 @@ p {
 #tweet-logo {
   height: 30px;
   width: 30px;
+}
+
+#how-it-works-dialog-content{
+  a:hover{
+    text-decoration: underline;
+  }
+  
+  .material-icons{
+    display: inline-block;
+    vertical-align: middle;
+  }
 }
 
 /* Media queries */
