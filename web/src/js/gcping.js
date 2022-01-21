@@ -45,8 +45,8 @@ let pingTestStatus = PING_TEST_RUNNING_STATUS;
 let fastestRegionVisible = false;
 let fastestRegion = null;
 let globalRegionProxy = "";
-let sortKey = "median";  // column to sort the data with
-let sortDir = "ascending";      // sorting direction(ascending/descending)
+let sortKey = "median"; // column to sort the data with
+let sortDir = "ascending"; // sorting direction(ascending/descending)
 
 /**
  * Fetches the endpoints for different Cloud Run regions.
@@ -100,7 +100,10 @@ async function pingAllRegions(iter) {
       );
 
       // update fastest region
-      if(fastestRegion === null || regions[region.key]["median"] < regions[fastestRegion]["median"]){
+      if (
+        fastestRegion === null ||
+        regions[region.key]["median"] < regions[fastestRegion]["median"]
+      ) {
         fastestRegion = region.key;
       }
 
@@ -169,7 +172,10 @@ function updateList() {
   let regionKey = "";
 
   for (let i = 0; i < results.length; i++) {
-    cls = results[i] === fastestRegion && fastestRegionVisible ? "fastestRegion" : "";
+    cls =
+      results[i] === fastestRegion && fastestRegionVisible
+        ? "fastestRegion"
+        : "";
     regionKey = getDisplayedRegionKey(results[i]);
     html +=
       '<tr class="mdc-data-table__row ' +
@@ -223,12 +229,12 @@ function addResult(regionKey) {
 
   // TODO: Probably use Binary search here to merge the following 2 blocks
   // if new region is at 0th position
-  if (compareTwoRegions(regionKey,results[0]) < 0) {
+  if (compareTwoRegions(regionKey, results[0]) < 0) {
     results.unshift(regionKey);
     return;
-  } 
+  }
   // if new region is at last position
-  else if (compareTwoRegions(regionKey,results[results.length - 1]) > 0) {
+  else if (compareTwoRegions(regionKey, results[results.length - 1]) > 0) {
     results.push(regionKey);
     return;
   }
@@ -237,8 +243,8 @@ function addResult(regionKey) {
   for (let i = 0; i < results.length - 1; i++) {
     // if the region to be added is b/w i and i+1 elements
     if (
-      compareTwoRegions(regionKey, results[i]) >= 0 && 
-      compareTwoRegions(regionKey, results[i+1]) < 0
+      compareTwoRegions(regionKey, results[i]) >= 0 &&
+      compareTwoRegions(regionKey, results[i + 1]) < 0
     ) {
       results.splice(i + 1, 0, regionKey);
       return;
@@ -255,7 +261,12 @@ function updateTweetLink(numRegions = 3) {
 
   for (let i = 0; i < results.length; i++) {
     if (results[i]["key"] !== "global") {
-      tweet += "\n" + regions[results[i]]['key'] + " (" + regions[results[i]]["median"] + " ms)";
+      tweet +=
+        "\n" +
+        regions[results[i]]["key"] +
+        " (" +
+        regions[results[i]]["median"] +
+        " ms)";
 
       if (--numRegions === 0) break;
     }
@@ -295,23 +306,23 @@ function getDisplayedRegionKey(regionKey) {
 /**
  * Sort the table data based on a column(defined in sortKey) and direction(sortDir)
  */
-function sortResults(){
+function sortResults() {
   results.sort(compareTwoRegions);
 }
 
 /**
- * 
- * @param {string} a Region key for first region to be compared 
- * @param {string} b Region key for second region to be compared 
- * @returns int
+ * Function to compare order of 2 regions based on the current sort options
+ * @param {string} a Region key for first region to be compared
+ * @param {string} b Region key for second region to be compared
+ * @return {int}
  */
-function compareTwoRegions(a, b){
-  const multiplier = sortDir === 'ascending' ? 1 : -1;
+function compareTwoRegions(a, b) {
+  const multiplier = sortDir === "ascending" ? 1 : -1;
 
   a = regions[a][sortKey];
   b = regions[b][sortKey];
 
-  if(a == b){
+  if (a == b) {
     return 0;
   }
 
@@ -347,16 +358,17 @@ window.onload = function () {
   // init data-table
   new MDCDataTable(document.querySelector(".mdc-data-table"));
 
-  document.querySelector(".mdc-data-table").addEventListener('MDCDataTable:sorted',function(data){
-    const detail = data.detail;
+  document
+    .querySelector(".mdc-data-table")
+    .addEventListener("MDCDataTable:sorted", function (data) {
+      const detail = data.detail;
 
-    // update the sorting options according to the requested values
-    sortKey = detail.columnId,
-    sortDir = detail.sortValue;
+      // update the sorting options according to the requested values
+      (sortKey = detail.columnId), (sortDir = detail.sortValue);
 
-    sortResults();
-    updateList();
-  });
+      sortResults();
+      updateList();
+    });
 
   // init tooltips
   [].map.call(document.querySelectorAll(".mdc-tooltip"), function (el) {
