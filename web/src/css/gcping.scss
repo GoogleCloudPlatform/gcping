@@ -39,6 +39,19 @@ input {
   color: #485656;
 }
 
+.d-block{
+  display:block;
+}
+.d-flex{
+  display: flex;
+}
+.d-none{
+  display:none;
+}
+.flex-align-center{
+  align-items: center;
+}
+
 .mdc-top-app-bar__row {
   width: 90%;
   margin-left: auto;
@@ -190,4 +203,29 @@ p {
 #tweet-logo {
   height: 30px;
   width: 30px;
+}
+
+/* Media queries */
+@media screen and (max-width: 425px){
+  .d-md-block{
+    display:block;
+  }
+  .d-md-none{
+    display:none;
+  }
+
+  .subtitle{
+    flex-direction: column;
+    text-align: center;
+
+    h5{
+      line-height: 1.5rem;
+    }
+  }
+
+  .mdc-data-table{
+    .embedded_region{
+      font-style: italic;
+    }
+  }
 }

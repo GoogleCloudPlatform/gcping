@@ -39,16 +39,22 @@
             target="_blank"
             href="https://github.com/GoogleCloudPlatform/gcping"
             class="app-bar-link"
-            ><i class="material-icons mdc-button__icon" aria-hidden="true"
-              >link</i
             >
-            GitHub</a
+            <span class="d-flex d-md-none flex-align-center">
+              <i class="material-icons mdc-button__icon" aria-hidden="true"
+              >link</i>
+              GitHub
+            </span>
+            <span class="d-none d-md-block">
+              <i class="material-icons mdc-button__icon" aria-hidden="true"
+              >code</i>
+            </span>
+          </a
           >
-          <a href="#" class="app-bar-link how-it-works-link"
-            ><i class="material-icons mdc-button__icon" aria-hidden="true"
-              >help_outline</i
-            >
-            How it works</a
+          <a href="#" class="app-bar-link how-it-works-link">
+            <i class="material-icons mdc-button__icon" aria-hidden="true">help_outline</i>
+            <span class="d-md-none">How it works</span>
+          </a
           >
         </section>
       </div>
@@ -106,6 +112,7 @@
                         class="
                           mdc-data-table__header-cell
                           mdc-data-table__header-cell--with-sort
+                          d-md-none
                         "
                         role="columnheader"
                         scope="col"
