@@ -221,8 +221,21 @@ p {
   }
 
   .mdc-data-table {
+    .mdc-data-table__header-cell,
+    .mdc-data-table__cell {
+      max-width: 100px;
+    }
+    .mdc-data-table__cell {
+      white-space: break-spaces;
+      line-height: 1.4;
+
+      &.result {
+        text-align: right;
+      }
+    }
     .embedded_region {
       font-style: italic;
+      margin-top: 10px;
     }
   }
 }
