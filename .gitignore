@@ -4,7 +4,7 @@
 *.tfstate.lock.info
 
 # Directories
-bin/
+/out
 .terraform/
 
 # Temp/env specific files
