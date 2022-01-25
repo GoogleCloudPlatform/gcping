@@ -46,6 +46,9 @@ jobs:
         echo ::set-env gcr_image=$(ko publish ./cmd/ping/)
         # ko publish ./cmd/ping/
 
+    - name: 'Show image URL output'
+      run: 'echo "$gcr_image'
+
     - id: 'deploy'
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@v0'
