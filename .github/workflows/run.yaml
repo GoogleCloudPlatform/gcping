@@ -32,12 +32,6 @@ jobs:
         workload_identity_provider: 'projects/793166746566/locations/global/workloadIdentityPools/github-pool/providers/my-provider'
         service_account: 'github-sa@kr-gcping.iam.gserviceaccount.com'
 
-    - uses: actions/checkout@v2
-    - uses: imjasonh/setup-ko@v0.4
-    - env:
-        KO_DOCKER_REPO: 'gcr.io/kr-gcping'
-      run: ko publish ./cmd/ping/
-
 
     # Authenticate using the created credentials file.
     #
@@ -47,5 +41,8 @@ jobs:
       run: |-
         gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
 
-        # Now you can run gcloud commands authenticated as the impersonated service account.
-        gcloud secrets versions access "latest" --secret "my-secret"
+    - uses: actions/checkout@v2
+    - uses: imjasonh/setup-ko@v0.4
+    - env:
+        KO_DOCKER_REPO: 'gcr.io/kr-gcping'
+      run: ko publish ./cmd/ping/
