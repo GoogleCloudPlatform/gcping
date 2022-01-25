@@ -32,17 +32,10 @@ jobs:
         workload_identity_provider: 'projects/793166746566/locations/global/workloadIdentityPools/github-pool/providers/my-provider'
         service_account: 'github-sa@kr-gcping.iam.gserviceaccount.com'
 
-
-    # Authenticate using the created credentials file.
-    #
-    # WARNING: The --cred-file flag is in preview and is subject to change.
-    - id: 'gcloud'
-      name: 'gcloud'
-      run: |-
-        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-
     - uses: actions/checkout@v2
     - uses: imjasonh/setup-ko@v0.4
     - env:
         KO_DOCKER_REPO: 'gcr.io/kr-gcping'
-      run: ko publish ./cmd/ping/
+      run: |-
+        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+        ko publish ./cmd/ping/
