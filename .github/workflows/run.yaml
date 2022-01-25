@@ -20,7 +20,7 @@ jobs:
 
     steps:
     # Install gcloud, do not specify authentication.
-    - uses: 'google-github-actions/setup-gcloud@master'
+    - uses: 'google-github-actions/setup-gcloud@v0'
       name: 'Set up Google Cloud SDK'
       with:
         project_id: 'kr-gcping'
