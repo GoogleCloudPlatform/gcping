@@ -37,9 +37,21 @@ jobs:
       name: 'Check out Github repository'
     - uses: imjasonh/setup-ko@v0.4
       name: 'Set up ko'
+      id: ko
     - env:
         KO_DOCKER_REPO: 'gcr.io/kr-gcping'
       name: 'Publish to Google Container Registry'
       run: |-
         gcloud auth configure-docker
         ko publish ./cmd/ping/
+
+    - id: 'deploy'
+      name: 'Stage to Cloud Run'
+      uses: 'google-github-actions/deploy-cloudrun@v0'
+      with:
+        service: $GITHUB_SHA
+        image: "${{ steps.ko.output }}"
+        
+    - name: 'Use output'
+      run: 'curl "${{ steps.deploy.outputs.url }}"'
+        
