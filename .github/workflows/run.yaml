@@ -21,21 +21,25 @@ jobs:
     steps:
     # Install gcloud, do not specify authentication.
     - uses: 'google-github-actions/setup-gcloud@master'
+      name: 'Set up Google Cloud SDK'
       with:
         project_id: 'kr-gcping'
 
     # Configure Workload Identity Federation via a credentials file.
     - id: 'auth'
-      name: 'Authenticate to Google Cloud'
+      name: 'Authenticate to Google Cloud using Workload Identity Federation'
       uses: 'google-github-actions/auth@v0.4.0'
       with:
         workload_identity_provider: 'projects/793166746566/locations/global/workloadIdentityPools/github-pool/providers/my-provider'
         service_account: 'github-sa@kr-gcping.iam.gserviceaccount.com'
 
     - uses: actions/checkout@v2
+      name: 'Check out Github repository'
     - uses: imjasonh/setup-ko@v0.4
+      name: 'Set up ko'
     - env:
         KO_DOCKER_REPO: 'gcr.io/kr-gcping'
+      name: 'Publish to Google Container Registry'
       run: |-
         gcloud auth configure-docker
         ko publish ./cmd/ping/
