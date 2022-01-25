@@ -50,7 +50,7 @@ jobs:
       uses: 'google-github-actions/deploy-cloudrun@v0'
       with:
         service: $GITHUB_SHA
-        image: "${{ steps.ko.output }}"
+        image: "${{ steps.ko.outputs }}"
         
     - name: 'Use output'
       run: 'curl "${{ steps.deploy.outputs.url }}"'
