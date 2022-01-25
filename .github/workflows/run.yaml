@@ -47,7 +47,7 @@ jobs:
         # ko publish ./cmd/ping/
 
     - name: 'Show image URL output'
-      run: 'echo "$gcr_image'
+      run: 'echo $gcr_image'
 
     - id: 'deploy'
       name: 'Stage to Cloud Run'
