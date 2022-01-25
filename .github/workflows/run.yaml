@@ -43,7 +43,7 @@ jobs:
       name: 'Publish to Google Container Registry'
       run: |-
         gcloud auth configure-docker
-        ::set-env gcr_image=$(ko publish ./cmd/ping/)
+        echo ::set-env gcr_image=$(ko publish ./cmd/ping/)
         # ko publish ./cmd/ping/
 
     - id: 'deploy'
