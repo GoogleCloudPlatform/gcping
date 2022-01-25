@@ -37,5 +37,5 @@ jobs:
     - env:
         KO_DOCKER_REPO: 'gcr.io/kr-gcping'
       run: |-
-        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
+        gcloud auth configure-docker
         ko publish ./cmd/ping/
