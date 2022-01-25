@@ -43,14 +43,15 @@ jobs:
       name: 'Publish to Google Container Registry'
       run: |-
         gcloud auth configure-docker
-        ko publish ./cmd/ping/
+        ::set-env gcr_image=$(ko publish ./cmd/ping/)
+        # ko publish ./cmd/ping/
 
     - id: 'deploy'
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@v0'
       with:
         service: $GITHUB_SHA
-        image: "${{ steps.ko.outputs }}"
+        image: $gcr_image
         
     - name: 'Use output'
       run: 'curl "${{ steps.deploy.outputs.url }}"'
