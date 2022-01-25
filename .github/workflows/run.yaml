@@ -35,7 +35,7 @@ jobs:
     - uses: imjasonh/setup-ko@v0.4
     - env:
         KO_DOCKER_REPO: 'gcr.io/kr-gcping'
-      run: ko publish ./cmd/ping/
+      run: ko publish ../cmd/ping/
 
 
     # Authenticate using the created credentials file.
