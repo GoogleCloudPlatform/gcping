@@ -66,6 +66,17 @@ input {
   }
 }
 
+.mdc-top-app-bar__row {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+
+  .mdc-top-app-bar__section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 .logo-container {
   display: inline-flex;
   align-items: center;
