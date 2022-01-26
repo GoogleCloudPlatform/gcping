@@ -8,34 +8,22 @@ on:
     branches: [ main ]
 
 jobs:
-  job_id:
-    runs-on: ubuntu-latest
-
-    # ...
-
-    # Add "id-token" with the intended permissions.
-    permissions:
+  deploycr:
+   runs-on: 'ubuntu-latest'
+   permissions:
       contents: 'read'
       id-token: 'write'
-
-    steps:
-    - uses: 'actions/checkout@v2' # Must come first!
-
-    # Configure Workload Identity Federation via a credentials file.
+   steps:
     - id: 'auth'
-      name: 'Authenticate to Google Cloud using Workload Identity Federation'
+      name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v0.4.0'
       with:
         workload_identity_provider: 'projects/793166746566/locations/global/workloadIdentityPools/github-pool/providers/my-provider'
         service_account: 'github-sa@kr-gcping.iam.gserviceaccount.com'
-
-    - id: 'deploy'
-      name: 'Stage to Cloud Run'
-      uses: 'google-github-actions/deploy-cloudrun@main'
+    - name: Deploy to Cloud Run
+      id: deploy
+      uses: google-github-actions/deploy-cloudrun@main
       with:
-        service: test-svc-gcping
-        image: gcr.io/kr-gcping/ping-b5e9c300f5e9cdafa118e623a88e6b97:latest
-        
-    - name: 'Use output'
-      run: 'curl "${{ steps.deploy.outputs.url }}"'
-        
+        service: hello-cloud-run 
+        image: gcr.io/cloudrun/hello
+
