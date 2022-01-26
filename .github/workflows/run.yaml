@@ -23,7 +23,7 @@ jobs:
       name: 'Check out Github repository'
 
     # Install gcloud, do not specify authentication.
-    - uses: 'google-github-actions/setup-gcloud@master'
+    - uses: 'google-github-actions/setup-gcloud@v0'
       name: 'Set up Google Cloud SDK'
       with:
         project_id: 'kr-gcping'
@@ -43,22 +43,17 @@ jobs:
         KO_DOCKER_REPO: 'gcr.io/kr-gcping'
       name: 'Publish to Google Container Registry'
       run: |-
-        gcloud auth configure-docker
+        # gcloud auth configure-docker
         ko publish ./cmd/ping/
-        gcloud run deploy test-cr --image=gcr.io/cloudrun/hello:latest --region=us-central1
-        #echo ::set-env gcr_image=$(ko publish ./cmd/ping/)
         
 
-    - name: 'Show image URL output'
-      run: 'echo $gcr_image'
-
-    - id: 'deploy'
-      name: 'Stage to Cloud Run'
-      uses: 'google-github-actions/deploy-cloudrun@main'
-      with:
-        service: $GITHUB_SHA
-        image: $gcr_image
-        
-    - name: 'Use output'
-      run: 'curl "${{ steps.deploy.outputs.url }}"'
+#    - id: 'deploy'
+#      name: 'Stage to Cloud Run'
+#      uses: 'google-github-actions/deploy-cloudrun@main'
+#      with:
+#        service: $GITHUB_SHA
+#        image: $gcr_image
+#        
+#    - name: 'Use output'
+#      run: 'curl "${{ steps.deploy.outputs.url }}"'
         
