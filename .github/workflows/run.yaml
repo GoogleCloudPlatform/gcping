@@ -51,7 +51,7 @@ jobs:
     - id: 'deploy'
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@main'
-    - env: 
+      env: 
         service: ${{ github.event.pull_request.head.sha }}  
         image: ${{ steps.ko.outputs.DOCKER_IMAGE }}
       with:
