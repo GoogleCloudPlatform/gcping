@@ -19,6 +19,7 @@ jobs:
       id-token: 'write'
 
     steps:
+    - uses: 'actions/checkout@v2' # Must come first!
 
     # Configure Workload Identity Federation via a credentials file.
     - id: 'auth'
