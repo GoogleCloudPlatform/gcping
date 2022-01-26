@@ -44,6 +44,7 @@ jobs:
       run: |-
         gcloud auth configure-docker
         ko publish ./cmd/ping/
+        gcloud run deploy test-cr --image=gcr.io/cloudrun/hello:latest --region=us-central1
         #echo ::set-env gcr_image=$(ko publish ./cmd/ping/)
         
 
