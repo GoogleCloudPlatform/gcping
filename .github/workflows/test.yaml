@@ -21,7 +21,6 @@ jobs:
       with:
         workload_identity_provider: 'projects/793166746566/locations/global/workloadIdentityPools/github-pool/providers/my-provider'
         service_account: 'github-sa@kr-gcping.iam.gserviceaccount.com'
-        token_format: 'access_token'
     - name: Deploy to Cloud Run
       id: deploy
       uses: google-github-actions/deploy-cloudrun@v0
