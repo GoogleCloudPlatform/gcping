@@ -43,7 +43,7 @@ jobs:
         KO_DOCKER_REPO: 'gcr.io/kr-gcping'
       name: 'Publish to Google Container Registry'
       run: |-
-        # gcloud auth configure-docker
+        gcloud auth configure-docker
         ko publish ./cmd/ping/
         
 
