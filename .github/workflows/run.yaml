@@ -44,14 +44,15 @@ jobs:
       name: 'Publish to Google Container Registry'
       run: |-
         gcloud auth configure-docker
-        echo '::set-output name=DOCKER_IMAGE::$(ko publish ./cmd/ping/)'
+        export $IMAGE=$(ko publish ./cmd/ping/)
+        echo '::set-output name=DOCKER_IMAGE::$IMAGE)'
         
 
     - id: 'deploy'
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@main'
       with:
-        service: $GITHUB_SHA
+        service: "$GITHUB_SHA"
         image: "${{ steps.ko.outputs.DOCKER_IMAGE }}"
         
     - name: 'Use output'
