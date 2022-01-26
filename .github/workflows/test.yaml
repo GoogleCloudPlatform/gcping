@@ -19,11 +19,6 @@ jobs:
       id-token: 'write'
 
     steps:
-    # Install gcloud, do not specify authentication.
-    - uses: 'google-github-actions/setup-gcloud@master'
-      name: 'Set up Google Cloud SDK'
-      with:
-        project_id: 'kr-gcping'
 
     # Configure Workload Identity Federation via a credentials file.
     - id: 'auth'
