@@ -16,6 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       name: 'Check out Github repository'
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - run: cd web ; npm install ; npm run build
+  
 
     # Install gcloud, do not specify authentication.
     - uses: 'google-github-actions/setup-gcloud@v0'
@@ -39,7 +44,8 @@ jobs:
       name: 'Publish to Google Container Registry'
       run: |-
         gcloud auth configure-docker
-        echo IMAGE=$(ko publish ./cmd/ping/) >> $GITHUB_ENV
+        echo IMAGE=$(ko publish ./cmd/ping/) >> $GITHUB_ENV 
+        echo PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }') >> $GITHUB_ENV
         
     - run: env
     
@@ -47,12 +53,12 @@ jobs:
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@main'
       with:
-        service: 'sha-${{ github.sha }}'
+        service: 'pr-${{ env.PR_NUMBER }}-${{ github.sha }}'
         image: '${{ env.IMAGE }}'
 
     - id: 'allowAll'
       name: 'Allow unauthenticated requests to staging endpoint'
-      run: 'gcloud run services add-iam-policy-binding sha-${{ github.sha }} --member="allUsers" --role="roles/run.invoker" --region=us-central1'
+      run: 'gcloud run services add-iam-policy-binding pr-${{ env.PR_NUMBER }}-${{ github.sha }} --member="allUsers" --role="roles/run.invoker" --region=us-central1'
 
     - run: echo ${{ github.event.pull_request.comments_url }}
     
