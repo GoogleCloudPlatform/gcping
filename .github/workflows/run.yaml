@@ -52,11 +52,11 @@ jobs:
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@main'
       with:
-        service: '${{ github.sha }}'
+        service: 'sha-${{ github.sha }}'
         image: '${{ env.IMAGE }}'
 
     - id: 'allowAll'
-      run: 'gcloud run services add-iam-policy-binding ${{ github.sha }} --member="allUsers" --role="roles/run.invoker"'
+      run: 'gcloud run services add-iam-policy-binding sha-${{ github.sha }} --member="allUsers" --role="roles/run.invoker"'
 
     
             
