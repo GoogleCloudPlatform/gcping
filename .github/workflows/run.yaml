@@ -53,14 +53,7 @@ jobs:
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@main'
       with:
-        service: test 
+        service: '${{ env.GITHUB_SHA}}' 
         image: '${{ env.IMAGE }}'
     
-    
-    - name: 'Use output'
-      run: |-
-        'echo "${{ steps.deploy.outputs.url }}"'
-        echo $GITHUB_SHA
-        echo $IMAGE
-        echo $DOCKER_IMAGE
-        
+            
