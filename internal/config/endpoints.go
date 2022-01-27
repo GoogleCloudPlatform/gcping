@@ -45,7 +45,7 @@ var AllEndpoints = map[string]Endpoint{
 	"asia-northeast1": {
 		URL:        "https://asia-northeast1-7tlbip4j4a-an.a.run.app",
 		Region:     "asia-northeast1",
-		RegionName: "Tokyo",
+		RegionName: "Tokyo, JP",
 	},
 	"asia-northeast2": {
 		URL:        "https://asia-northeast2-7tlbip4j4a-dt.a.run.app",
