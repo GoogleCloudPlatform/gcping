@@ -45,11 +45,10 @@ jobs:
       run: |-
         gcloud auth configure-docker
         export IMAGE=$(ko publish ./cmd/ping/)
-        echo '::set-output name=DOCKER_IMAGE::$IMAGE)'
+        echo '::set-env name=DOCKER_IMAGE::$IMAGE)'
         echo $GITHUB_SHA
         echo $IMAGE
         echo $DOCKER_IMAGE
-        
 
     - id: 'deploy'
       name: 'Stage to Cloud Run'
@@ -62,5 +61,9 @@ jobs:
         image: $DOCKER_IMAGE
         
     - name: 'Use output'
-      run: 'echo "${{ steps.deploy.outputs.url }}"'
+      run: |-
+        'echo "${{ steps.deploy.outputs.url }}"'
+        echo $GITHUB_SHA
+        echo $IMAGE
+        echo $DOCKER_IMAGE
         
