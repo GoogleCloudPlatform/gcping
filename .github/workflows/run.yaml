@@ -54,7 +54,7 @@ jobs:
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@main'
       with:
-        service: ${{ steps.ko.outputs.sha_short }} #'${{ env.GITHUB_SHA}}' 
+        service: '${{ steps.ko.outputs.sha_short }}' 
         image: '${{ env.IMAGE }}'
     
             
