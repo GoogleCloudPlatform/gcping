@@ -11,11 +11,9 @@ jobs:
   job_id:
     runs-on: ubuntu-latest
 
-    # ...
-
-    # Add "id-token" with the intended permissions.
     permissions:
       contents: 'read'
+      pull-requests: 'write'
       id-token: 'write'
 
     steps:
