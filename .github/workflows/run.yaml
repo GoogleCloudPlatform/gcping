@@ -56,7 +56,7 @@ jobs:
         image: '${{ env.IMAGE }}'
 
     - id: 'allowAll'
-      run: 'gcloud run services add-iam-policy-binding sha-${{ github.sha }} --member="allUsers" --role="roles/run.invoker"'
+      run: 'gcloud run services add-iam-policy-binding sha-${{ github.sha }} --member="allUsers" --role="roles/run.invoker" --region=us-central1'
 
     
             
