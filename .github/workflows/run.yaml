@@ -50,6 +50,9 @@ jobs:
         echo $IMAGE
         echo $DOCKER_IMAGE
 
+
+    - run: env
+    
     - id: 'deploy'
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@main'
@@ -59,7 +62,8 @@ jobs:
       with:
         service: $GITHUB_SHA #"${service}"
         image: $DOCKER_IMAGE
-        
+    
+    
     - name: 'Use output'
       run: |-
         'echo "${{ steps.deploy.outputs.url }}"'
