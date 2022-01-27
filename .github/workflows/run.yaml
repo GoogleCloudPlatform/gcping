@@ -45,7 +45,10 @@ jobs:
       run: |-
         gcloud auth configure-docker
         echo IMAGE=$(ko publish ./cmd/ping/) >> $GITHUB_ENV
-        echo SHA_SHORT=$(git rev-parse --short ${{ github.event.pull_request.head.sha }})  >> $GITHUB_ENV
+        echo 1 $GITHUB_SHA
+        echo 2 $github.sha
+        echo 3 '${{ github.sha }}'
+        
         
     - run: env
     
@@ -54,6 +57,6 @@ jobs:
       uses: 'google-github-actions/deploy-cloudrun@main'
       with:
         service: '${{ env.SHA_SHORT }}' 
-        image: '${{ env.IMAGE }}'
+        image: '${{ env.GITHUB_SHA }}'
     
             
