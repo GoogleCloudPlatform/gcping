@@ -57,6 +57,6 @@ jobs:
       uses: 'google-github-actions/deploy-cloudrun@main'
       with:
         service: '${{ env.SHA_SHORT }}' 
-        image: '${{ env.GITHUB_SHA }}'
+        image: $GITHUB_SHA
     
             
