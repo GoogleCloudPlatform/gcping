@@ -165,7 +165,7 @@ var AllEndpoints = map[string]Endpoint{
 	"us-west2": {
 		URL:        "https://us-west2-7tlbip4j4a-wl.a.run.app",
 		Region:     "us-west2",
-		RegionName: "Los Angeles",
+		RegionName: "Los Angeles, CA",
 	},
 	"us-west3": {
 		URL:        "https://us-west3-7tlbip4j4a-wm.a.run.app",
