@@ -47,7 +47,7 @@ jobs:
         echo IMAGE=$(ko publish ./cmd/ping/) >> $GITHUB_ENV
         echo 1 $GITHUB_SHA
         echo 2 $github.sha
-        echo 3 '${{ github.sha }}'
+        echo 3 '${{ $GITHUB_SHA }}'
         
         
     - run: env
@@ -56,7 +56,8 @@ jobs:
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@main'
       with:
-        service: '${{ env.SHA_SHORT }}' 
-        image: $GITHUB_SHA
+        service: '${{ $GITHUB_SHA }}' 
+        image: '${{ env.IMAGE }}'
+
     
             
