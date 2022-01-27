@@ -58,6 +58,8 @@ jobs:
     - id: 'allowAll'
       name: 'Allow unauthenticated requests to staging endpoint'
       run: 'gcloud run services add-iam-policy-binding sha-${{ github.sha }} --member="allUsers" --role="roles/run.invoker" --region=us-central1'
+
+    - run: echo ${{ github.event.pull_request.comments_url }}
     
     - name: Comment EXTERNAL_IP
       timeout-minutes: 5
