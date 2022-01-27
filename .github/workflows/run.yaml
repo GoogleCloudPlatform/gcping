@@ -56,7 +56,7 @@ jobs:
        # service: ${{ github.event.pull_request.head.sha }}  
         #image: ${{ steps.ko.outputs.DOCKER_IMAGE }}
       with:
-        service: $GITHUB_SHA 
+        service: test 
         image: $IMAGE
     
     
