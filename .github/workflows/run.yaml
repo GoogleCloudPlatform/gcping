@@ -44,12 +44,8 @@ jobs:
       name: 'Publish to Google Container Registry'
       run: |-
         gcloud auth configure-docker
-        export IMAGE=$(ko publish ./cmd/ping/)
+        export IMAGE=$(ko publish ./cmd/ping/) >> >> $GITHUB_ENV
         #echo '::set-env name=DOCKER_IMAGE::$IMAGE)'
-        echo $GITHUB_SHA
-        echo $IMAGE
-        echo $DOCKER_IMAGE
-
 
     - run: env
     
