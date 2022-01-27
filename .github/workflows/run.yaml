@@ -45,7 +45,7 @@ jobs:
       run: |-
         gcloud auth configure-docker
         export IMAGE=$(ko publish ./cmd/ping/)
-        echo '::set-env name=DOCKER_IMAGE::$IMAGE)'
+        #echo '::set-env name=DOCKER_IMAGE::$IMAGE)'
         echo $GITHUB_SHA
         echo $IMAGE
         echo $DOCKER_IMAGE
