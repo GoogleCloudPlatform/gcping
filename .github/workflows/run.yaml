@@ -46,6 +46,9 @@ jobs:
         gcloud auth configure-docker
         export IMAGE=$(ko publish ./cmd/ping/)
         echo '::set-output name=DOCKER_IMAGE::$IMAGE)'
+        echo $GITHUB_SHA
+        echo $IMAGE
+        echo $DOCKER_IMAGE
         
 
     - id: 'deploy'
