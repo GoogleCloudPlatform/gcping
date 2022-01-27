@@ -57,7 +57,7 @@ jobs:
         #image: ${{ steps.ko.outputs.DOCKER_IMAGE }}
       with:
         service: test 
-        image: $IMAGE
+        image: ${{ IMAGE }}
     
     
     - name: 'Use output'
