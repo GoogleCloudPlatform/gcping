@@ -70,7 +70,7 @@ jobs:
             $COMMENTS_URL \
             -H "Content-Type: application/json" \
             -H "Authorization: token $GITHUB_TOKEN" \
-            --data '{ "body": PR staged at '"${{ steps.deploy.outputs.url }}"'"}'
+            --data '{ "body": "PR staged at '"${{ steps.deploy.outputs.url }}"'"}'
           sleep 60
 
     
