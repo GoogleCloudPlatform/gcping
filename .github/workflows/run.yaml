@@ -45,8 +45,7 @@ jobs:
       run: |-
         gcloud auth configure-docker
         echo IMAGE=$(ko publish ./cmd/ping/) >> $GITHUB_ENV
-        #echo '::set-env name=DOCKER_IMAGE::$IMAGE)'
-        echo "::set-output name=sha_short::$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
+        echo SHA_SHORT=$(git rev-parse --short ${{ github.event.pull_request.head.sha }})  >> $GITHUB_ENV
         
     - run: env
     
@@ -54,7 +53,7 @@ jobs:
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@main'
       with:
-        service: '${{ steps.ko.outputs.sha_short }}' 
+        service: '${{ env.SHA_SHORT }}' 
         image: '${{ env.IMAGE }}'
     
             
