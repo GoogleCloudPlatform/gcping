@@ -196,40 +196,4 @@ p {
   }
 }
 
-/* Media queries */
-@media screen and (max-width: 425px) {
-  .d-md-block {
-    display: block;
-  }
-  .d-md-none {
-    display: none;
-  }
-
-  .subtitle {
-    flex-direction: column;
-    text-align: center;
-
-    h5 {
-      line-height: 1.5rem;
-    }
-  }
-
-  .mdc-data-table {
-    .mdc-data-table__header-cell,
-    .mdc-data-table__cell {
-      max-width: 100px;
-    }
-    .mdc-data-table__cell {
-      white-space: break-spaces;
-      line-height: 1.4;
-
-      &.result {
-        text-align: right;
-      }
-    }
-    .embedded_region {
-      font-style: italic;
-      margin-top: 10px;
-    }
-  }
-}
+@import "media_queries";
