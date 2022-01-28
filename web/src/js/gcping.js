@@ -109,7 +109,6 @@ async function pingAllRegions(iter) {
 
       addResult(region.key);
       updateList();
-      updateTweetLink();
     }
 
     // start displaying the fastest region after at least 1 iteration is over.
@@ -253,30 +252,6 @@ function addResult(regionKey) {
       return;
     }
   }
-}
-
-/**
- * Updates the tweet link to contain `numRegions` num of fastest regions.
- * @param {int} numRegions
- */
-function updateTweetLink(numRegions = 3) {
-  let tweet = "My lowest-latency #GCP regions via gcping.com:";
-
-  for (let i = 0; i < results.length; i++) {
-    if (results[i]["key"] !== "global") {
-      tweet +=
-        "\n" +
-        regions[results[i]]["key"] +
-        " (" +
-        regions[results[i]]["median"] +
-        " ms)";
-
-      if (--numRegions === 0) break;
-    }
-  }
-
-  document.getElementById("tweet-link").href =
-    "https://twitter.com/share?text=" + encodeURIComponent(tweet);
 }
 
 /**
