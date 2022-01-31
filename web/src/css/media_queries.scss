@@ -19,10 +19,6 @@ Add media queries/breakpoints related rules here.
     }
   
     .mdc-data-table {
-      .mdc-data-table__header-cell,
-      .mdc-data-table__cell {
-        max-width: 100px;
-      }
       .mdc-data-table__cell {
         white-space: break-spaces;
         line-height: 1.4;
@@ -33,7 +29,7 @@ Add media queries/breakpoints related rules here.
       }
       .embedded_region {
         font-style: italic;
-        margin-top: 10px;
+        margin-top: 0.4rem;
       }
     }
 }
