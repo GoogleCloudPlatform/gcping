@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  job_id:
+  stage_pr:
     runs-on: ubuntu-latest
 
     permissions:
@@ -26,7 +26,7 @@ jobs:
     - uses: 'google-github-actions/setup-gcloud@v0'
       name: 'Set up Google Cloud SDK'
       with:
-        project_id: 'kr-gcping'
+        project_id: ${{ secrets.GCP_PROJECT }}
 
     # Configure Workload Identity Federation via a credentials file.
     - id: 'auth'
@@ -62,7 +62,7 @@ jobs:
 
     - run: echo ${{ github.event.pull_request.comments_url }}
     
-    - name: Comment EXTERNAL_IP
+    - name: Comment staged Cloud Run URL
       timeout-minutes: 5
       env:
           COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
