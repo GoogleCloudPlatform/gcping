@@ -43,7 +43,7 @@ jobs:
         KO_DOCKER_REPO: 'gcr.io/kr-gcping'
       name: 'Publish to Google Container Registry'
       run: |-
-        gcloud auth configure-docker
+        gcloud auth configure-docker gcr.io --quiet
         echo IMAGE=$(ko publish ./cmd/ping/) >> $GITHUB_ENV 
         echo PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }') >> $GITHUB_ENV
         
