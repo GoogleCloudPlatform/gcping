@@ -63,7 +63,7 @@ jobs:
     - run: echo ${{ github.event.pull_request.comments_url }}
     
     - name: Comment staged Cloud Run URL
-      timeout-minutes: 5
+      timeout-minutes: 1
       env:
           COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -74,7 +74,7 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Authorization: token $GITHUB_TOKEN" \
             --data '{ "body": "PR staged at '"${{ steps.deploy.outputs.url }}"'"}'
-          sleep 60
+          sleep 10
 
     
             
