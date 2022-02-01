@@ -6,7 +6,7 @@ on:
     types: [ closed ]
 
 jobs:
-  job_id:
+  delete:
     runs-on: ubuntu-latest
 
     permissions:
@@ -19,7 +19,7 @@ jobs:
     - uses: 'google-github-actions/setup-gcloud@v0'
       name: 'Set up Google Cloud SDK'
       with:
-        project_id: 'kr-gcping'
+        project_id: ${{ secrets.GCP_PROJECT }}
 
     # Configure Workload Identity Federation via a credentials file.
     - id: 'auth'
