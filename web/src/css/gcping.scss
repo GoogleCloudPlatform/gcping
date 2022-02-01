@@ -22,7 +22,6 @@
 @use "@material/tooltip/styles" as tooltipStyles;
 
 @include data-table.core-styles;
-@include data-table.theme-baseline;
 
 :root {
   --mdc-theme-primary: rgb(26, 115, 232);
@@ -37,6 +36,34 @@ body,
 input {
   font-family: "Roboto", sans-serif;
   color: #485656;
+  margin: 0;
+}
+
+.d-block {
+  display: block;
+}
+.d-flex {
+  display: flex;
+}
+.d-none {
+  display: none;
+}
+.flex-align-center {
+  align-items: center;
+}
+.flex-justify-center {
+  justify-content: center;
+}
+
+.mdc-top-app-bar__row {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+
+  .mdc-top-app-bar__section {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .mdc-top-app-bar__row {
@@ -80,6 +107,7 @@ input {
   h5 {
     font-weight: 400;
     margin: 1.5rem 0;
+    font-size: 1.2rem;
   }
 }
 
@@ -134,14 +162,6 @@ input {
   }
 }
 
-.mdl-data-table thead {
-  background-color: var(--mdc-theme-primary);
-}
-
-.mdl-data-table tbody tr:hover {
-  background-color: inherit;
-}
-
 .sticky {
   position: -webkit-sticky;
   position: sticky;
@@ -155,28 +175,6 @@ a:visited {
   text-decoration: none;
 }
 
-.ribbon {
-  background-color: #283238;
-  left: 0;
-  height: 40vh;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 0;
-}
-
-h1 {
-  color: white;
-  font-size: 26px;
-  margin-top: 45px;
-}
-
-h1 a,
-h1 a:visited {
-  color: white;
-  font-weight: inherit;
-}
-
 h2 {
   font-size: 22px;
   font-weight: 500;
@@ -187,7 +185,15 @@ p {
   margin-bottom: 4px;
 }
 
-#tweet-logo {
-  height: 30px;
-  width: 30px;
+#how-it-works-dialog-content{
+  a:hover{
+    text-decoration: underline;
+  }
+  
+  .material-icons{
+    display: inline-block;
+    vertical-align: middle;
+  }
 }
+
+@import "media_queries";
