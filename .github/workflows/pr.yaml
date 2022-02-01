@@ -33,8 +33,8 @@ jobs:
       name: 'Authenticate to Google Cloud using Workload Identity Federation'
       uses: 'google-github-actions/auth@v0'
       with:
-        workload_identity_provider: 'projects/793166746566/locations/global/workloadIdentityPools/github-pool/providers/my-provider'
-        service_account: 'github-sa@kr-gcping.iam.gserviceaccount.com'
+        workload_identity_provider: $WIF_PROVIDER
+        service_account: $GCP_SA
 
     - uses: imjasonh/setup-ko@v0.4
       name: 'Set up ko'
