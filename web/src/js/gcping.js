@@ -17,6 +17,10 @@
 // TODO: Show regions on a map, with lines overlayed according to ping times.
 // TODO: Add an option to contribute times and JS geolocation info to a public BigQuery dataset.
 
+import { MDCDialog } from "@material/dialog";
+import { MDCDataTable } from "@material/data-table";
+import { MDCTooltip } from "@material/tooltip";
+
 const GLOBAL_REGION_KEY = "global";
 const PING_TEST_RUNNING_STATUS = "running";
 const PING_TEST_STOPPED_STATUS = "stopped";
@@ -36,10 +40,13 @@ const btnCtrl = document.getElementById("stopstart");
  * }
  */
 const regions = {};
-const results = [];
+const results = []; // this will always be sorted according to sortKey and sortDir
 let pingTestStatus = PING_TEST_RUNNING_STATUS;
 let fastestRegionVisible = false;
+let fastestRegion = null;
 let globalRegionProxy = "";
+let sortKey = "median"; // column to sort the data with
+let sortDir = "ascending"; // sorting direction(ascending/descending)
 
 /**
  * Fetches the endpoints for different Cloud Run regions.
@@ -92,9 +99,16 @@ async function pingAllRegions(iter) {
         regions[region.key]["latencies"],
       );
 
-      addResult(region.key, latency);
+      // update fastest region
+      if (
+        fastestRegion === null ||
+        regions[region.key]["median"] < regions[fastestRegion]["median"]
+      ) {
+        fastestRegion = region.key;
+      }
+
+      addResult(region.key);
       updateList();
-      updateTweetLink();
     }
 
     // start displaying the fastest region after at least 1 iteration is over.
@@ -142,9 +156,9 @@ function pingSingleRegion(regionKey) {
 function updatePingTestState(status) {
   pingTestStatus = status;
   if (status === PING_TEST_RUNNING_STATUS) {
-    btnCtrl.querySelector(".material-icons").innerText = "stop";
+    btnCtrl.classList.add("running");
   } else if (status === PING_TEST_STOPPED_STATUS) {
-    btnCtrl.querySelector(".material-icons").innerText = "play_arrow";
+    btnCtrl.classList.remove("running");
   }
 }
 
@@ -155,20 +169,25 @@ function updateList() {
   let html = "";
   let cls = "";
   let regionKey = "";
-  const fastestRegion = getFastestRegion();
 
   for (let i = 0; i < results.length; i++) {
-    cls = results[i] === fastestRegion && fastestRegionVisible ? "top" : "";
+    cls =
+      results[i] === fastestRegion && fastestRegionVisible
+        ? "fastestRegion"
+        : "";
     regionKey = getDisplayedRegionKey(results[i]);
     html +=
-      '<tr class="' +
+      '<tr class="mdc-data-table__row ' +
       cls +
-      '"><td class="regiondesc">' +
+      '"><td class="mdc-data-table__cell regiondesc">' +
       regions[results[i]]["label"] +
-      '<div class="region">' +
+      '<div class="embedded_region d-none d-md-block">' +
       regionKey +
-      "</div></td>" +
-      '<td class="result"><div>' +
+      "</div>" +
+      '</td><td class="mdc-data-table__cell region d-md-none">' +
+      regionKey +
+      "</td>" +
+      '<td class="mdc-data-table__cell result"><div>' +
       regions[results[i]]["median"] +
       " ms</div></td></tr>";
   }
@@ -191,12 +210,12 @@ function getMedian(arr) {
 }
 
 /**
- * Helper that adds the regionKey to it's proper position making the results array sorted
+ * Helper that adds the regionKey to it's proper position keeping the results array sorted
+ * This means we don't always have to sort the whole results array
  * TODO: Try and use an ordered map here to simply this
  * @param {string} regionKey
- * @param {number} latency
  */
-function addResult(regionKey, latency) {
+function addResult(regionKey) {
   if (!results.length) {
     results.push(regionKey);
     return;
@@ -211,43 +230,28 @@ function addResult(regionKey, latency) {
   }
 
   // TODO: Probably use Binary search here to merge the following 2 blocks
-  if (latency < regions[results[0]].median) {
+  // if new region is at 0th position
+  if (compareTwoRegions(regionKey, results[0]) < 0) {
     results.unshift(regionKey);
     return;
-  } else if (latency > regions[results[results.length - 1]].median) {
+  }
+  // if new region is at last position
+  else if (compareTwoRegions(regionKey, results[results.length - 1]) > 0) {
     results.push(regionKey);
     return;
   }
 
   // add the region to it's proper position
   for (let i = 0; i < results.length - 1; i++) {
+    // if the region to be added is b/w i and i+1 elements
     if (
-      latency >= regions[results[i]].median &&
-      latency <= regions[results[i + 1]].median
+      compareTwoRegions(regionKey, results[i]) >= 0 &&
+      compareTwoRegions(regionKey, results[i + 1]) < 0
     ) {
       results.splice(i + 1, 0, regionKey);
       return;
     }
   }
-}
-
-/**
- * Updates the tweet link to contain `numRegions` num of fastest regions.
- * @param {int} numRegions
- */
-function updateTweetLink(numRegions = 3) {
-  let tweet = "My lowest-latency #GCP regions via gcping.com:";
-
-  for (let i = 0; i < results.length; i++) {
-    if (results[i]["key"] !== "global") {
-      tweet += "\n" + results[i]["key"] + " (" + results[i]["median"] + " ms)";
-
-      if (--numRegions === 0) break;
-    }
-  }
-
-  document.getElementById("tweet-link").href =
-    "https://twitter.com/share?text=" + encodeURIComponent(tweet);
 }
 
 /**
@@ -278,15 +282,29 @@ function getDisplayedRegionKey(regionKey) {
 }
 
 /**
- * Gets the fastest region, excluding the global region
- * @return {string}
+ * Sort the table data based on a column(defined in sortKey) and direction(sortDir)
  */
-function getFastestRegion() {
-  for (let i = 0; i < results.length; i++) {
-    if (results[i] !== GLOBAL_REGION_KEY) {
-      return results[i];
-    }
+function sortResults() {
+  results.sort(compareTwoRegions);
+}
+
+/**
+ * Function to compare order of 2 regions based on the current sort options
+ * @param {string} a Region key for first region to be compared
+ * @param {string} b Region key for second region to be compared
+ * @return {int}
+ */
+function compareTwoRegions(a, b) {
+  const multiplier = sortDir === "ascending" ? 1 : -1;
+
+  a = regions[a][sortKey];
+  b = regions[b][sortKey];
+
+  if (a == b) {
+    return 0;
   }
+
+  return multiplier * (a > b ? 1 : -1);
 }
 
 /**
@@ -304,3 +322,34 @@ btnCtrl.addEventListener("click", function () {
 
 // start the process by fetching the endpoints
 getEndpoints();
+
+window.onload = function () {
+  // How it works btn
+  const dialog = new MDCDialog(document.querySelector(".mdc-dialog"));
+  document
+    .querySelector(".how-it-works-link")
+    .addEventListener("click", function (e) {
+      e.preventDefault();
+      dialog.open();
+    });
+
+  // init data-table
+  new MDCDataTable(document.querySelector(".mdc-data-table"));
+
+  document
+    .querySelector(".mdc-data-table")
+    .addEventListener("MDCDataTable:sorted", function (data) {
+      const detail = data.detail;
+
+      // update the sorting options according to the requested values
+      (sortKey = detail.columnId), (sortDir = detail.sortValue);
+
+      sortResults();
+      updateList();
+    });
+
+  // init tooltips
+  [].map.call(document.querySelectorAll(".mdc-tooltip"), function (el) {
+    return new MDCTooltip(el);
+  });
+};

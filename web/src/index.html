@@ -11,140 +11,247 @@
     <title>GCPing.com</title>
     <link
       rel="stylesheet"
-      href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,500|Material+Icons"
     />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
-    />
-    <link rel="stylesheet" href="css/gcping.css" />
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script defer src="js/gcping.js"></script>
+    <link rel="stylesheet" href="css/gcping.scss" />
+    <script defer src="js/gcping.js" type="module"></script>
   </head>
   <body>
-    <div class="mdl-layout mdl-js-layout">
-      <div class="ribbon"></div>
-      <main class="mdl-layout__content">
-        <div class="mdl-grid">
-          <div
-            class="
-              mdl-cell
-              mdl-cell--6-col
-              mdl-cell--1-offset-tablet
-              mdl-cell--3-offset-desktop
-            "
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+      <div class="mdc-top-app-bar__row">
+        <section
+          class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"
+        >
+          <span class="mdc-top-app-bar__title logo-container"
+            ><img src="./images/icon.png" alt="GCPing Logo" class="logo" />
+            GCPing</span
           >
-            <h1>
-              Measure your latency to
-              <a
-                target="_blank"
-                href="https://cloud.google.com/compute/docs/regions-zones/regions-zones"
-                >Google Cloud regions</a
+        </section>
+        <section
+          class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end"
+          role="toolbar"
+        >
+          <a
+            target="_blank"
+            href="https://github.com/GoogleCloudPlatform/gcping"
+            class="app-bar-link"
+          >
+            <span class="d-flex d-md-none flex-align-center">
+              <i class="material-icons mdc-button__icon" aria-hidden="true"
+                >link</i
               >
-            </h1>
-          </div>
-          <div
-            class="
-              mdl-cell
-              startstop-cell
-              mdl-cell--6-col
-              mdl-cell--1-offset-tablet
-              mdl-cell--3-offset-desktop
-            "
-          >
-            <button
-              id="stopstart"
-              class="
-                mdl-button mdl-js-button
-                mdl-button--fab
-                mdl-js-ripple-effect
-              "
+              GitHub
+            </span>
+            <span class="d-none d-md-block">
+              <i class="material-icons mdc-button__icon" aria-hidden="true"
+                >code</i
+              >
+            </span>
+          </a>
+          <a href="#" class="app-bar-link how-it-works-link">
+            <i class="material-icons mdc-button__icon" aria-hidden="true"
+              >help_outline</i
             >
-              <i class="material-icons">stop</i>
-            </button>
-          </div>
-          <div
-            class="
-              mdl-cell
-              results-cell
-              mdl-cell--6-col
-              mdl-cell--1-offset-tablet
-              mdl-cell--3-offset-desktop
-            "
-          >
-            <table
-              class="
-                mdl-data-table mdl-js-data-table
-                mdl-shadow--2dp
-                mdl-color-text--grey-800
-              "
+            <span class="d-md-none">How it works</span>
+          </a>
+        </section>
+      </div>
+    </header>
+    <div class="mdc-layout">
+      <main class="mdc-layout__content mdc-top-app-bar--fixed-adjust">
+        <div class="subtitle">
+          <h5>Measure your latency to Google Cloud regions</h5>
+          <button id="stopstart" class="mdc-button mdc-button--touch running">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__label show-on-running"
+              ><i class="material-icons mdc-button__icon">stop</i> Stop</span
             >
-              <thead class="sticky">
-                <tr>
-                  <th>REGION</th>
-                  <th>MEDIAN LATENCY</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="2">Loading...</td>
-                </tr>
-              </tbody>
-            </table>
+            <span class="mdc-button__label show-on-stopped"
+              ><i class="material-icons mdc-button__icon">restart_alt</i>
+              Restart</span
+            >
+          </button>
+        </div>
+        <div class="mdc-grid">
+          <div class="results-cell">
+            <div class="mdc-data-table">
+              <div class="mdc-data-table__table-container">
+                <table class="mdc-data-table__table" aria-label="Ping results">
+                  <thead>
+                    <tr class="mdc-data-table__header-row">
+                      <th
+                        class="
+                          mdc-data-table__header-cell
+                          mdc-data-table__header-cell--with-sort
+                        "
+                        role="columnheader"
+                        scope="col"
+                        data-column-id="label"
+                        aria-sort="ascending"
+                      >
+                        <div class="mdc-data-table__header-cell-wrapper">
+                          <div class="mdc-data-table__header-cell-label">
+                            Location
+                          </div>
+                          <button
+                            class="
+                              mdc-icon-button
+                              material-icons
+                              mdc-data-table__sort-icon-button
+                            "
+                            aria-label="Sort by Location"
+                            aria-describedby="location-sort-tooltip"
+                          >
+                            arrow_downward
+                          </button>
+                        </div>
+                      </th>
+                      <th
+                        class="
+                          mdc-data-table__header-cell
+                          mdc-data-table__header-cell--with-sort
+                          d-md-none
+                        "
+                        role="columnheader"
+                        scope="col"
+                        data-column-id="key"
+                      >
+                        <div class="mdc-data-table__header-cell-wrapper">
+                          <div class="mdc-data-table__header-cell-label">
+                            Region
+                          </div>
+                          <button
+                            class="
+                              mdc-icon-button
+                              material-icons
+                              mdc-data-table__sort-icon-button
+                            "
+                            aria-label="Sort by Region"
+                            aria-describedby="region-sort-tooltip"
+                          >
+                            arrow_downward
+                          </button>
+                        </div>
+                      </th>
+                      <th
+                        class="
+                          mdc-data-table__header-cell
+                          mdc-data-table__header-cell--with-sort
+                          mdc-data-table__header-cell--sorted
+                          mdc-data-table__header-cell--sorted-ascending
+                        "
+                        role="columnheader"
+                        scope="col"
+                        data-column-id="median"
+                        aria-sort="ascending"
+                      >
+                        <div class="mdc-data-table__header-cell-wrapper">
+                          <div class="mdc-data-table__header-cell-label">
+                            Median Latency
+                          </div>
+                          <button
+                            class="
+                              mdc-icon-button
+                              material-icons
+                              mdc-data-table__sort-icon-button
+                            "
+                            aria-label="Sort by Latency"
+                            aria-describedby="latency-sort-tooltip"
+                          >
+                            arrow_downward
+                          </button>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="mdc-data-table__content"></tbody>
+                </table>
+              </div>
+            </div>
           </div>
-          <div
-            class="
-              about-content
-              mdl-cell
-              mdl-cell--6-col
-              mdl-cell--1-offset-tablet
-              mdl-cell--3-offset-desktop
-            "
-          >
-            <center>
-              <a
-                id="tweet-link"
-                href="https://twitter.com/share"
-                target="_blank"
-                ><img
-                  id="tweet-logo"
-                  src="images/twitter.png"
-                  alt="Tweet your latencies"
-              /></a>
-            </center>
-            <h2>How does this work?</h2>
-            <p>
-              Your browser makes HTTPS requests to
-              <a target="_blank" href="https://cloud.google.com/run"
-                >Google Cloud Run</a
+          <div class="mdc-dialog">
+            <div class="mdc-dialog__container">
+              <div
+                class="mdc-dialog__surface"
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="my-dialog-title"
+                aria-describedby="my-dialog-content"
               >
-              services deployed to each region. The median time between request
-              and response is shown.
-            </p>
-            <p>
-              The <b>global</b> row uses a
-              <a target="_blank" href="https://cloud.google.com/load-balancing/"
-                >Global HTTPS Load Balancer</a
-              >
-              to route requests to the nearest service.
-            </p>
-            <p>
-              <b>Note:</b> This site is intended to show <i>relative</i> latency
-              to each region, and should not be used to determine the absolute
-              lowest latency possible, or your own network speed or other
-              network conditions. Results are not scientific.
-            </p>
-            <p>
-              This is not an official Google project.
-              <a
-                target="_blank"
-                href="https://github.com/GoogleCloudPlatform/gcping"
-                >Source available on GitHub</a
-              >.
-            </p>
+                <div
+                  class="mdc-dialog__content"
+                  id="how-it-works-dialog-content"
+                >
+                  <h2>How does this work?</h2>
+                  <p>
+                    Your browser makes HTTPS requests to
+                    <a target="_blank" href="https://cloud.google.com/run"
+                      ><i class="material-icons" aria-hidden="true">link</i> Google Cloud Run</a
+                    >
+                    services deployed to each region. The median time between
+                    request and response is shown.
+                  </p>
+                  <p>
+                    The <b>global</b> row uses a
+                    <a
+                      target="_blank"
+                      href="https://cloud.google.com/load-balancing/"
+                      ><i class="material-icons" aria-hidden="true">link</i> Global HTTPS Load Balancer</a
+                    >
+                    to route requests to the nearest service.
+                  </p>
+                  <p>
+                    <b>Note:</b> This site is intended to show
+                    <i>relative</i> latency to each region, and should not be
+                    used to determine the absolute lowest latency possible, or
+                    your own network speed or other network conditions.
+                    Results are not scientific.
+                  </p>
+                  <p>
+                    This is not an official Google project.
+                    <a
+                      target="_blank"
+                      href="https://github.com/GoogleCloudPlatform/gcping"
+                      ><i class="material-icons" aria-hidden="true">link</i> Source available on GitHub</a
+                    >.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mdc-dialog__scrim"></div>
           </div>
         </div>
       </main>
+    </div>
+    <div
+      id="location-sort-tooltip"
+      class="mdc-tooltip"
+      role="tooltip"
+      aria-hidden="true"
+    >
+      <div class="mdc-tooltip__surface mdc-tooltip__surface-animation">
+        Sort by Location
+      </div>
+    </div>
+    <div
+      id="region-sort-tooltip"
+      class="mdc-tooltip"
+      role="tooltip"
+      aria-hidden="true"
+    >
+      <div class="mdc-tooltip__surface mdc-tooltip__surface-animation">
+        Sort by Region
+      </div>
+    </div>
+    <div
+      id="latency-sort-tooltip"
+      class="mdc-tooltip"
+      role="tooltip"
+      aria-hidden="true"
+    >
+      <div class="mdc-tooltip__surface mdc-tooltip__surface-animation">
+        Sort by Latency
+      </div>
     </div>
   </body>
 </html>
