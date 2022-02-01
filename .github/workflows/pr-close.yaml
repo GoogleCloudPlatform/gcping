@@ -33,4 +33,4 @@ jobs:
 
     - id: 'delete'
       name: 'Delete staged endpoints'
-      run: 'for i in $(gcloud run services list --filter=SERVICE:pr-${{ env.PR_NUMBER }}- --format='value(SERVICE)'); do gcloud run services delete $i --region=us-central1 --quiet ; done'
+      run: "for i in $(gcloud run services list --filter=SERVICE:pr-${{ env.PR_NUMBER }}- --format='value(SERVICE)'); do gcloud run services delete $i --region=us-central1 --quiet ; done"
