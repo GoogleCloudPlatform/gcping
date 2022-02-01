@@ -3,7 +3,7 @@ name: pr_close
 on:
   pull_request:
     branches: [ main ]
-    types: [closed]
+    types: [ closed ]
 
 jobs:
   job_id:
