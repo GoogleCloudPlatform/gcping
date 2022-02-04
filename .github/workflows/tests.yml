@@ -41,3 +41,4 @@ jobs:
         cd web
         npm install
         npm run lint
+        npx stylelint src/css
