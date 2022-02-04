@@ -8,6 +8,12 @@
 			{
 				"message": "Expected class selector to be kebab-case(with __ separator allowed)"
 			}
-		]
+		],
+        "no-invalid-position-at-import-rule": [
+            true,
+            {
+                "ignoreAtRules": ["use", "include"]
+            }
+        ]
     }
 }

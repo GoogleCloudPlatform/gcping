@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-@import "media_queries";
 @use "@material/top-app-bar/mdc-top-app-bar";
 @use "@material/dialog/mdc-dialog";
 @use "@material/button/styles" as btnStyles;
@@ -22,6 +21,7 @@
 @use "@material/data-table/data-table";
 @use "@material/tooltip/styles" as tooltipStyles;
 @include data-table.core-styles;
+@import "media_queries";
 
 :root {
   --mdc-theme-primary: rgb(26, 115, 232);
