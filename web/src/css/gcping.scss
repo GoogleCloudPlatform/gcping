@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+@import "media_queries";
 @use "@material/top-app-bar/mdc-top-app-bar";
 @use "@material/dialog/mdc-dialog";
 @use "@material/button/styles" as btnStyles;
 @use "@material/icon-button/styles" as iconBtnStyles;
 @use "@material/data-table/data-table";
 @use "@material/tooltip/styles" as tooltipStyles;
-
 @include data-table.core-styles;
 
 :root {
@@ -34,7 +34,7 @@
 
 body,
 input {
-  font-family: "Roboto", sans-serif;
+  font-family: Roboto, sans-serif;
   color: #485656;
   margin: 0;
 }
@@ -42,28 +42,21 @@ input {
 .d-block {
   display: block;
 }
+
 .d-flex {
   display: flex;
 }
+
 .d-none {
   display: none;
 }
+
 .flex-align-center {
   align-items: center;
 }
+
 .flex-justify-center {
   justify-content: center;
-}
-
-.mdc-top-app-bar__row {
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-
-  .mdc-top-app-bar__section {
-    padding-left: 0;
-    padding-right: 0;
-  }
 }
 
 .mdc-top-app-bar__row {
@@ -148,6 +141,7 @@ input {
   .mdc-data-table__header-row {
     height: auto;
   }
+
   .mdc-data-table__header-cell {
     background-color: var(--mdc-theme-secondary);
   }
@@ -157,15 +151,14 @@ input {
     padding: 4px 16px;
   }
 
-  tbody tr.fastestRegion td:first-child {
+  tbody tr.fastest-region td:first-child {
     border-left: 4px solid var(--mdc-theme-success);
   }
 }
 
 .sticky {
-  position: -webkit-sticky;
   position: sticky;
-  top: 0px;
+  top: 0;
   z-index: 1;
 }
 
@@ -185,15 +178,13 @@ p {
   margin-bottom: 4px;
 }
 
-#how-it-works-dialog-content{
-  a:hover{
+#how-it-works-dialog-content {
+  a:hover {
     text-decoration: underline;
   }
-  
-  .material-icons{
+
+  .material-icons {
     display: inline-block;
     vertical-align: middle;
   }
 }
-
-@import "media_queries";
