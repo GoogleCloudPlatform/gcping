@@ -51,7 +51,7 @@ jobs:
       name: 'Stage to Cloud Run'
       uses: 'google-github-actions/deploy-cloudrun@main'
       with:
-        service: 'pr-${{ env.PR_NUMBER }}-${{ github.sha }}'
+        service: 'pr-${{ github.event.pull_request.number }}-${{ github.sha }}'
         image: '${{ env.IMAGE }}'
 
     - id: 'allowAll'
