@@ -23,10 +23,10 @@ jobs:
 
     # Configure Login via a service account key secret.
     - id: 'auth'
-      name: 'Authenticate to Google Cloud using Workload Identity Federation'
+      name: 'Authenticate to Google Cloud using Service Account Key secret'
       uses: 'google-github-actions/auth@v0'
       with:
-        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
     - run: echo PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }') >> $GITHUB_ENV
 
