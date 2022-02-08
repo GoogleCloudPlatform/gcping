@@ -29,8 +29,6 @@ jobs:
       with:
         credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-    - run: echo PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }') >> $GITHUB_ENV
-
     - id: 'delete'
       name: 'Delete staged endpoints'
-      run: "for i in $(gcloud run services list --filter=SERVICE:pr-${{ env.PR_NUMBER }}- --format='value(SERVICE)'); do gcloud run services delete $i --region=us-central1 --quiet ; done"
+      run: "for i in $(gcloud run services list --filter=SERVICE:pr-${{ github.event.pull_request.number }}- --format='value(SERVICE)'); do gcloud run services delete $i --region=us-central1 --quiet ; done"
