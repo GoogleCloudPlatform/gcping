@@ -14,7 +14,8 @@ jobs:
       id-token: 'write'
 
     steps:
-
+    - uses: actions/checkout@v2
+      name: 'Check out Github repository'
     # Install gcloud, do not specify authentication.
     - uses: 'google-github-actions/setup-gcloud@v0'
       name: 'Set up Google Cloud SDK'
