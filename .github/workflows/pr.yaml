@@ -44,7 +44,6 @@ jobs:
       run: |-
         gcloud auth configure-docker gcr.io --quiet
         echo IMAGE=$(ko publish ./cmd/ping/) >> $GITHUB_ENV 
-        echo PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }') >> $GITHUB_ENV
         
     - run: env
     
@@ -57,7 +56,7 @@ jobs:
 
     - id: 'allowAll'
       name: 'Allow unauthenticated requests to staging endpoint'
-      run: 'gcloud run services add-iam-policy-binding pr-${{ env.PR_NUMBER }}-${{ github.sha }} --member="allUsers" --role="roles/run.invoker" --region=us-central1'
+      run: 'gcloud run services add-iam-policy-binding pr-${{ github.event.pull_request.number }}-${{ github.sha }} --member="allUsers" --role="roles/run.invoker" --region=us-central1'
 
     - run: echo ${{ github.event.pull_request.comments_url }}
     
