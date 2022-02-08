@@ -39,7 +39,7 @@ jobs:
       name: 'Set up ko'
       id: ko
     - env:
-        KO_DOCKER_REPO: 'gcr.io/kr-gcping'
+        KO_DOCKER_REPO: 'gcr.io/gcping-devrel'
       name: 'Publish to Google Container Registry'
       run: |-
         gcloud auth configure-docker gcr.io --quiet
