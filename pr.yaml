@@ -1,0 +1,79 @@
+name: run
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  stage_pr:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      pull-requests: 'write'
+      id-token: 'write'
+
+    steps:
+    - uses: actions/checkout@v2
+      name: 'Check out Github repository'
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - run: cd web ; npm install ; npm run build
+  
+
+    # Install gcloud, do not specify authentication.
+    - uses: 'google-github-actions/setup-gcloud@v0'
+      name: 'Set up Google Cloud SDK'
+      with:
+        project_id: ${{ secrets.GCP_PROJECT }}
+
+    # Configure Login via a service account key secret.
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud using Workload Identity Federation'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+
+    - uses: imjasonh/setup-ko@v0.4
+      name: 'Set up ko'
+      id: ko
+    - env:
+        KO_DOCKER_REPO: 'gcr.io/kr-gcping'
+      name: 'Publish to Google Container Registry'
+      run: |-
+        gcloud auth configure-docker gcr.io --quiet
+        echo IMAGE=$(ko publish ./cmd/ping/) >> $GITHUB_ENV 
+        echo PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }') >> $GITHUB_ENV
+        
+    - run: env
+    
+    - id: 'deploy'
+      name: 'Stage to Cloud Run'
+      uses: 'google-github-actions/deploy-cloudrun@main'
+      with:
+        service: 'pr-${{ env.PR_NUMBER }}-${{ github.sha }}'
+        image: '${{ env.IMAGE }}'
+
+    - id: 'allowAll'
+      name: 'Allow unauthenticated requests to staging endpoint'
+      run: 'gcloud run services add-iam-policy-binding pr-${{ env.PR_NUMBER }}-${{ github.sha }} --member="allUsers" --role="roles/run.invoker" --region=us-central1'
+
+    - run: echo ${{ github.event.pull_request.comments_url }}
+    
+    - name: Comment staged Cloud Run URL
+      timeout-minutes: 1
+      env:
+          COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+          curl \
+            -X POST \
+            $COMMENTS_URL \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            --data '{ "body": "PR staged at '"${{ steps.deploy.outputs.url }}"'"}'
+          sleep 10
+
+    
+            
