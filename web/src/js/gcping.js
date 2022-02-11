@@ -58,7 +58,7 @@ function getEndpoints() {
       return resp.json();
     })
     .then(function (endpoints) {
-      for (zone of Object.values(endpoints)) {
+      for (const zone of Object.values(endpoints)) {
         const gcpZone = {
           key: zone.Region,
           label: zone.RegionName,
@@ -84,7 +84,7 @@ async function pingAllRegions(iter) {
   const regionsArr = Object.values(regions);
 
   for (let i = 0; i < iter; i++) {
-    for (region of regionsArr) {
+    for (const region of regionsArr) {
       // Takes care of the stopped button
       if (pingTestStatus === PING_TEST_STOPPED_STATUS) {
         break;

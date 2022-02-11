@@ -1,0 +1,34 @@
+name: pr_close
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - uses: actions/checkout@v2
+      name: 'Check out Github repository'
+    # Install gcloud, do not specify authentication.
+    - uses: 'google-github-actions/setup-gcloud@v0'
+      name: 'Set up Google Cloud SDK'
+      with:
+        project_id: ${{ secrets.GCP_PROJECT }}
+
+    # Configure Login via a service account key secret.
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud using Service Account Key secret'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    - id: 'delete'
+      name: 'Delete staged endpoints'
+      run: "for i in $(gcloud run services list --filter=SERVICE:pr-${{ github.event.pull_request.number }}- --format='value(SERVICE)'); do gcloud run services delete $i --region=us-central1 --quiet ; done"

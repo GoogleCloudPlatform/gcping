@@ -3,12 +3,13 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ["google", "plugin:prettier/recommended"],
-  parserOptions: {},
+  extends: ["eslint:recommended", "google", "plugin:prettier/recommended"],
   plugins: [],
-  rules: {},
+  rules: {
+    "no-implicit-globals": "error",
+  },
   parserOptions: {
     ecmaVersion: 11,
-    sourceType: "module"
-  }
+    sourceType: "module",
+  },
 };
