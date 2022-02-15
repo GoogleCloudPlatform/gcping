@@ -248,7 +248,6 @@ resource "google_compute_url_map" "global" {
   }
 }
 
-
 // Create a global backend service with a backend for each regional NEG.
 resource "google_compute_backend_service" "global" {
   name       = "global"
