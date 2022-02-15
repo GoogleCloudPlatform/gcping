@@ -58,7 +58,7 @@ func main() {
 		}
 	})
 
-	// Serve /ping with region response.
+	// Serve /api/ping with region response.
 	http.HandleFunc("/api/ping", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Cache-Control", "no-store")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
@@ -68,5 +68,17 @@ func main() {
 		})
 		fmt.Fprintln(w, region)
 	})
+
+	// Serve /ping with region response to fix issue#96 on older cli versions.
+	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Cache-Control", "no-store")
+		w.Header().Add("Access-Control-Allow-Origin", "*")
+		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
+		once.Do(func() {
+			w.Header().Add("X-First-Request", "true")
+		})
+		fmt.Fprintln(w, region)
+	})
+
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
