@@ -34,27 +34,36 @@ An example output:
 
 ```
 $ gcping
- 1.  [global]                   36.752191ms
- 2.  [us-east4]                 37.091976ms
- 3.  [northamerica-northeast1]  51.918669ms
- 4.  [us-central1]              75.488941ms
- 5.  [us-east1]                 75.928857ms
- 6.  [us-west2]                 148.998964ms
- 7.  [us-west1]                 157.899518ms
- 8.  [europe-west2]             166.42703ms
- 9.  [europe-west1]             174.226927ms
-10.  [europe-west4]             179.802812ms
-11.  [europe-west3]             195.430189ms
-12.  [europe-west6]             208.143331ms
-13.  [europe-north1]            252.823482ms
-14.  [southamerica-east1]       311.575344ms
-15.  [asia-northeast1]          338.151472ms
-16.  [asia-northeast2]          358.787403ms
-17.  [asia-east1]               394.165761ms
-18.  [asia-east2]               418.293092ms
-19.  [australia-southeast1]     425.679503ms
-20.  [asia-southeast1]          454.494659ms
-21.  [asia-south1]              573.022571ms
+ 1.  [global]                   11.17568ms
+ 2.  [us-central1]              12.373109ms
+ 3.  [us-west3]                 29.203499ms
+ 4.  [northamerica-northeast2]  30.615139ms
+ 5.  [us-east4]                 33.401098ms
+ 6.  [northamerica-northeast1]  38.612769ms
+ 7.  [us-west1]                 43.041808ms
+ 8.  [us-east1]                 46.847258ms
+ 9.  [us-west4]                 53.438688ms
+10.  [us-west2]                 57.659108ms
+11.  [europe-west2]             103.371016ms
+12.  [europe-west4]             111.966565ms
+13.  [europe-west1]             112.327356ms
+14.  [europe-west3]             114.245525ms
+15.  [europe-west6]             118.966225ms
+16.  [europe-central2]          128.008935ms
+17.  [europe-north1]            136.796505ms
+18.  [asia-northeast1]          142.480775ms
+19.  [southamerica-east1]       147.324384ms
+20.  [asia-northeast2]          156.088594ms
+21.  [asia-northeast3]          168.205243ms
+22.  [asia-east2]               170.763954ms
+23.  [australia-southeast2]     188.310153ms
+24.  [southamerica-west1]       206.412352ms
+25.  [asia-southeast2]          210.029872ms
+26.  [asia-south1]              256.2628ms
+27.  [asia-south2]              276.434709ms
+28.  [australia-southeast1]     396.915245ms
+29.  [asia-east1]               417.147963ms
+30.  [asia-southeast1]          496.648151ms
 ```
 
 ```

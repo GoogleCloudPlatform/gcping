@@ -187,7 +187,7 @@ func (w *worker) reportTop() {
 	if t == "global" {
 		t = sorted[1].region
 	}
-	fmt.Print(t)
+	fmt.Println(t )
 	return
 }
 
@@ -201,7 +201,7 @@ func (w *worker) reportRegion(region string) {
 	close(w.inputs)
 
 	sorted := w.sortOutput()
-	fmt.Print(sorted[0].median())
+	fmt.Println(sorted[0].median())
 
 }
 
