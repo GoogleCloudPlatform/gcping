@@ -10,16 +10,18 @@
   "scripts": {
     "start": "parcel",
     "build": "parcel build",
-    "lint": "eslint src/",
-    "fix": "prettier --write src/ && eslint --fix src/"
+    "lint": "eslint src/ && stylelint src/css",
+    "fix": "prettier --write src/ && eslint --fix src/ && stylelint --fix src/css"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.2.0",
+    "@parcel/transformer-sass": "2.2.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-prettier": "4.0.0",
     "parcel": "^2.0.0",
-    "prettier": "2.4.1"
+    "prettier": "2.4.1",
+    "stylelint": "14.3.0",
+    "stylelint-config-standard-scss": "3.0.0"
   },
   "dependencies": {
     "@material/button": "13.0.0",

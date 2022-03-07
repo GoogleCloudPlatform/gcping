@@ -173,7 +173,7 @@ function updateList() {
   for (let i = 0; i < results.length; i++) {
     cls =
       results[i] === fastestRegion && fastestRegionVisible
-        ? "fastestRegion"
+        ? "fastest-region"
         : "";
     regionKey = getDisplayedRegionKey(results[i]);
     html +=
@@ -181,7 +181,7 @@ function updateList() {
       cls +
       '"><td class="mdc-data-table__cell regiondesc">' +
       regions[results[i]]["label"] +
-      '<div class="embedded_region d-none d-md-block">' +
+      '<div class="embedded-region d-none d-md-block">' +
       regionKey +
       "</div>" +
       '</td><td class="mdc-data-table__cell region d-md-none">' +

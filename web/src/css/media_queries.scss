@@ -2,47 +2,49 @@
 Add media queries/breakpoints related rules here.
 */
 @media screen and (max-width: 640px) {
-    .d-md-block {
-      display: block;
+  .d-md-block {
+    display: block;
+  }
+
+  .d-md-none {
+    display: none;
+  }
+
+  .subtitle {
+    flex-direction: column;
+    text-align: center;
+
+    h5 {
+      line-height: 1.5rem;
     }
-    .d-md-none {
-      display: none;
-    }
-  
-    .subtitle {
-      flex-direction: column;
-      text-align: center;
-  
-      h5 {
-        line-height: 1.5rem;
+  }
+
+  .mdc-data-table {
+    .mdc-data-table__cell {
+      white-space: break-spaces;
+      line-height: 1.4;
+
+      &.result {
+        text-align: right;
       }
     }
-  
-    .mdc-data-table {
-      .mdc-data-table__cell {
-        white-space: break-spaces;
-        line-height: 1.4;
-  
-        &.result {
-          text-align: right;
-        }
-      }
-      .embedded_region {
-        font-style: italic;
-        margin-top: 0.4rem;
-      }
+
+    .embedded-region {
+      font-style: italic;
+      margin-top: 0.4rem;
     }
+  }
 }
 
 // Any rules for touch devices, can go here.
 @media (hover: none) {
-    #how-it-works-dialog-content {
-        a {
-            text-decoration: underline;
-        }
+  #how-it-works-dialog-content {
+    a {
+      text-decoration: underline;
     }
+  }
 
-    .mdc-data-table__sort-icon-button {
-        opacity: 0.2;
-    }
+  .mdc-data-table__sort-icon-button {
+    opacity: 0.2;
+  }
 }

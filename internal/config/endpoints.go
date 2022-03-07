@@ -30,7 +30,7 @@ var AllEndpoints = map[string]Endpoint{
 	"global": {
 		URL:        "https://global.gcping.com",
 		Region:     "global",
-		RegionName: "Global HTTP Load Balancer",
+		RegionName: "Global External HTTPS Load Balancer",
 	},
 	"asia-east1": {
 		URL:        "https://asia-east1-5tkroniexa-de.a.run.app",
