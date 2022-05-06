@@ -1,5 +1,6 @@
 const CHROME_ALARM_ID = 'gcping_endpoint_alarm';
 const CHROME_STORAGE_ENDPOINTS_KEY = 'gcping_endpoints';
+
 // when the extension is installed, add an alarm to refresh our endpoints
 chrome.runtime.onInstalled.addListener(details => {
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
@@ -10,12 +11,18 @@ chrome.runtime.onInstalled.addListener(details => {
   }
 });
 
+/**
+ * Event listener for the alarm
+ */
 chrome.alarms.onAlarm.addListener(function(alarm){
   if(alarm.name === CHROME_ALARM_ID){
     fetchAndSaveEndpoints();
   }
 });
 
+/**
+ * Event listener on click on the extension's action
+ */
 chrome.action.onClicked.addListener(async (tab) => {
   pingAllRegions();
 });
@@ -24,8 +31,9 @@ chrome.action.onClicked.addListener(async (tab) => {
  * Helper to fetch the different endpoints that we need to ping
  * and save it in the chrome localstorage
  */
-function fetchAndSaveEndpoints() {
-  fetch("https://gcping.com/api/endpoints")
+async function fetchAndSaveEndpoints() {
+  return new Promise((resolve, reject)=>{
+    fetch("https://gcping.com/api/endpoints")
     .then(function (resp) {
       return resp.json();
     })
@@ -44,16 +52,28 @@ function fetchAndSaveEndpoints() {
         regions[gcpZone.key] = gcpZone;
       }
 
-      chrome.storage.local.set({CHROME_STORAGE_ENDPOINTS_KEY: regions});
+      const data = {};
+      data[CHROME_STORAGE_ENDPOINTS_KEY] = regions;
+
+      chrome.storage.local.set(data);
+      resolve();
     });
+  });
 }
 
 /**
  * Ping all regions to get results
  */
 async function pingAllRegions() {
-  let regions = await getRegionsToPing(),
-    numRegions = Object.keys(regions).length,
+  let regions = await getRegionsToPing();
+
+  // fallback in case the regions have never been fetched
+  if(!regions){
+    await fetchAndSaveEndpoints();
+    regions = await getRegionsToPing();
+  }
+
+  let numRegions = Object.keys(regions).length,
     counter = 1,
     results = {},
     fastestRegion;
@@ -112,7 +132,7 @@ function displayPingResults(region, ping) {
  */
 async function getRegionsToPing(){
   return new Promise((resolve, reject)=>{
-    chrome.storage.local.get(CHROME_STORAGE_ENDPOINTS_KEY,function(result){
+    chrome.storage.local.get([CHROME_STORAGE_ENDPOINTS_KEY],function(result){
       resolve(result[CHROME_STORAGE_ENDPOINTS_KEY]);
     });
   });

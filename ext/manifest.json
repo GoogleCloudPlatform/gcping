@@ -1,7 +1,7 @@
 {
     "name": "GCPing Extension",
     "description": "Extension to run gcping.com functionality.",
-    "version": "0.1",
+    "version": "0.1.1",
     "manifest_version": 3,
     "permissions": ["notifications", "storage", "alarms"],
     "background": {
