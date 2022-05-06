@@ -226,6 +226,26 @@ resource "google_compute_url_map" "global" {
   name            = "global"
   description     = "a description"
   default_service = google_compute_backend_service.global.id
+  
+  // Create a host rule to match traffic to alias (gcpping.com)
+  host_rule {
+    hosts = [
+        var.domain_alias,
+        ]
+    path_matcher = "alt-redirect"
+  }
+
+  // 301 redirect traffic from gcpping.com to gcping.com
+  path_matcher {
+    name = "alt-redirect"
+
+    default_url_redirect {
+      host_redirect          = var.domain
+      https_redirect         = false
+      redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
+      strip_query            = false
+    }
+  }
 }
 
 // Create a global backend service with a backend for each regional NEG.
