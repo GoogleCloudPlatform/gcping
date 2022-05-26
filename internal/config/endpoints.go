@@ -172,7 +172,7 @@ var AllEndpoints = map[string]Endpoint{
 		Region:     "us-east4",
 		RegionName: "North Virginia",
 	},
-	"us-east4": {
+	"us-east5": {
 		URL:        "https://us-east5-5tkroniexa-ul.a.run.app",
 		Region:     "us-east5",
 		RegionName: "Columbus",
