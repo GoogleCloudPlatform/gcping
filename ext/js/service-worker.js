@@ -169,7 +169,7 @@ async function saveRunData(runData) {
 
 /**
  * Fetches the past runs from chrome.storage
- * @returns Promise
+ * @return {Promise}
  */
 async function getCurrentRuns() {
   return new Promise((resolve, reject) => {
