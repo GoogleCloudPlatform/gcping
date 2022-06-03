@@ -77,6 +77,9 @@ async function pingAllRegions() {
   let counter = 1;
   const results = {};
   let fastestRegion;
+  const runData = {
+    startTime: Date.now(),
+  };
 
   chrome.action.setBadgeText({ text: `0/${numRegions}` });
 
@@ -94,6 +97,11 @@ async function pingAllRegions() {
 
   chrome.action.setBadgeText({ text: "" });
   displayPingResults(fastestRegion, results[fastestRegion]);
+
+  runData["endTime"] = Date.now();
+  runData["results"] = results;
+
+  await saveRunData(runData);
 }
 
 /**
@@ -136,6 +144,38 @@ async function getRegionsToPing() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get([CHROME_STORAGE_ENDPOINTS_KEY], function (result) {
       resolve(result[CHROME_STORAGE_ENDPOINTS_KEY]);
+    });
+  });
+}
+
+/**
+ * Saves the run data to chrome local storage
+ * @param {object} runData
+ */
+async function saveRunData(runData) {
+  const currentRuns = await getCurrentRuns();
+  currentRuns.push(runData["startTime"]);
+
+  const localData = {
+    runs: currentRuns,
+  };
+
+  localData[`run-${runData["startTime"]}`] = runData;
+
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.set(localData, resolve);
+  });
+}
+
+/**
+ * Fetches the past runs from chrome.storage
+ * @returns Promise
+ */
+async function getCurrentRuns() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get("runs", (result) => {
+      // return an empty array by default
+      resolve(result["runs"] ?? []);
     });
   });
 }
