@@ -1,0 +1,77 @@
+:root {
+    --mdc-theme-primary: rgb(26, 115, 232);
+    --mdc-theme-secondary: rgba(0, 0, 0, 0.04);
+    /* --mdc-theme-success: #09af00; */
+    /* --mdc-typography-body2-font-size: 13px; */
+    /* --mdc-typography-body2-line-height: 1.5rem; */
+    --icon-margin-horizontal: 5px;
+  }
+  body{
+    font-family: Roboto, sans-serif;
+    color: #485656;
+    margin: 0;
+  }
+  a,
+a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+  .d-block {
+    display: block;
+  }
+  
+  .d-flex {
+    display: flex;
+  }
+  
+  .d-none {
+    display: none;
+  }
+  
+  .flex-align-center {
+    align-items: center;
+  }
+  
+  .flex-justify-center {
+    justify-content: center;
+  }
+  .mdc-top-app-bar__row {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .mdc-top-app-bar__row .mdc-top-app-bar__section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .logo-container {
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+  }
+
+  .logo-container .logo {
+    margin-right: 10px;
+  }
+
+  .app-bar-link {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 10px;
+  }
+
+  .app-bar-link .material-icons {
+    margin-right: var(--icon-margin-horizontal);
+  }
+
+  .tabDetails .tabSingle{
+      display: none;
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .tabDetails .tabSingle.tabActive{
+      display: flex;
+  }
