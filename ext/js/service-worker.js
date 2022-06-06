@@ -1,6 +1,12 @@
 const CHROME_ALARM_ID = "gcping_endpoint_alarm";
 const CHROME_STORAGE_ENDPOINTS_KEY = "gcping_endpoints";
 
+const currentStatus = {
+  status: "not running",
+  completed: 0,
+  total: 0,
+};
+
 // when the extension is installed, add an alarm to refresh our endpoints
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
@@ -25,6 +31,19 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
  */
 chrome.action.onClicked.addListener(async (tab) => {
   pingAllRegions();
+});
+
+/**
+ * Message received from other parts of the extension
+ */
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "fetch_current_status") {
+    fetchCurrentStatus().then((data) => {
+      sendResponse(data);
+    });
+  }
+
+  return true;
 });
 
 /**
@@ -81,6 +100,9 @@ async function pingAllRegions() {
     startTime: Date.now(),
   };
 
+  currentStatus.status = "running";
+  currentStatus.total = numRegions;
+
   chrome.action.setBadgeText({ text: `0/${numRegions}` });
 
   for (const region of Object.values(regions)) {
@@ -92,6 +114,7 @@ async function pingAllRegions() {
     }
 
     chrome.action.setBadgeText({ text: `${counter}/${numRegions}` });
+    currentStatus.completed = counter;
     counter++;
   }
 
@@ -178,4 +201,12 @@ async function getCurrentRuns() {
       resolve(result["runs"] ?? []);
     });
   });
+}
+
+/**
+ * Helper to return the current status of the ping test
+ * @return {Object}
+ */
+async function fetchCurrentStatus() {
+  return currentStatus;
 }

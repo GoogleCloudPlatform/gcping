@@ -1,6 +1,7 @@
 window.onload = function () {
   initComponents();
   showCurrentRuns();
+  updateCurrentRunningStatus();
 };
 
 /**
@@ -106,16 +107,18 @@ function focusTab(selectedIndex) {
  * Helper to initialize all the material components
  */
 function initComponents() {
-  const tabBar = new mdc.tabBar.MDCTabBar(
+  new mdc.tabBar.MDCTabBar(
     document.querySelector(".mdc-tab-bar")
   );
 
   // Handle tab click
-  tabBar[0].addEventListener("MDCTabBar:activated", function (ev) {
-    const tabIndex = ev?.detail?.index ?? 0;
+  document
+    .querySelector(".mdc-tab-bar")
+    .addEventListener("MDCTabBar:activated", function (ev) {
+      const tabIndex = ev?.detail?.index ?? 0;
 
-    focusTab(tabIndex);
-  });
+      focusTab(tabIndex);
+    });
 }
 
 /**
@@ -129,4 +132,39 @@ function getFormattedTime(dt) {
     ", " +
     new Intl.DateTimeFormat("en-US", { timeStyle: "medium" }).format(dt)
   );
+}
+
+/**
+ * Updates the current status for the ping test in the UI.
+ */
+async function updateCurrentRunningStatus() {
+  const data = await getCurrentRunningStatus();
+  const container = document.getElementById("statusContainer");
+
+  container.querySelector(".statusRow").querySelector(".value").innerText =
+    data.status;
+
+  if (data.status === "running") {
+    container.classList.add("statusRunning");
+    container.querySelector(".completedRow").querySelector(".value").innerText =
+      data.completed;
+    container.querySelector(".totalRow").querySelector(".value").innerText =
+      data.total;
+  } else {
+    container.classList.remove("statusRunning");
+  }
+}
+
+/**
+ * Fetches the current status of the ping test
+ */
+async function getCurrentRunningStatus() {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage(
+      { action: "fetch_current_status" },
+      function (response) {
+        resolve(response);
+      }
+    );
+  });
 }

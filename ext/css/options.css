@@ -75,3 +75,11 @@ a:visited {
   .tabDetails .tabSingle.tabActive{
       display: flex;
   }
+
+  #statusContainer .value{
+      text-transform: capitalize;
+  }
+  #statusContainer:not(.statusRunning) .completedRow,
+  #statusContainer:not(.statusRunning) .totalRow{
+      display: none;
+  }
