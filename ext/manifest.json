@@ -1,0 +1,23 @@
+{
+  "name": "GCPing",
+  "description": "Extension to run gcping.com functionality.",
+  "version": "0.1.2",
+  "manifest_version": 3,
+  "permissions": [
+    "notifications",
+    "storage",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "js/service-worker.js"
+  },
+  "action": {
+    "default_title": "GCPing"
+  },
+  "icons": {
+    "16": "images/icon.png",
+    "32": "images/icon.png",
+    "48": "images/icon.png",
+    "128": "images/icon-128.jpeg"
+  }
+}
