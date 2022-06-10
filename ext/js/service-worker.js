@@ -1,8 +1,10 @@
 const CHROME_ALARM_ID = "gcping_endpoint_alarm";
 const CHROME_STORAGE_ENDPOINTS_KEY = "gcping_endpoints";
+const PING_STATUS_RUNNING = "running";
+const PING_STATUS_NOT_RUNNING = "not running";
 
 const currentStatus = {
-  status: "not running",
+  status: PING_STATUS_NOT_RUNNING,
   completed: 0,
   total: 0,
 };
@@ -98,7 +100,7 @@ async function pingAllRegions() {
     startTime: Date.now(),
   };
 
-  currentStatus.status = "running";
+  currentStatus.status = PING_STATUS_RUNNING;
   currentStatus.total = numRegions;
 
   chrome.action.setBadgeText({ text: `0/${numRegions}` });
@@ -117,7 +119,8 @@ async function pingAllRegions() {
     syncCurrentStatus();
   }
 
-  currentStatus.status = "not running";
+  currentStatus.status = PING_STATUS_NOT_RUNNING;
+  syncCurrentStatus();
   chrome.action.setBadgeText({ text: "" });
   displayPingResults(fastestRegion, results[fastestRegion]);
 
@@ -212,14 +215,8 @@ async function fetchCurrentStatus() {
 }
 
 /**
- * Function that sends the current ping test status to the other parts of the extension.
+ * Function that sends the current ping test status to the options page(s).
  */
 function syncCurrentStatus() {
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    const tabId = tabs[0]?.id ?? null;
-
-    if(tabId !== null) {
-      chrome.tabs.sendMessage(tabs[0].id, {action: "sync_ping_status", currentStatus}, function(response) {});
-    }
-  });
+  chrome.runtime.sendMessage({ action: "sync_ping_status", currentStatus }, function (response) {});
 }
