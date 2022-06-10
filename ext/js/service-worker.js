@@ -114,8 +114,10 @@ async function pingAllRegions() {
     chrome.action.setBadgeText({ text: `${counter}/${numRegions}` });
     currentStatus.completed = counter;
     counter++;
+    syncCurrentStatus();
   }
 
+  currentStatus.status = "not running";
   chrome.action.setBadgeText({ text: "" });
   displayPingResults(fastestRegion, results[fastestRegion]);
 
@@ -207,4 +209,17 @@ async function getCurrentRuns() {
  */
 async function fetchCurrentStatus() {
   return currentStatus;
+}
+
+/**
+ * Function that sends the current ping test status to the other parts of the extension.
+ */
+function syncCurrentStatus() {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    const tabId = tabs[0]?.id ?? null;
+
+    if(tabId !== null) {
+      chrome.tabs.sendMessage(tabs[0].id, {action: "sync_ping_status", currentStatus}, function(response) {});
+    }
+  });
 }

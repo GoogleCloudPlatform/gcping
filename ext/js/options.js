@@ -1,8 +1,17 @@
-window.onload = function () {
+window.onload = async function () {
   initComponents();
   showCurrentRuns();
-  updateCurrentRunningStatus();
+  updateCurrentRunningStatus(await getCurrentRunningStatus());
 };
+
+/**
+ * Message received from other parts of the extension
+ */
+ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === "sync_ping_status") {
+    updateCurrentRunningStatus(request.currentStatus);
+  }
+});
 
 /**
  * Loads and shows the latest runs in the options page
@@ -136,20 +145,20 @@ function getFormattedTime(dt) {
 
 /**
  * Updates the current status for the ping test in the UI.
+ * @param {Object} currentStatus
  */
-async function updateCurrentRunningStatus() {
-  const data = await getCurrentRunningStatus();
+async function updateCurrentRunningStatus(currentStatus) {
   const container = document.getElementById("statusContainer");
 
   container.querySelector(".statusRow").querySelector(".value").innerText =
-    data.status;
+    currentStatus.status;
 
-  if (data.status === "running") {
+  if (currentStatus.status === "running") {
     container.classList.add("statusRunning");
     container.querySelector(".completedRow").querySelector(".value").innerText =
-      data.completed;
+      currentStatus.completed;
     container.querySelector(".totalRow").querySelector(".value").innerText =
-      data.total;
+      currentStatus.total;
   } else {
     container.classList.remove("statusRunning");
   }
