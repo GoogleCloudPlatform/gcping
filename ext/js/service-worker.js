@@ -4,7 +4,7 @@ const CHROME_STORAGE_ENDPOINTS_KEY = "gcping_endpoints";
 // when the extension is installed, add an alarm to refresh our endpoints
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-    
+
     // Create an alarm to run every hour without any delay
     chrome.alarms.create(CHROME_ALARM_ID, {
       delayInMinutes: 0,
@@ -34,10 +34,8 @@ chrome.action.onClicked.addListener(pingAllRegions);
 async function fetchAndSaveEndpoints() {
   return new Promise((resolve, reject) => {
     fetch("https://gcping.com/api/endpoints")
-      .then(function (resp) {
-        return resp.json();
-      })
-      .then(function (endpoints) {
+      .then((resp) => resp.json())
+      .then((endpoints) => {
         const regions = {};
 
         for (const zone of Object.values(endpoints)) {
