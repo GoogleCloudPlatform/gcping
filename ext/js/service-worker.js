@@ -4,6 +4,8 @@ const CHROME_STORAGE_ENDPOINTS_KEY = "gcping_endpoints";
 // when the extension is installed, add an alarm to refresh our endpoints
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+    
+    // Create an alarm to run every hour without any delay
     chrome.alarms.create(CHROME_ALARM_ID, {
       delayInMinutes: 0,
       periodInMinutes: 60,
@@ -23,9 +25,7 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
 /**
  * Event listener on click on the extension's action
  */
-chrome.action.onClicked.addListener(async (tab) => {
-  pingAllRegions();
-});
+chrome.action.onClicked.addListener(pingAllRegions);
 
 /**
  * Helper to fetch the different endpoints that we need to ping
