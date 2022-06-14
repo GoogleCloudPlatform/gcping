@@ -18,7 +18,6 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-	"net/http"
 	"os"
 
 	"google.golang.org/api/run/v1"
