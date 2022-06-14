@@ -34,8 +34,6 @@ func main() {
 	}
 	log.Printf("Serving on :%s", port)
 
-	var AllEndpoints map[string]config.Endpoint = config.GenerateConfig()
-
 	region := os.Getenv("REGION")
 	if region == "" {
 		region = "pong"
@@ -54,7 +52,7 @@ func main() {
 		w.Header().Add("Content-Type", "application/json;charset=utf-8")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
-		err := json.NewEncoder(w).Encode(AllEndpoints)
+		err := json.NewEncoder(w).Encode(config.GetEndpoints())
 		if err != nil {
 			w.WriteHeader(500)
 		}

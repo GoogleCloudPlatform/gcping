@@ -17,7 +17,9 @@ package config
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	"google.golang.org/api/run/v1"
@@ -34,7 +36,46 @@ type Endpoint struct {
 	RegionName string
 }
 
-func GenerateConfig() map[string]Endpoint {
+type innerEndpoint struct {
+	//Used to unmarshal properly formatted JSON obtained from /api/endpoint JSON
+	URL        string
+	Region     string
+	RegionName string
+}
+
+var allEndpoints map[string]Endpoint
+
+func getJson(url string, target interface{}) error {
+	r, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer r.Body.Close()
+	return json.NewDecoder(r.Body).Decode(target)
+
+}
+
+func GetEndpoints() map[string]Endpoint {
+	//TODO detect when running in Cloud Run and GenerateConfigFromAPI()
+	if len(allEndpoints) == 0 {
+		allEndpoints = GenerateConfigFromEndpoints()
+	}
+	return allEndpoints
+}
+
+func GenerateConfigFromEndpoints() map[string]Endpoint {
+	//Used by CLI to pull endpoint configs from Cloud Run enpoints.
+	e := make(map[string]Endpoint)
+	ie := new(map[string]innerEndpoint)
+	getJson("https://global.gcping.com/api/endpoints", &ie)
+	for _, s := range *ie {
+		e[s.Region] = Endpoint(s)
+	}
+	return e
+}
+
+func GenerateConfigFromAPI() map[string]Endpoint {
+	//Used by Cloud Run Endpoints to pull endpoint configs from Cloud Run Admin API
 	log.Print("Using Cloud Run Admin API to generate Endpoints config.")
 	ctx := context.Background()
 	runService, err := run.NewService(ctx)
@@ -71,19 +112,13 @@ func GenerateConfig() map[string]Endpoint {
 
 	for _, s := range endpoints {
 		EndpointsMap[s.Region] = s
-		// or just keys, without values: elementMap[s] = ""
 	}
 
 	return EndpointsMap
-	//	output, _ := json.MarshalIndent(ServicesMap, "", "\t")
-
-	//	fmt.Fprint(w, string(output))
-
 }
 
 func (es *Endpoint) UnmarshalJSON(data []byte) error {
-	// define private models for the data format
-
+	//Custom unmarshal function for Endpoint data
 	type labelsInner struct {
 		Location string `json:"cloud.googleapis.com/location"`
 	}

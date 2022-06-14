@@ -137,7 +137,7 @@ func (w *worker) reportAll() {
 	w.inputs = make(chan input, concurrency)
 	w.outputs = make(chan output, w.size(region))
 	for i := 0; i < number; i++ {
-		for r, e := range config.AllEndpoints {
+		for r, e := range config.GetEndpoints() {
 			w.inputs <- input{region: r, endpoint: e.URL}
 		}
 	}
@@ -159,7 +159,7 @@ func (w *worker) reportCSV() {
 	w.inputs = make(chan input, concurrency)
 	w.outputs = make(chan output, w.size(region))
 	for i := 0; i < number; i++ {
-		for r, e := range config.AllEndpoints {
+		for r, e := range config.GetEndpoints() {
 			w.inputs <- input{region: r, endpoint: e.URL}
 		}
 	}
@@ -176,7 +176,7 @@ func (w *worker) reportTop() {
 	w.inputs = make(chan input, concurrency)
 	w.outputs = make(chan output, w.size(region))
 	for i := 0; i < number; i++ {
-		for r, e := range config.AllEndpoints {
+		for r, e := range config.GetEndpoints() {
 			w.inputs <- input{region: r, endpoint: e.URL}
 		}
 	}
@@ -195,7 +195,7 @@ func (w *worker) reportRegion(region string) {
 	w.inputs = make(chan input, concurrency)
 	w.outputs = make(chan output, w.size(region))
 	for i := 0; i < number; i++ {
-		e, _ := config.AllEndpoints[region]
+		e, _ := config.GetEndpoints()[region]
 		w.inputs <- input{region: region, endpoint: e.URL}
 	}
 	close(w.inputs)
@@ -209,5 +209,5 @@ func (w *worker) size(region string) int {
 	if region != "" {
 		return number
 	}
-	return number * len(config.AllEndpoints)
+	return number * len(config.GetEndpoints())
 }

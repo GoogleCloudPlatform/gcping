@@ -60,7 +60,7 @@ func main() {
 	}
 
 	if region != "" {
-		if _, found := config.AllEndpoints[region]; !found {
+		if _, found := config.GetEndpoints()[region]; !found {
 			fmt.Printf("region %q is not supported or does not exist\n", region)
 			os.Exit(1)
 		}
