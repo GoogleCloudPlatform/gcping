@@ -34,7 +34,7 @@ func main() {
 	}
 	log.Printf("Serving on :%s", port)
 
-	var AllEndpoints map[string]config.Endpoint = config.GenerateConfig()
+	var AllEndpoints map[string]config.Endpoint = config.GenerateConfigFromAPI()
 
 	region := os.Getenv("REGION")
 	if region == "" {
