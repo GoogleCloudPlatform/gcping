@@ -92,11 +92,11 @@ resource "google_cloud_run_service" "regions" {
   location = each.key
 
   metadata {
-            labels = {
-        "env" = "prod",
-      }
-
+    labels = {
+      "env" = "prod",
+    }
   }
+
   template {
     metadata {
       annotations = {
