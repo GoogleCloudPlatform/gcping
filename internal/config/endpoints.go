@@ -51,7 +51,6 @@ func getJson(url string, target interface{}) error {
 	}
 	defer r.Body.Close()
 	return json.NewDecoder(r.Body).Decode(target)
-
 }
 
 func GetEndpoints() map[string]Endpoint {
