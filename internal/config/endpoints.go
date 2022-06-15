@@ -72,10 +72,9 @@ func GenerateConfigFromEndpoints() map[string]Endpoint {
 	return e
 }
 
-func GenerateConfigFromAPI() map[string]Endpoint {
+func GenerateConfigFromAPI(ctx context.Context) map[string]Endpoint {
 	//Used by Cloud Run Endpoints to pull endpoint configs from Cloud Run Admin API
 	log.Print("Using Cloud Run Admin API to generate Endpoints config.")
-	ctx := context.Background()
 	runService, err := run.NewService(ctx)
 	// TODO: Get project name from Cloud Run metadata service if not defined in env variable
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")

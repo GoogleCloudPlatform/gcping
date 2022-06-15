@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"os"
 	"sync"
+	"context"
 
 	"github.com/GoogleCloudPlatform/gcping/internal/config"
 )
@@ -28,13 +29,14 @@ import (
 var once sync.Once
 
 func main() {
+	ctx := context.Background()
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 	log.Printf("Serving on :%s", port)
 
-	var AllEndpoints map[string]config.Endpoint = config.GenerateConfigFromAPI()
+	var AllEndpoints map[string]config.Endpoint = config.GenerateConfigFromAPI(ctx)
 
 	region := os.Getenv("REGION")
 	if region == "" {
