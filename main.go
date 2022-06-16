@@ -78,7 +78,7 @@ func main() {
 
 	switch {
 	case region != "":
-		w.reportRegion(region,ctx)
+		w.reportRegion(ctx, region)
 	case top:
 		w.reportTop(ctx)
 	case csvCum:

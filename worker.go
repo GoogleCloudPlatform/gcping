@@ -111,7 +111,7 @@ func (w *worker) start() {
 
 func (w *worker) sortOutput(ctx context.Context) []output {
 	m := make(map[string]output)
-	for i := 0; i < w.size(region, ctx); i++ {
+	for i := 0; i < w.size(ctx, region); i++ {
 		o := <-w.outputs
 
 		a := m[o.region]
@@ -136,7 +136,7 @@ func (w *worker) sortOutput(ctx context.Context) []output {
 
 func (w *worker) reportAll(ctx context.Context) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region, ctx))
+	w.outputs = make(chan output, w.size(ctx, region))
 	for i := 0; i < number; i++ {
 		for r, e := range config.GenerateConfigFromEndpoints(ctx) {
 			w.inputs <- input{region: r, endpoint: e.URL}
@@ -158,7 +158,7 @@ func (w *worker) reportAll(ctx context.Context) {
 
 func (w *worker) reportCSV(ctx context.Context) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region, ctx))
+	w.outputs = make(chan output, w.size(ctx, region))
 	for i := 0; i < number; i++ {
 		for r, e := range config.GenerateConfigFromEndpoints(ctx) {
 			w.inputs <- input{region: r, endpoint: e.URL}
@@ -175,7 +175,7 @@ func (w *worker) reportCSV(ctx context.Context) {
 
 func (w *worker) reportTop(ctx context.Context) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region, ctx))
+	w.outputs = make(chan output, w.size(ctx, region))
 	for i := 0; i < number; i++ {
 		for r, e := range config.GenerateConfigFromEndpoints(ctx) {
 			w.inputs <- input{region: r, endpoint: e.URL}
@@ -192,9 +192,9 @@ func (w *worker) reportTop(ctx context.Context) {
 	return
 }
 
-func (w *worker) reportRegion(region string, ctx context.Context) {
+func (w *worker) reportRegion(ctx context.Context, region string) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region, ctx))
+	w.outputs = make(chan output, w.size(ctx, region))
 	for i := 0; i < number; i++ {
 		e, _ := config.GenerateConfigFromEndpoints(ctx)[region]
 		w.inputs <- input{region: region, endpoint: e.URL}
@@ -206,7 +206,7 @@ func (w *worker) reportRegion(region string, ctx context.Context) {
 
 }
 
-func (w *worker) size(region string, ctx context.Context) int {
+func (w *worker) size(ctx context.Context, region string) int {
 	if region != "" {
 		return number
 	}
