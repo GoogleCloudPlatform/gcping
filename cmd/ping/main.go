@@ -36,8 +36,7 @@ func main() {
 	}
 	log.Printf("Serving on :%s", port)
 
-	var AllEndpoints map[string]config.Endpoint 
-	AllEndpoints, err := config.GenerateConfigFromAPI(ctx)
+	allEndpoints, err := config.GenerateConfigFromAPI(ctx)
 
 	if err != nil {
 		log.Println(err)
@@ -61,7 +60,7 @@ func main() {
 		w.Header().Add("Content-Type", "application/json;charset=utf-8")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
-		err := json.NewEncoder(w).Encode(AllEndpoints)
+		err := json.NewEncoder(w).Encode(allEndpoints)
 		if err != nil {
 			w.WriteHeader(500)
 		}
