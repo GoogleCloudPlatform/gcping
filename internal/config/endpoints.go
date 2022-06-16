@@ -44,50 +44,42 @@ type innerEndpoint struct {
 
 var allEndpoints map[string]Endpoint
 
-func getJson(url string, target interface{}) error {
-	r, err := http.Get(url)
-	if err != nil {
-		return err
-	}
-	defer r.Body.Close()
-	return json.NewDecoder(r.Body).Decode(target)
-}
-
-func GetEndpoints() map[string]Endpoint {
-	//TODO detect when running in Cloud Run and GenerateConfigFromAPI()
-	if len(allEndpoints) == 0 {
-		allEndpoints = GenerateConfigFromEndpoints()
-	}
-	return allEndpoints
-}
-
-func GenerateConfigFromEndpoints() map[string]Endpoint {
+func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
 	//Used by CLI to pull endpoint configs from Cloud Run enpoints.
 	e := make(map[string]Endpoint)
 	ie := new(map[string]innerEndpoint)
-	getJson("https://global.gcping.com/api/endpoints", &ie)
+
+	req, err := http.NewRequestWithContext(
+		ctx, 
+		http.MethodGet, 
+		"https://global.gcping.com/api/endpoints",
+		nil,
+	)
+	client := http.DefaultClient
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer resp.Body.Close()
+	json.NewDecoder(resp.Body).Decode(ie)
+
 	for _, s := range *ie {
 		e[s.Region] = Endpoint(s)
 	}
 	return e
 }
 
-func GenerateConfigFromAPI(ctx context.Context) map[string]Endpoint {
+func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 	//Used by Cloud Run Endpoints to pull endpoint configs from Cloud Run Admin API
 	log.Print("Using Cloud Run Admin API to generate Endpoints config.")
 	runService, err := run.NewService(ctx)
 	// TODO: Get project name from Cloud Run metadata service if not defined in env variable
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 
-	if err != nil {
-		panic(err)
-	}
 	// List Services
 	resp, err := runService.Namespaces.Services.List("namespaces/" + projectID).Fields("items(status/address/url,metadata(labels,name),spec(template/metadata/annotations))").LabelSelector("env=prod").Do()
-
-	if err != nil {
-		panic(err)
-	}
 
 	s, _ := json.MarshalIndent(resp.Items, "", "\t")
 
@@ -111,7 +103,7 @@ func GenerateConfigFromAPI(ctx context.Context) map[string]Endpoint {
 		EndpointsMap[s.Region] = s
 	}
 
-	return EndpointsMap
+	return EndpointsMap, err
 }
 
 func (es *Endpoint) UnmarshalJSON(data []byte) error {

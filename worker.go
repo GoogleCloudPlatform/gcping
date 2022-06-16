@@ -21,6 +21,7 @@ import (
 	"sort"
 	"text/tabwriter"
 	"time"
+	"context"
 
 	"github.com/GoogleCloudPlatform/gcping/internal/config"
 )
@@ -108,9 +109,9 @@ func (w *worker) start() {
 	}
 }
 
-func (w *worker) sortOutput() []output {
+func (w *worker) sortOutput(ctx context.Context) []output {
 	m := make(map[string]output)
-	for i := 0; i < w.size(region); i++ {
+	for i := 0; i < w.size(region, ctx); i++ {
 		o := <-w.outputs
 
 		a := m[o.region]
@@ -133,17 +134,17 @@ func (w *worker) sortOutput() []output {
 	return all
 }
 
-func (w *worker) reportAll() {
+func (w *worker) reportAll(ctx context.Context) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region))
+	w.outputs = make(chan output, w.size(region, ctx))
 	for i := 0; i < number; i++ {
-		for r, e := range config.GetEndpoints() {
+		for r, e := range config.GenerateConfigFromEndpoints(ctx) {
 			w.inputs <- input{region: r, endpoint: e.URL}
 		}
 	}
 	close(w.inputs)
 
-	sorted := w.sortOutput()
+	sorted := w.sortOutput(ctx)
 	tr := tabwriter.NewWriter(os.Stdout, 3, 2, 2, ' ', 0)
 	for i, a := range sorted {
 		fmt.Fprintf(tr, "%2d.\t[%v]\t%v", i+1, a.region, a.median())
@@ -155,34 +156,34 @@ func (w *worker) reportAll() {
 	tr.Flush()
 }
 
-func (w *worker) reportCSV() {
+func (w *worker) reportCSV(ctx context.Context) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region))
+	w.outputs = make(chan output, w.size(region, ctx))
 	for i := 0; i < number; i++ {
-		for r, e := range config.GetEndpoints() {
+		for r, e := range config.GenerateConfigFromEndpoints(ctx) {
 			w.inputs <- input{region: r, endpoint: e.URL}
 		}
 	}
 	close(w.inputs)
 
-	sorted := w.sortOutput()
+	sorted := w.sortOutput(ctx)
 	fmt.Println("region,latency_ns,errors")
 	for _, a := range sorted {
 		fmt.Printf("%v,%v,%v\n", a.region, a.median().Nanoseconds(), a.errors)
 	}
 }
 
-func (w *worker) reportTop() {
+func (w *worker) reportTop(ctx context.Context) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region))
+	w.outputs = make(chan output, w.size(region, ctx))
 	for i := 0; i < number; i++ {
-		for r, e := range config.GetEndpoints() {
+		for r, e := range config.GenerateConfigFromEndpoints(ctx) {
 			w.inputs <- input{region: r, endpoint: e.URL}
 		}
 	}
 	close(w.inputs)
 
-	sorted := w.sortOutput()
+	sorted := w.sortOutput(ctx)
 	t := sorted[0].region
 	if t == "global" {
 		t = sorted[1].region
@@ -191,23 +192,23 @@ func (w *worker) reportTop() {
 	return
 }
 
-func (w *worker) reportRegion(region string) {
+func (w *worker) reportRegion(region string, ctx context.Context) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region))
+	w.outputs = make(chan output, w.size(region, ctx))
 	for i := 0; i < number; i++ {
-		e, _ := config.GetEndpoints()[region]
+		e, _ := config.GenerateConfigFromEndpoints(ctx)[region]
 		w.inputs <- input{region: region, endpoint: e.URL}
 	}
 	close(w.inputs)
 
-	sorted := w.sortOutput()
+	sorted := w.sortOutput(ctx)
 	fmt.Println(sorted[0].median())
 
 }
 
-func (w *worker) size(region string) int {
+func (w *worker) size(region string, ctx context.Context) int {
 	if region != "" {
 		return number
 	}
-	return number * len(config.GetEndpoints())
+	return number * len(config.GenerateConfigFromEndpoints(ctx))
 }
