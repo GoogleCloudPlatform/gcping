@@ -35,8 +35,6 @@ type Endpoint struct {
 	RegionName string
 }
 
-var allEndpoints map[string]Endpoint
-
 func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
 	//Used by CLI to pull endpoint configs from Cloud Run enpoints.
 	
