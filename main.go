@@ -16,12 +16,12 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"net/http"
 	"os"
 	"time"
-	"context"
 
 	"github.com/GoogleCloudPlatform/gcping/internal/config"
 )
@@ -55,6 +55,10 @@ func main() {
 
 	ctx := context.Background()
 
+	// Fetch and cache endpoint map in memory for the duration of the
+	// process.
+	AllEndpoints := config.GenerateConfigFromEndpoints(ctx)
+
 	if number < 0 || concurrency <= 0 {
 		usage()
 	}
@@ -63,7 +67,7 @@ func main() {
 	}
 
 	if region != "" {
-		if _, found := config.GenerateConfigFromEndpoints(ctx)[region]; !found {
+		if _, found := AllEndpoints[region]; !found {
 			fmt.Printf("region %q is not supported or does not exist\n", region)
 			os.Exit(1)
 		}
@@ -78,13 +82,13 @@ func main() {
 
 	switch {
 	case region != "":
-		w.reportRegion(ctx, region)
+		w.reportRegion(AllEndpoints, region)
 	case top:
-		w.reportTop(ctx)
+		w.reportTop(AllEndpoints)
 	case csvCum:
-		w.reportCSV(ctx)
+		w.reportCSV(AllEndpoints)
 	default:
-		w.reportAll(ctx)
+		w.reportAll(AllEndpoints)
 	}
 }
 
