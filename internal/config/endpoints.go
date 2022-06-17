@@ -106,9 +106,9 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 	return EndpointsMap, err
 }
 
-// unmarshalJSON describes the structure of the json served by the Cloud Run
+// UnmarshalJSON describes the structure of the json served by the Cloud Run
 // Admin API.
-func (es *Endpoint) unmarshalJSON(data []byte) error {
+func (es *Endpoint) UnmarshalJSON(data []byte) error {
 	type labelsInner struct {
 		Location string `json:"cloud.googleapis.com/location"`
 	}
