@@ -15,13 +15,13 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"sync"
-	"context"
 
 	"github.com/GoogleCloudPlatform/gcping/internal/config"
 )
@@ -40,7 +40,7 @@ func main() {
 
 	if err != nil {
 		log.Println(err)
-	}	
+	}
 
 	region := os.Getenv("REGION")
 	if region == "" {
