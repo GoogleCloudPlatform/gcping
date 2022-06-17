@@ -4,6 +4,8 @@ window.onload = async function () {
   updateCurrentRunningStatus(await getCurrentRunningStatus());
 };
 
+let currentProgress;
+
 /**
  * Message received from other parts of the extension
  */
@@ -120,6 +122,10 @@ function initComponents() {
     document.querySelector(".mdc-tab-bar")
   );
 
+  currentProgress = new mdc.circularProgress.MDCCircularProgress(document.getElementById('currentProgress'));
+
+  currentProgress.progress = 0.8;
+
   // Handle tab click
   document
     .querySelector(".mdc-tab-bar")
@@ -155,12 +161,14 @@ async function updateCurrentRunningStatus(currentStatus) {
 
   if (currentStatus.status === "running") {
     container.classList.add("statusRunning");
-    container.querySelector(".completedRow").querySelector(".value").innerText =
-      currentStatus.completed;
-    container.querySelector(".totalRow").querySelector(".value").innerText =
-      currentStatus.total;
+    container.querySelector(".completedVal").innerText = currentStatus.completed;
+    container.querySelector(".totalVal").innerText = currentStatus.total;
+
+    const ratio = currentStatus.completed/currentStatus.total;
+    currentProgress.progress = ratio;
   } else {
     container.classList.remove("statusRunning");
+    currentProgress.progress = 0;
   }
 }
 

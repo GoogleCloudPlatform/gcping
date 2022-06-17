@@ -79,7 +79,41 @@ a:visited {
   #statusContainer .value{
       text-transform: capitalize;
   }
-  #statusContainer:not(.statusRunning) .completedRow,
-  #statusContainer:not(.statusRunning) .totalRow{
-      display: none;
-  }
+
+#progress{
+  width:200px;
+  height:200px;
+  position: relative;
+}
+
+#statusContainer:not(.statusRunning) .completedVal,
+#statusContainer:not(.statusRunning) .totalVal{
+    display: none;
+}
+
+#progress .completedVal {
+  font-size:2rem;
+  border-bottom: 2px solid var(--mdc-theme-primary);
+  position: absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%, -100%);
+}
+
+#progress .totalVal {
+  font-size: 2rem;
+  position: absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%, 0);
+}
+
+#progress .mdc-circular-progress {
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+#statusContainer.statusRunning .mdc-circular-progress {
+  display: block;
+}
