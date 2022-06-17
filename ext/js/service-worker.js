@@ -12,7 +12,6 @@ const currentStatus = {
 // when the extension is installed, add an alarm to refresh our endpoints
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-
     // Create an alarm to run every hour without any delay
     chrome.alarms.create(CHROME_ALARM_ID, {
       delayInMinutes: 0,
@@ -43,13 +42,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     fetchCurrentStatus().then((data) => {
       sendResponse(data);
     });
-  }
-
-  else if (request.action === "run_test") {
+  } else if (request.action === "run_test") {
     pingAllRegions();
-  }
-
-  else if (request.action === "stop_test") {
+  } else if (request.action === "stop_test") {
     stopRunningTest();
   }
 
@@ -92,6 +87,11 @@ async function fetchAndSaveEndpoints() {
  * Ping all regions to get results
  */
 async function pingAllRegions() {
+  // Don't do anything if the test is already running
+  if (currentStatus.status === PING_STATUS_RUNNING) {
+    return;
+  }
+
   let regions = await getRegionsToPing();
 
   // fallback in case the regions have never been fetched
@@ -144,6 +144,9 @@ async function pingAllRegions() {
   await saveRunData(runData);
 }
 
+/**
+ * Helper to stop the current running test
+ */
 function stopRunningTest() {
   currentStatus.status = PING_STATUS_NOT_RUNNING;
   currentStatus.completed = 0;
@@ -241,5 +244,8 @@ async function fetchCurrentStatus() {
  * Function that sends the current ping test status to the options page(s).
  */
 function syncCurrentStatus() {
-  chrome.runtime.sendMessage({ action: "sync_ping_status", currentStatus }, function (response) {});
+  chrome.runtime.sendMessage(
+    { action: "sync_ping_status", currentStatus },
+    function (response) {}
+  );
 }

@@ -9,7 +9,7 @@ let currentProgress;
 /**
  * Message received from other parts of the extension
  */
- chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "sync_ping_status") {
     updateCurrentRunningStatus(request.currentStatus);
   }
@@ -118,11 +118,11 @@ function focusTab(selectedIndex) {
  * Helper to initialize all the material components
  */
 function initComponents() {
-  new mdc.tabBar.MDCTabBar(
-    document.querySelector(".mdc-tab-bar")
-  );
+  new mdc.tabBar.MDCTabBar(document.querySelector(".mdc-tab-bar"));
 
-  currentProgress = new mdc.circularProgress.MDCCircularProgress(document.getElementById('currentProgress'));
+  currentProgress = new mdc.circularProgress.MDCCircularProgress(
+    document.getElementById("currentProgress")
+  );
 
   currentProgress.progress = 0.8;
 
@@ -161,10 +161,11 @@ async function updateCurrentRunningStatus(currentStatus) {
 
   if (currentStatus.status === "running") {
     container.classList.add("statusRunning");
-    container.querySelector(".completedVal").innerText = currentStatus.completed;
+    container.querySelector(".completedVal").innerText =
+      currentStatus.completed;
     container.querySelector(".totalVal").innerText = currentStatus.total;
 
-    const ratio = currentStatus.completed/currentStatus.total;
+    const ratio = currentStatus.completed / currentStatus.total;
     currentProgress.progress = ratio;
   } else {
     container.classList.remove("statusRunning");
@@ -189,12 +190,12 @@ async function getCurrentRunningStatus() {
 /**
  * Event handlers for button clicks
  */
-document.querySelector("button.runBtn").addEventListener("click", function(e) {
-    console.log('run_test');
-    chrome.runtime.sendMessage({ action: "run_test" },() => {});
+document.querySelector("button.runBtn").addEventListener("click", function (e) {
+  chrome.runtime.sendMessage({ action: "run_test" }, () => {});
 });
 
-document.querySelector("button.stopBtn").addEventListener("click", function(e) {
-  console.log('stop_test');
-  chrome.runtime.sendMessage({ action: "stop_test" },() => {});
-});
+document
+  .querySelector("button.stopBtn")
+  .addEventListener("click", function (e) {
+    chrome.runtime.sendMessage({ action: "stop_test" }, () => {});
+  });
