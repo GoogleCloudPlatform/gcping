@@ -37,20 +37,20 @@ type Endpoint struct {
 
 func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
 	//Used by CLI to pull endpoint configs from Cloud Run enpoints.
-	
+
 	type innerEndpoint struct {
 		//Used to unmarshal properly formatted JSON obtained from /api/endpoint JSON
 		URL        string
 		Region     string
 		RegionName string
 	}
-	
+
 	e := make(map[string]Endpoint)
 	ie := new(map[string]innerEndpoint)
 
 	req, err := http.NewRequestWithContext(
-		ctx, 
-		http.MethodGet, 
+		ctx,
+		http.MethodGet,
 		"https://global.gcping.com/api/endpoints",
 		nil,
 	)
@@ -89,8 +89,8 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 	var EndpointsMap = make(map[string]Endpoint)
 
 	// Add global endpoint to map if env is defined.
-	globalUrl := os.Getenv("GLOBAL_ENDPOINT")
-	if globalUrl != "" {
+	globalURL := os.Getenv("GLOBAL_ENDPOINT")
+	if globalURL != "" {
 		var Global Endpoint
 		Global.Region = "global"
 		Global.RegionName = "Global External HTTPS Load Balancer"
@@ -133,7 +133,7 @@ func (es *Endpoint) UnmarshalJSON(data []byte) error {
 	}
 
 	type addressInner struct {
-		Url string `json:"url"`
+		URL string `json:"url"`
 	}
 
 	type statusInner struct {
@@ -154,7 +154,7 @@ func (es *Endpoint) UnmarshalJSON(data []byte) error {
 
 	// create the struct in desired format
 	tmp := &Endpoint{
-		URL:        ns.Status.Address.Url,
+		URL:        ns.Status.Address.URL,
 		Region:     ns.Metadata.Labels.Location,
 		RegionName: ns.Spec.Template.Metadata.Annotations.RegionName,
 	}
