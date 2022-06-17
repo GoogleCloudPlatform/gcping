@@ -35,9 +35,9 @@ type Endpoint struct {
 	RegionName string
 }
 
+// GenerateConfigFromEndpoints is used by the cli to generate an Endpoint map
+// using a precompiled list served by the gcping endpoints.
 func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
-	//Used by CLI to pull endpoint configs from Cloud Run enpoints.
-
 	type innerEndpoint struct {
 		//Used to unmarshal properly formatted JSON obtained from /api/endpoint JSON
 		URL        string
@@ -70,8 +70,9 @@ func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
 	return e
 }
 
+// GenerateConfigFromAPI is used by the web endpoints running in Cloud Run
+// to generate the endpoint config through the Cloud Run Admin API.
 func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
-	//Used by Cloud Run Endpoints to pull endpoint configs from Cloud Run Admin API
 	log.Print("Using Cloud Run Admin API to generate Endpoints config.")
 	runService, err := run.NewService(ctx)
 	// TODO: Get project name from Cloud Run metadata service if not defined in env variable
@@ -105,8 +106,9 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 	return EndpointsMap, err
 }
 
-func (es *Endpoint) UnmarshalJSON(data []byte) error {
-	//Custom unmarshal function for Endpoint data
+// unmarshalJSON describes the structure of the json served by the Cloud Run
+// Admin API.
+func (es *Endpoint) unmarshalJSON(data []byte) error {
 	type labelsInner struct {
 		Location string `json:"cloud.googleapis.com/location"`
 	}
@@ -116,7 +118,7 @@ func (es *Endpoint) UnmarshalJSON(data []byte) error {
 	}
 
 	type templateMetadataInner struct {
-		Annotations annotationsInner `json:"annotations`
+		Annotations annotationsInner `json:"annotations"`
 	}
 
 	type templateInner struct {
