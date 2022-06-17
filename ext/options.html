@@ -69,7 +69,22 @@
                 <div class="tabSingle tabActive">
                     <h1>Current Status</h1>
                     <div id="statusContainer">
-                        <div class="statusRow">Status: <span class="value">-</span></div>
+                        <div class="statusRow">
+                            <span class="value">Not Running</span>
+                            <div class="btns mdc-touch-target-wrapper">
+                                <button class="mdc-button mdc-button--icon-leading mdc-button--raised runBtn">
+                                    <span class="mdc-button__ripple"></span>
+                                    <i class="material-icons mdc-button__icon" aria-hidden="true">play_circle</i>
+                                    <span class="mdc-button__label">Run</span>
+                                </button>
+
+                                <button class="mdc-button mdc-button--icon-leading mdc-button--raised stopBtn">
+                                    <span class="mdc-button__ripple"></span>
+                                    <i class="material-icons mdc-button__icon" aria-hidden="true">stop_circle</i>
+                                    <span class="mdc-button__label">Stop</span>
+                                </button>
+                            </div>
+                        </div>
                         <div id="progress">
                             <div class="completedVal"></div>
                             <div class="totalVal"></div>

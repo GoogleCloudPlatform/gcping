@@ -185,3 +185,16 @@ async function getCurrentRunningStatus() {
     );
   });
 }
+
+/**
+ * Event handlers for button clicks
+ */
+document.querySelector("button.runBtn").addEventListener("click", function(e) {
+    console.log('run_test');
+    chrome.runtime.sendMessage({ action: "run_test" },() => {});
+});
+
+document.querySelector("button.stopBtn").addEventListener("click", function(e) {
+  console.log('stop_test');
+  chrome.runtime.sendMessage({ action: "stop_test" },() => {});
+});

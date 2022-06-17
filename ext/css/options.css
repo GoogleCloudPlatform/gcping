@@ -76,9 +76,30 @@ a:visited {
       display: flex;
   }
 
-  #statusContainer .value{
-      text-transform: capitalize;
-  }
+#statusContainer .btns {
+  margin-top: 1rem;
+}
+
+#statusContainer.statusRunning .stopBtn,
+#statusContainer:not(.statusRunning) .runBtn {
+  display: block;
+}
+
+#statusContainer:not(.statusRunning) .stopBtn,
+#statusContainer.statusRunning .runBtn {
+  display: none;
+}
+
+#statusContainer .statusRow{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#statusContainer .statusRow .value {
+  text-transform: capitalize;
+  font-size: 1rem;
+}
 
 #progress{
   width:200px;

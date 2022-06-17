@@ -45,6 +45,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     });
   }
 
+  else if (request.action === "run_test") {
+    pingAllRegions();
+  }
+
+  else if (request.action === "stop_test") {
+    stopRunningTest();
+  }
+
   return true;
 });
 
@@ -113,6 +121,12 @@ async function pingAllRegions() {
       fastestRegion = region["key"];
     }
 
+    // This may be changed in b/w test by the stopRunningTest func
+    // called from the options page
+    if (currentStatus.status !== PING_STATUS_RUNNING) {
+      return;
+    }
+
     chrome.action.setBadgeText({ text: `${counter}/${numRegions}` });
     currentStatus.completed = counter;
     counter++;
@@ -128,6 +142,15 @@ async function pingAllRegions() {
   runData["results"] = results;
 
   await saveRunData(runData);
+}
+
+function stopRunningTest() {
+  currentStatus.status = PING_STATUS_NOT_RUNNING;
+  currentStatus.completed = 0;
+  currentStatus.total = 0;
+
+  chrome.action.setBadgeText({ text: "" });
+  syncCurrentStatus();
 }
 
 /**
