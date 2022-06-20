@@ -22,8 +22,10 @@ import (
 	"net/http"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/GoogleCloudPlatform/gcping/internal/config"
+	"github.com/patrickmn/go-cache"
 )
 
 var once sync.Once
@@ -36,12 +38,8 @@ func main() {
 	}
 	log.Printf("Serving on :%s", port)
 
-	allEndpoints, err := config.GenerateConfigFromAPI(ctx)
-
-	if err != nil {
-		log.Println(err)
-	}
-
+	// Set up cache with default 5 minutes retention to
+	c := cache.New(5*time.Minute, 5*time.Minute)
 	region := os.Getenv("REGION")
 	if region == "" {
 		region = "pong"
@@ -60,7 +58,7 @@ func main() {
 		w.Header().Add("Content-Type", "application/json;charset=utf-8")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
-		err := json.NewEncoder(w).Encode(allEndpoints)
+		err := json.NewEncoder(w).Encode(endpointsCache(ctx, *c))
 		if err != nil {
 			w.WriteHeader(500)
 		}
@@ -89,4 +87,23 @@ func main() {
 	})
 
 	log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+// endpointsCache is used to fetch a value from the local cache if available
+// and from the Cloud Rur Admin API in case it is not available, or has expired.
+func endpointsCache(ctx context.Context, c cache.Cache) map[string]config.Endpoint {
+	em := make(map[string]config.Endpoint)
+	e, found := c.Get("map")
+	if found {
+		em = e.(map[string]config.Endpoint)
+		log.Println("Returning Endpoint map from cache")
+	} else {
+		e, err := config.GenerateConfigFromAPI(ctx)
+		em = e
+		c.Set("map", e, cache.DefaultExpiration)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	return em
 }
