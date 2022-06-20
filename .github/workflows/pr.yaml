@@ -27,7 +27,6 @@ jobs:
       name: 'Set up Google Cloud SDK'
       with:
         project_id: ${{ secrets.GCP_PROJECT }}
-        env_vars: REGION=us-central1,GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT }},GLOBAL_ENDPOINT="https://global.gcping.com"
 
     # Configure Login via a service account key secret.
     - id: 'auth'
@@ -54,6 +53,7 @@ jobs:
       with:
         service: 'pr-${{ github.event.pull_request.number }}-${{ github.sha }}'
         image: '${{ env.IMAGE }}'
+        env_vars: REGION=us-central1,GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT }},GLOBAL_ENDPOINT="https://global.gcping.com"
 
     - id: 'allowAll'
       name: 'Allow unauthenticated requests to staging endpoint'
