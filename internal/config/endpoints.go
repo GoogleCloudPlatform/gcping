@@ -29,7 +29,7 @@ type Endpoint struct {
 	// URL is the HTTPS URL of the service
 	URL string
 	// Region is the programmatic name of the region where the endpoint is
-	// deloyed, e.g., us-central1.
+	// deployed, e.g., us-central1.
 	Region string
 	// RegionName is the geographic name of the region, e.g., Iowa.
 	RegionName string
@@ -38,15 +38,8 @@ type Endpoint struct {
 // GenerateConfigFromEndpoints is used by the cli to generate an Endpoint map
 // using a precompiled list served by the gcping endpoints.
 func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
-	type innerEndpoint struct {
-		//Used to unmarshal properly formatted JSON obtained from /api/endpoint JSON
-		URL        string
-		Region     string
-		RegionName string
-	}
 
-	e := make(map[string]Endpoint)
-	ie := new(map[string]innerEndpoint)
+	EndpointsMap := make(map[string]Endpoint)
 
 	req, err := http.NewRequestWithContext(
 		ctx,
@@ -62,16 +55,13 @@ func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
 	}
 
 	defer resp.Body.Close()
-	json.NewDecoder(resp.Body).Decode(ie)
+	json.NewDecoder(resp.Body).Decode(&EndpointsMap)
 
-	for _, s := range *ie {
-		e[s.Region] = Endpoint(s)
-	}
-	return e
+	return EndpointsMap
 }
 
-// GenerateConfigFromAPI is used by the web endpoints running in Cloud Run
-// to generate the endpoint config through the Cloud Run Admin API.
+// GenerateConfigFromAPI is used to generate the endpoint config through the
+// metadat provided by the Cloud Run Admin API.
 func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 	log.Print("Using Cloud Run Admin API to generate Endpoints config.")
 	runService, err := run.NewService(ctx)
@@ -83,86 +73,24 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 
 	s, _ := json.MarshalIndent(resp.Items, "", "\t")
 
-	var endpoints []Endpoint
-
-	json.Unmarshal([]byte(s), &endpoints)
-
+	var nestedEndpointsMap []nestedEndpoint
+	json.Unmarshal(s, &nestedEndpointsMap)
 	var EndpointsMap = make(map[string]Endpoint)
 
 	// Add global endpoint to map if env is defined.
 	globalURL := os.Getenv("GLOBAL_ENDPOINT")
 	if globalURL != "" {
-		var Global Endpoint
-		Global.Region = "global"
-		Global.RegionName = "Global External HTTPS Load Balancer"
-		Global.URL = os.Getenv("GLOBAL_ENDPOINT")
+		Global := Endpoint{
+			URL:        os.Getenv("GLOBAL_ENDPOINT"),
+			Region:     "global",
+			RegionName: "Global External HTTPS Load Balancer",
+		}
 		EndpointsMap[Global.Region] = Global
 	}
 
-	for _, s := range endpoints {
-		EndpointsMap[s.Region] = s
+	for _, nestedEndpoint := range nestedEndpointsMap {
+		e := unNestEndpoint(nestedEndpoint)
+		EndpointsMap[e.Region] = e
 	}
-
 	return EndpointsMap, err
-}
-
-// UnmarshalJSON describes the structure of the json served by the Cloud Run
-// Admin API.
-func (es *Endpoint) UnmarshalJSON(data []byte) error {
-	type labelsInner struct {
-		Location string `json:"cloud.googleapis.com/location"`
-	}
-
-	type annotationsInner struct {
-		RegionName string `json:"region-name"`
-	}
-
-	type templateMetadataInner struct {
-		Annotations annotationsInner `json:"annotations"`
-	}
-
-	type templateInner struct {
-		Metadata templateMetadataInner `json:"metadata"`
-	}
-
-	type specInner struct {
-		Template templateInner `json:"template"`
-	}
-
-	type metadataInner struct {
-		Labels labelsInner `json:"labels"`
-		Name   string      `json:"name"`
-	}
-
-	type addressInner struct {
-		URL string `json:"url"`
-	}
-
-	type statusInner struct {
-		Address addressInner `json:"address"`
-	}
-
-	type nestedService struct {
-		Metadata metadataInner `json:"metadata"`
-		Status   statusInner   `json:"status"`
-		Spec     specInner     `json:"spec"`
-	}
-
-	var ns nestedService
-
-	if err := json.Unmarshal(data, &ns); err != nil {
-		return err
-	}
-
-	// create the struct in desired format
-	tmp := &Endpoint{
-		URL:        ns.Status.Address.URL,
-		Region:     ns.Metadata.Labels.Location,
-		RegionName: ns.Spec.Template.Metadata.Annotations.RegionName,
-	}
-
-	// reassign the method receiver pointer
-	// to store the values in the struct
-	*es = *tmp
-	return nil
 }
