@@ -75,7 +75,7 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 
 	var nestedEndpointsMap []nestedEndpoint
 	json.Unmarshal(s, &nestedEndpointsMap)
-	var EndpointsMap = make(map[string]Endpoint)
+	var endpointsMap = make(map[string]Endpoint)
 
 	// Add global endpoint to map if env is defined.
 	globalURL := os.Getenv("GLOBAL_ENDPOINT")
@@ -85,12 +85,12 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 			Region:     "global",
 			RegionName: "Global External HTTPS Load Balancer",
 		}
-		EndpointsMap[Global.Region] = Global
+		endpointsMap[Global.Region] = Global
 	}
 
 	for _, nestedEndpoint := range nestedEndpointsMap {
 		e := unNestEndpoint(nestedEndpoint)
-		EndpointsMap[e.Region] = e
+		endpointsMap[e.Region] = e
 	}
-	return EndpointsMap, err
+	return endpointsMap, err
 }
