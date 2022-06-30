@@ -57,7 +57,7 @@ func main() {
 
 	// Fetch and cache endpoint map in memory for the duration of the
 	// process.
-	AllEndpoints := config.GenerateConfigFromEndpoints(ctx)
+	endpoints := config.GenerateConfigFromEndpoints(ctx)
 
 	if number < 0 || concurrency <= 0 {
 		usage()
@@ -67,7 +67,7 @@ func main() {
 	}
 
 	if region != "" {
-		if _, found := AllEndpoints[region]; !found {
+		if _, found := endpoints[region]; !found {
 			fmt.Printf("region %q is not supported or does not exist\n", region)
 			os.Exit(1)
 		}
@@ -82,13 +82,13 @@ func main() {
 
 	switch {
 	case region != "":
-		w.reportRegion(AllEndpoints, region)
+		w.reportRegion(endpoints, region)
 	case top:
-		w.reportTop(AllEndpoints)
+		w.reportTop(endpoints)
 	case csvCum:
-		w.reportCSV(AllEndpoints)
+		w.reportCSV(endpoints)
 	default:
-		w.reportAll(AllEndpoints)
+		w.reportAll(endpoints)
 	}
 }
 
