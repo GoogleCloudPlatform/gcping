@@ -39,7 +39,7 @@ func main() {
 	log.Printf("Serving on :%s", port)
 
 	// Set up cache with default 5 minutes retention to
-	c := cache.New(5*time.Minute, 5*time.Minute)
+	cache := cache.New(5*time.Minute, 5*time.Minute)
 	region := os.Getenv("REGION")
 	if region == "" {
 		region = "pong"
@@ -58,7 +58,7 @@ func main() {
 		w.Header().Add("Content-Type", "application/json;charset=utf-8")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
-		err := json.NewEncoder(w).Encode(endpointsCache(ctx, *c))
+		err := json.NewEncoder(w).Encode(endpointsCache(ctx, cache))
 		if err != nil {
 			w.WriteHeader(500)
 		}
@@ -91,7 +91,7 @@ func main() {
 
 // endpointsCache is used to fetch a value from the local cache if available
 // and from the Cloud Rur Admin API in case it is not available, or has expired.
-func endpointsCache(ctx context.Context, c cache.Cache) map[string]config.Endpoint {
+func endpointsCache(ctx context.Context, c *cache.Cache) map[string]config.Endpoint {
 	em := make(map[string]config.Endpoint)
 	e, found := c.Get("map")
 	if found {
