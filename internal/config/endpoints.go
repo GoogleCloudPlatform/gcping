@@ -73,8 +73,8 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 
 	s, _ := json.MarshalIndent(resp.Items, "", "\t")
 
-	var nestedEndpointsMap []nestedEndpoint
-	json.Unmarshal(s, &nestedEndpointsMap)
+	var nested []nestedEndpoint
+	json.Unmarshal(s, &nested)
 	var endpointsMap = make(map[string]Endpoint)
 
 	// Add global endpoint to map if env is defined.
@@ -88,7 +88,7 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 		endpointsMap[Global.Region] = Global
 	}
 
-	for _, nestedEndpoint := range nestedEndpointsMap {
+	for _, nestedEndpoint := range nested {
 		e := unNestEndpoint(nestedEndpoint)
 		endpointsMap[e.Region] = e
 	}
