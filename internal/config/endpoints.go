@@ -69,7 +69,11 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 
 	// List Services
-	resp, err := runService.Namespaces.Services.List("namespaces/" + projectID).Fields("items(status/address/url,metadata(labels,name),spec(template/metadata/annotations))").LabelSelector("env=prod").Do()
+	resp, err := runService.Namespaces.Services.List("namespaces/"+projectID).
+		Fields("items(status/address/url",
+			"metadata(labels,name)",
+			"spec(template/metadata/annotations))").
+		LabelSelector("env=prod").Do()
 
 	s, _ := json.MarshalIndent(resp.Items, "", "\t")
 
