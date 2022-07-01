@@ -63,7 +63,7 @@ func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
 // GenerateConfigFromAPI is used to generate the endpoint config through the
 // metadat provided by the Cloud Run Admin API.
 func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
-	log.Print("Using Cloud Run Admin API to generate Endpoints config.")
+	log.Println("Using Cloud Run Admin API to generate Endpoints config.")
 	r, err := run.NewService(ctx)
 	// TODO: Get project name from Cloud Run metadata service if not defined in env variable
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
