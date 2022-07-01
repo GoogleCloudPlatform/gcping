@@ -36,7 +36,7 @@ type Endpoint struct {
 }
 
 // GenerateConfigFromEndpoints is used by the cli to generate an Endpoint map
-// using a precompiled list served by the gcping endpoints.
+// using json served by the gcping endpoints.
 func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
 
 	EndpointsMap := make(map[string]Endpoint)
@@ -61,7 +61,7 @@ func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
 }
 
 // GenerateConfigFromAPI is used to generate the endpoint config through the
-// metadat provided by the Cloud Run Admin API.
+// metadata provided by the Cloud Run Admin API.
 func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 	log.Println("Using Cloud Run Admin API to generate Endpoints config.")
 	r, err := run.NewService(ctx)
@@ -75,11 +75,16 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 			"spec(template/metadata/annotations))").
 		LabelSelector("env=prod").Do()
 
-	s, _ := json.MarshalIndent(resp.Items, "", "\t")
-
-	var nested []nestedEndpoint
-	json.Unmarshal(s, &nested)
 	var endpointsMap = make(map[string]Endpoint)
+
+	for _, v := range resp.Items {
+		e := Endpoint{
+			URL:        v.Status.Address.Url,
+			Region:     v.Metadata.Labels["cloud.googleapis.com/location"],
+			RegionName: v.Spec.Template.Metadata.Annotations["region-name"],
+		}
+		endpointsMap[e.Region] = e
+	}
 
 	// Add global endpoint to map if env is defined.
 	globalURL := os.Getenv("GLOBAL_ENDPOINT")
@@ -92,9 +97,5 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 		endpointsMap[g.Region] = g
 	}
 
-	for _, nestedEndpoint := range nested {
-		e := unNestEndpoint(nestedEndpoint)
-		endpointsMap[e.Region] = e
-	}
 	return endpointsMap, err
 }
