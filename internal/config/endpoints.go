@@ -84,12 +84,12 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 	// Add global endpoint to map if env is defined.
 	globalURL := os.Getenv("GLOBAL_ENDPOINT")
 	if globalURL != "" {
-		Global := Endpoint{
-			URL:        os.Getenv("GLOBAL_ENDPOINT"),
+		g := Endpoint{
+			URL:        globalURL,
 			Region:     "global",
 			RegionName: "Global External HTTPS Load Balancer",
 		}
-		endpointsMap[Global.Region] = Global
+		endpointsMap[g.Region] = g
 	}
 
 	for _, nestedEndpoint := range nested {
