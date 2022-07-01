@@ -64,12 +64,12 @@ func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
 // metadat provided by the Cloud Run Admin API.
 func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 	log.Print("Using Cloud Run Admin API to generate Endpoints config.")
-	runService, err := run.NewService(ctx)
+	r, err := run.NewService(ctx)
 	// TODO: Get project name from Cloud Run metadata service if not defined in env variable
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 
 	// List Services
-	resp, err := runService.Namespaces.Services.List("namespaces/"+projectID).
+	resp, err := r.Namespaces.Services.List("namespaces/"+projectID).
 		Fields("items(status/address/url",
 			"metadata(labels,name)",
 			"spec(template/metadata/annotations))").
