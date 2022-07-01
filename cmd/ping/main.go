@@ -31,7 +31,8 @@ import (
 var once sync.Once
 
 func main() {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"

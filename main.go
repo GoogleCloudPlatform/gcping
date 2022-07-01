@@ -53,7 +53,8 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
 	// Fetch and cache endpoint map in memory for the duration of the
 	// process.
