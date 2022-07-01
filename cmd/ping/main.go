@@ -94,16 +94,18 @@ func main() {
 func endpointsCache(ctx context.Context, c *cache.Cache) map[string]config.Endpoint {
 	em := make(map[string]config.Endpoint)
 	e, found := c.Get("map")
-	if found {
-		em = e.(map[string]config.Endpoint)
-		log.Println("Returning Endpoint map from cache")
-	} else {
+	if !found {
 		e, err := config.GenerateConfigFromAPI(ctx)
 		em = e
 		c.Set("map", e, cache.DefaultExpiration)
 		if err != nil {
 			log.Println(err)
 		}
+		return em
 	}
+
+	em = e.(map[string]config.Endpoint)
+	log.Println("Returning Endpoint map from cache")
+
 	return em
 }
