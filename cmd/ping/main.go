@@ -101,10 +101,15 @@ func endpointsCache(c *cache.Cache) map[string]config.Endpoint {
 	if !found {
 		e, err := config.GenerateConfigFromAPI(ctx)
 		if err != nil {
-			log.Println(err)
-			os.Exit(1)
+			em, found := c.Get("map_fallback")
+			if !found {
+				log.Println("cannot fetch endpoint map")
+				os.Exit(1)
+			}
+			return em.(map[string]config.Endpoint)
 		}
 		c.Set("map", e, cache.DefaultExpiration)
+		c.Set("map_fallback", e, 0)
 		return e
 	}
 
