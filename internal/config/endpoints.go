@@ -73,8 +73,7 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 	var endpointsMap = make(map[string]Endpoint)
 	r, err := run.NewService(ctx)
 	// TODO: Get project name from Cloud Run metadata service if not defined in env variable
-	//projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
-	projectID := "kr-gcping"
+	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 	if projectID == "" {
 		err := fmt.Errorf("could not retrieve Google Cloud Project ID from $GOOGLE_CLOUD_PROJECT")
 		return endpointsMap, err
