@@ -31,20 +31,21 @@ import (
 var once sync.Once
 
 func main() {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 	log.Printf("Serving on :%s", port)
 
-	// Set up cache with default 5 minutes retention to
+	// Set up cache with default 5 minutes retention and no purge time
 	cache := cache.New(5*time.Minute, 5*time.Minute)
 	region := os.Getenv("REGION")
 	if region == "" {
 		region = "pong"
 	}
+
+	// Prefetch and cache endpoint map
+	endpointsCache(cache)
 
 	// Serve / from files in kodata.
 	kdp := os.Getenv("KO_DATA_PATH")
@@ -59,7 +60,7 @@ func main() {
 		w.Header().Add("Content-Type", "application/json;charset=utf-8")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
-		err := json.NewEncoder(w).Encode(endpointsCache(ctx, cache))
+		err := json.NewEncoder(w).Encode(endpointsCache(cache))
 		if err != nil {
 			w.WriteHeader(500)
 		}
@@ -92,21 +93,20 @@ func main() {
 
 // endpointsCache is used to fetch a value from the local cache if available
 // and from the Cloud Rur Admin API in case it is not available, or has expired.
-func endpointsCache(ctx context.Context, c *cache.Cache) map[string]config.Endpoint {
-	em := make(map[string]config.Endpoint)
-	e, found := c.Get("map")
+func endpointsCache(c *cache.Cache) map[string]config.Endpoint {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	em, found := c.Get("map")
 	if !found {
 		e, err := config.GenerateConfigFromAPI(ctx)
-		em = e
-		c.Set("map", e, cache.DefaultExpiration)
 		if err != nil {
 			log.Println(err)
+			os.Exit(1)
 		}
-		return em
+		c.Set("map", e, cache.DefaultExpiration)
+		return e
 	}
 
-	em = e.(map[string]config.Endpoint)
-	log.Println("Returning Endpoint map from cache")
-
-	return em
+	return em.(map[string]config.Endpoint)
 }

@@ -17,7 +17,7 @@ package config
 import (
 	"context"
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -37,36 +37,48 @@ type Endpoint struct {
 
 // GenerateConfigFromEndpoints is used by the cli to generate an Endpoint map
 // using json served by the gcping endpoints.
-func GenerateConfigFromEndpoints(ctx context.Context) map[string]Endpoint {
+func GenerateConfigFromEndpoints(ctx context.Context, endpointsURL string) (map[string]Endpoint, error) {
 
-	EndpointsMap := make(map[string]Endpoint)
+	endpointsMap := make(map[string]Endpoint)
 
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodGet,
-		"https://global.gcping.com/api/endpoints",
+		endpointsURL,
 		nil,
 	)
 	client := http.DefaultClient
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return endpointsMap, err
+	}
+	if resp.StatusCode != http.StatusOK {
+		err := fmt.Errorf("%v %s", resp.Status, endpointsURL)
+		return endpointsMap, err
 	}
 
 	defer resp.Body.Close()
-	json.NewDecoder(resp.Body).Decode(&EndpointsMap)
+	decoder := json.NewDecoder(resp.Body)
+	if err := decoder.Decode(&endpointsMap); err != nil {
+		return endpointsMap, err
+	}
 
-	return EndpointsMap
+	return endpointsMap, err
 }
 
 // GenerateConfigFromAPI is used to generate the endpoint config through the
 // metadata provided by the Cloud Run Admin API.
 func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
-	log.Println("Using Cloud Run Admin API to generate Endpoints config.")
+	var endpointsMap = make(map[string]Endpoint)
 	r, err := run.NewService(ctx)
 	// TODO: Get project name from Cloud Run metadata service if not defined in env variable
-	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	//projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	projectID := "kr-gcping"
+	if projectID == "" {
+		err := fmt.Errorf("could not retrieve Google Cloud Project ID from $GOOGLE_CLOUD_PROJECT")
+		return endpointsMap, err
+	}
 
 	// List Services
 	resp, err := r.Namespaces.Services.List("namespaces/"+projectID).
@@ -74,8 +86,6 @@ func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
 			"metadata(labels,name)",
 			"spec(template/metadata/annotations))").
 		LabelSelector("env=prod").Do()
-
-	var endpointsMap = make(map[string]Endpoint)
 
 	for _, v := range resp.Items {
 		e := Endpoint{

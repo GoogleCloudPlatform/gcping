@@ -27,14 +27,15 @@ import (
 )
 
 var (
-	top         bool
-	number      int // number of requests for each region
-	concurrency int
-	timeout     time.Duration
-	csv         bool
-	csvCum      bool
-	verbose     bool
-	region      string
+	top          bool
+	number       int // number of requests for each region
+	concurrency  int
+	timeout      time.Duration
+	csv          bool
+	csvCum       bool
+	verbose      bool
+	region       string
+	endpointsURL string
 	// TODO(jbd): Add payload options such as body size.
 
 	client *http.Client // TODO(jbd): One client per worker?
@@ -49,6 +50,7 @@ func main() {
 	flag.BoolVar(&csv, "csv", false, "")
 	flag.BoolVar(&csvCum, "csv-cum", false, "")
 	flag.StringVar(&region, "r", "", "")
+	flag.StringVar(&endpointsURL, "url", "https://global.gcping.com/api/endpoints", "")
 
 	flag.Usage = usage
 	flag.Parse()
@@ -58,7 +60,11 @@ func main() {
 
 	// Fetch and cache endpoint map in memory for the duration of the
 	// process.
-	endpoints := config.GenerateConfigFromEndpoints(ctx)
+	endpoints, err := config.GenerateConfigFromEndpoints(ctx, endpointsURL)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	if number < 0 || concurrency <= 0 {
 		usage()
@@ -110,6 +116,7 @@ Options:
          Examples: "500ms", "1s", "1s500ms".
 -top     If true, only the top (non-global) region is printed.
 -csv-cum If true, cumulative value is printed in CSV; disables default report.
+-url     URL of endpoint list. Default is https://global.gcping.com/api/endpoints
 
 -csv     CSV output; disables verbose output.
 -v       Verbose output.
