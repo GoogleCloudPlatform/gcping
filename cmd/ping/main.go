@@ -37,7 +37,7 @@ func main() {
 	}
 	log.Printf("Serving on :%s", port)
 
-	// Set up cache with default 5 minutes retention and no purge time
+	// Set up cache with default 5 minutes retentio
 	cache := cache.New(5*time.Minute, 5*time.Minute)
 	region := os.Getenv("REGION")
 	if region == "" {
@@ -45,7 +45,7 @@ func main() {
 	}
 
 	// Prefetch and cache endpoint map
-	endpointsCache(cache)
+	_, _ = endpointsCache(cache)
 
 	// Serve / from files in kodata.
 	kdp := os.Getenv("KO_DATA_PATH")
@@ -60,7 +60,11 @@ func main() {
 		w.Header().Add("Content-Type", "application/json;charset=utf-8")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
-		err := json.NewEncoder(w).Encode(endpointsCache(cache))
+		endpoints, err := endpointsCache(cache)
+		if err != nil {
+			w.WriteHeader(500)
+		}
+		err = json.NewEncoder(w).Encode(endpoints)
 		if err != nil {
 			w.WriteHeader(500)
 		}
@@ -93,25 +97,26 @@ func main() {
 
 // endpointsCache is used to fetch a value from the local cache if available
 // and from the Cloud Rur Admin API in case it is not available, or has expired.
-func endpointsCache(c *cache.Cache) map[string]config.Endpoint {
+func endpointsCache(c *cache.Cache) (map[string]config.Endpoint, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	em, found := c.Get("map")
+	em, found := c.Get("endpoints")
 	if !found {
-		e, err := config.GenerateConfigFromAPI(ctx)
+		e, err := config.GenerateConfigFromCloudRunAPI(ctx)
 		if err != nil {
-			em, found := c.Get("map_fallback")
+			//Retrieve stale_endpoints when the fresh endpoints are unavailable
+			em, found := c.Get("stale_endpoints")
 			if !found {
 				log.Println("cannot fetch endpoint map")
-				os.Exit(1)
+				return nil, fmt.Errorf("cannot fetch map")
 			}
-			return em.(map[string]config.Endpoint)
+			return em.(map[string]config.Endpoint), nil
 		}
-		c.Set("map", e, cache.DefaultExpiration)
-		c.Set("map_fallback", e, 0)
-		return e
+		c.Set("endpoints", e, cache.DefaultExpiration)
+		c.Set("stale_endpoints", e, 0)
+		return e, nil
 	}
 
-	return em.(map[string]config.Endpoint)
+	return em.(map[string]config.Endpoint), nil
 }

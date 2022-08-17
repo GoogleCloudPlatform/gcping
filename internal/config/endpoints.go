@@ -35,9 +35,9 @@ type Endpoint struct {
 	RegionName string
 }
 
-// GenerateConfigFromEndpoints is used by the cli to generate an Endpoint map
+// GetEndpointsFromServer is used by the cli to generate an Endpoint map
 // using json served by the gcping endpoints.
-func GenerateConfigFromEndpoints(ctx context.Context, endpointsURL string) (map[string]Endpoint, error) {
+func GetEndpointsFromServer(ctx context.Context, endpointsURL string) (map[string]Endpoint, error) {
 
 	endpointsMap := make(map[string]Endpoint)
 
@@ -48,7 +48,6 @@ func GenerateConfigFromEndpoints(ctx context.Context, endpointsURL string) (map[
 		nil,
 	)
 	client := http.DefaultClient
-
 	resp, err := client.Do(req)
 	if err != nil {
 		return endpointsMap, err
@@ -67,16 +66,17 @@ func GenerateConfigFromEndpoints(ctx context.Context, endpointsURL string) (map[
 	return endpointsMap, err
 }
 
-// GenerateConfigFromAPI is used to generate the endpoint config through the
+// GenerateConfigFromCloudRunAPI is used to generate the endpoint config through the
 // metadata provided by the Cloud Run Admin API.
-func GenerateConfigFromAPI(ctx context.Context) (map[string]Endpoint, error) {
+func GenerateConfigFromCloudRunAPI(ctx context.Context) (map[string]Endpoint, error) {
 	var endpointsMap = make(map[string]Endpoint)
 	r, err := run.NewService(ctx)
 	// TODO: Get project name from Cloud Run metadata service if not defined in env variable
-	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
-	if projectID == "" {
+	//projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	projectID, ok := os.LookupEnv("GOOGLE_CLOUD_PROJECT")
+	if !ok {
 		err := fmt.Errorf("could not retrieve Google Cloud Project ID from $GOOGLE_CLOUD_PROJECT")
-		return endpointsMap, err
+		return nil, err
 	}
 
 	// List Services

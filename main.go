@@ -55,12 +55,12 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 	defer cancel()
 
 	// Fetch and cache endpoint map in memory for the duration of the
 	// process.
-	endpoints, err := config.GenerateConfigFromEndpoints(ctx, endpointsURL)
+	endpoints, err := config.GetEndpointsFromServer(ctx, endpointsURL)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
