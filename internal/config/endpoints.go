@@ -44,14 +44,13 @@ func GetEndpointsFromServer(ctx context.Context, endpointsURL string) (map[strin
 		endpointsURL,
 		nil,
 	)
-	client := http.DefaultClient
-	resp, err := client.Do(req)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return endpointsMap, err
+		return nil, err
 	}
 	if resp.StatusCode != http.StatusOK {
 		err := fmt.Errorf("%v %s", resp.Status, endpointsURL)
-		return endpointsMap, err
+		return nil, err
 	}
 
 	defer resp.Body.Close()
