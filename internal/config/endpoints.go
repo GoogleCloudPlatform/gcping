@@ -137,6 +137,11 @@ var AllEndpoints = map[string]Endpoint{
 		Region:     "europe-southwest1",
 		RegionName: "Madrid",
 	},
+	"me-west1": {
+		URL:        "https://me-west1-5tkroniexa-zf.a.run.app/",
+		Region:     "me-west1",
+		RegionName: "Tel Aviv",
+	},
 	"northamerica-northeast1": {
 		URL:        "https://northamerica-northeast1-5tkroniexa-nn.a.run.app",
 		Region:     "northamerica-northeast1",
