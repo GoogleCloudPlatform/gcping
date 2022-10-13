@@ -32,11 +32,9 @@ type Endpoint struct {
 	RegionName string
 }
 
-// GetEndpointsFromServer is used by the cli to generate an Endpoint map
+// EndpointsFromServer is used by the cli to generate an Endpoint map
 // using json served by the gcping endpoints.
-func GetEndpointsFromServer(ctx context.Context, endpointsURL string) (map[string]Endpoint, error) {
-
-	endpointsMap := make(map[string]Endpoint)
+func EndpointsFromServer(ctx context.Context, endpointsURL string) (map[string]Endpoint, error) {
 
 	req, err := http.NewRequestWithContext(
 		ctx,
@@ -48,18 +46,20 @@ func GetEndpointsFromServer(ctx context.Context, endpointsURL string) (map[strin
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode != http.StatusOK {
 		err := fmt.Errorf("%v %s", resp.Status, endpointsURL)
 		return nil, err
 	}
 
-	defer resp.Body.Close()
+	e := make(map[string]Endpoint)
 	decoder := json.NewDecoder(resp.Body)
-	if err := decoder.Decode(&endpointsMap); err != nil {
-		return endpointsMap, err
+	if err := decoder.Decode(&e); err != nil {
+		return e, err
 	}
 
-	return endpointsMap, err
+	return e, err
 }
 
 // AllEndpoints associates a region name with its Cloud Run Endpoint.

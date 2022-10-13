@@ -60,7 +60,7 @@ func main() {
 
 	// Fetch and cache endpoint map in memory for the duration of the
 	// process.
-	endpoints, err := config.GetEndpointsFromServer(ctx, endpointsURL)
+	endpoints, err := config.EndpointsFromServer(ctx, endpointsURL)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
