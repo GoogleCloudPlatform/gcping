@@ -14,15 +14,54 @@
 
 package config
 
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
 // Endpoint represents a Cloud Run service deploy in a particular region.
 type Endpoint struct {
 	// URL is the HTTPS URL of the service
 	URL string
 	// Region is the programmatic name of the region where the endpoint is
-	// deloyed, e.g., us-central1.
+	// deployed, e.g., us-central1.
 	Region string
 	// RegionName is the geographic name of the region, e.g., Iowa.
 	RegionName string
+}
+
+// EndpointsFromServer is used by the cli to generate an Endpoint map
+// using json served by the gcping endpoints.
+func EndpointsFromServer(ctx context.Context, endpointsURL string) (map[string]Endpoint, error) {
+
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodGet,
+		endpointsURL,
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("%v %s", resp.Status, endpointsURL)
+	}
+
+	e := make(map[string]Endpoint)
+	decoder := json.NewDecoder(resp.Body)
+	if err := decoder.Decode(&e); err != nil {
+		return e, err
+	}
+
+	return e, err
 }
 
 // AllEndpoints associates a region name with its Cloud Run Endpoint.

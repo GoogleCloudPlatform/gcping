@@ -16,6 +16,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"net/http"
@@ -26,14 +27,15 @@ import (
 )
 
 var (
-	top         bool
-	number      int // number of requests for each region
-	concurrency int
-	timeout     time.Duration
-	csv         bool
-	csvCum      bool
-	verbose     bool
-	region      string
+	top          bool
+	number       int // number of requests for each region
+	concurrency  int
+	timeout      time.Duration
+	csv          bool
+	csvCum       bool
+	verbose      bool
+	region       string
+	endpointsURL string
 	// TODO(jbd): Add payload options such as body size.
 
 	client *http.Client // TODO(jbd): One client per worker?
@@ -48,9 +50,21 @@ func main() {
 	flag.BoolVar(&csv, "csv", false, "")
 	flag.BoolVar(&csvCum, "csv-cum", false, "")
 	flag.StringVar(&region, "r", "", "")
+	flag.StringVar(&endpointsURL, "url", "https://global.gcping.com/api/endpoints", "")
 
 	flag.Usage = usage
 	flag.Parse()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Fetch and cache endpoint map in memory for the duration of the
+	// process.
+	endpoints, err := config.EndpointsFromServer(ctx, endpointsURL)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	if number < 0 || concurrency <= 0 {
 		usage()
@@ -60,7 +74,7 @@ func main() {
 	}
 
 	if region != "" {
-		if _, found := config.AllEndpoints[region]; !found {
+		if _, found := endpoints[region]; !found {
 			fmt.Printf("region %q is not supported or does not exist\n", region)
 			os.Exit(1)
 		}
@@ -75,13 +89,13 @@ func main() {
 
 	switch {
 	case region != "":
-		w.reportRegion(region)
+		w.reportRegion(endpoints, region)
 	case top:
-		w.reportTop()
+		w.reportTop(endpoints)
 	case csvCum:
-		w.reportCSV()
+		w.reportCSV(endpoints)
 	default:
-		w.reportAll()
+		w.reportAll(endpoints)
 	}
 }
 
@@ -102,6 +116,7 @@ Options:
          Examples: "500ms", "1s", "1s500ms".
 -top     If true, only the top (non-global) region is printed.
 -csv-cum If true, cumulative value is printed in CSV; disables default report.
+-url     URL of endpoint list. Default is https://global.gcping.com/api/endpoints
 
 -csv     CSV output; disables verbose output.
 -v       Verbose output.
