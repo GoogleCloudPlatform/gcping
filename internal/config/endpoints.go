@@ -42,6 +42,9 @@ func EndpointsFromServer(ctx context.Context, endpointsURL string) (map[string]E
 		endpointsURL,
 		nil,
 	)
+	if err != nil {
+		return nil, err
+	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -49,8 +52,7 @@ func EndpointsFromServer(ctx context.Context, endpointsURL string) (map[string]E
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		err := fmt.Errorf("%v %s", resp.Status, endpointsURL)
-		return nil, err
+		return nil, fmt.Errorf("%v %s", resp.Status, endpointsURL)
 	}
 
 	e := make(map[string]Endpoint)
