@@ -40,5 +40,5 @@ jobs:
     - name: Run lint
       run: |
         cd web
-        npm install
+        npm ci
         npm run lint
