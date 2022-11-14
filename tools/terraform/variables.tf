@@ -45,3 +45,18 @@ variable "release_bucket" {
   type    = string
   default = "gcping-release"
 }
+
+variable "cloudbuild_logs_bucket" {
+  type    = string
+  default = "gcping-devrel_gcblogs"
+}
+
+variable "github_org" {
+  type    = string
+  default = "GoogleCloudPlatform"
+}
+
+variable "github_repo" {
+  type    = string
+  default = "gcping"
+}

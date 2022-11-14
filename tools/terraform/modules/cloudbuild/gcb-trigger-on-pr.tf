@@ -12,16 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "4.43.0"
-    }
+resource "google_cloudbuild_trigger" "pr-trigger" {
+    depends_on = [
+        google_project_service.iam,
+        google_service_account.gcb
+    ]
 
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = "4.43.0"
+    provider = google-beta
+
+    service_account = google_service_account.gcb.id
+    project         = var.project
+    name            = "pr-validation-staging"
+    description     = "Build and deploy to a staging endpoint"
+    filename        = "tools/cloudbuild/pr-open.yaml"
+
+  github {
+    owner = var.github_org
+    name  = var.github_repo
+    pull_request {
+      branch = "^main$"
+      comment_control = "COMMENTS_ENABLED_FOR_EXTERNAL_CONTRIBUTORS_ONLY"
     }
   }
 }
