@@ -58,7 +58,7 @@ func EndpointsFromServer(ctx context.Context, endpointsURL string) (map[string]E
 	e := make(map[string]Endpoint)
 	decoder := json.NewDecoder(resp.Body)
 	if err := decoder.Decode(&e); err != nil {
-		return e, err
+		return nil, err
 	}
 
 	return e, err
