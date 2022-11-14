@@ -15,17 +15,13 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"sync"
 
 	"github.com/GoogleCloudPlatform/gcping/internal/config"
+	"github.com/GoogleCloudPlatform/gcping/internal/httphandler"
 )
-
-var once sync.Once
 
 func main() {
 	port := os.Getenv("PORT")
@@ -45,40 +41,15 @@ func main() {
 		log.Println("KO_DATA_PATH unset")
 		kdp = "/var/run/ko/"
 	}
-	http.Handle("/", http.FileServer(http.Dir(kdp)))
 
-	http.HandleFunc("/api/endpoints", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Cache-Control", "no-store")
-		w.Header().Add("Content-Type", "application/json;charset=utf-8")
-		w.Header().Add("Access-Control-Allow-Origin", "*")
-		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
-		err := json.NewEncoder(w).Encode(config.AllEndpoints)
-		if err != nil {
-			w.WriteHeader(500)
-		}
+	handler := httphandler.New(&httphandler.Options{
+		Region:     region,
+		StaticRoot: http.Dir(kdp),
+		Endpoints:  config.AllEndpoints,
 	})
 
-	// Serve /api/ping with region response.
-	http.HandleFunc("/api/ping", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Cache-Control", "no-store")
-		w.Header().Add("Access-Control-Allow-Origin", "*")
-		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
-		once.Do(func() {
-			w.Header().Add("X-First-Request", "true")
-		})
-		fmt.Fprintln(w, region)
-	})
-
-	// Serve /ping with region response to fix issue#96 on older cli versions.
-	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Cache-Control", "no-store")
-		w.Header().Add("Access-Control-Allow-Origin", "*")
-		w.Header().Add("Strict-Transport-Security", "max-age=3600; includeSubdomains; preload")
-		once.Do(func() {
-			w.Header().Add("X-First-Request", "true")
-		})
-		fmt.Fprintln(w, region)
-	})
-
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	if err := http.ListenAndServe(":"+port, handler); err != nil {
+		log.Fatalf("ListenAndServe(): %v", err)
+	}
+	log.Print("Exiting.")
 }
