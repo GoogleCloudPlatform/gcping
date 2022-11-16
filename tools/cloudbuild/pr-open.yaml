@@ -36,7 +36,7 @@ steps:
   args:
     - -c
     - |
-      echo $(/ko publish ./cmd/ping --tags pr-$_PR_NUMBER,$SHORT_SHA) > ./image.txt || exit 1
+      echo $(/ko publish ./cmd/ping --tags pr-$_PR_NUMBER,pr-$_PR_NUMBER-$SHORT_SHA) > ./image.txt || exit 1
 
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   id: run-deploy-image
