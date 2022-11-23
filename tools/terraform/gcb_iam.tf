@@ -17,26 +17,26 @@ resource "google_project_service" "iam" {
   service = "iam.googleapis.com"
 }
 
-// Create a Cloud Build Service account
+// Create custom Service Account for Cloud Build
 resource "google_service_account" "gcb" {
-  account_id = "cloudbuild"
+  account_id   = "cloudbuild"
   display_name = "Service account for Cloud Build jobs"
 }
 
 resource "google_project_iam_member" "gcb-run-admin" {
-  project = "${var.project}"
+  project = var.project
   role    = "roles/run.admin"
   member  = "serviceAccount:${google_service_account.gcb.email}"
 }
 
 resource "google_project_iam_member" "gcb-builder" {
-  project = "${var.project}"
+  project = var.project
   role    = "roles/cloudbuild.builds.builder"
   member  = "serviceAccount:${google_service_account.gcb.email}"
 }
 
 resource "google_project_iam_member" "gcb-sa-user" {
-  project = "${var.project}"
+  project = var.project
   role    = "roles/iam.serviceAccountUser"
   member  = "serviceAccount:${google_service_account.gcb.email}"
 }

@@ -13,17 +13,17 @@
 // limitations under the License.
 
 locals {
-    managed_domains = var.domain_alias_flag ? [
-      "www.${var.domain}",
-      "global.${var.domain}",
-      "${var.domain}",
-      "www.${var.domain_alias}",
-      "${var.domain_alias}",
+  managed_domains = var.domain_alias_flag ? [
+    "www.${var.domain}",
+    "global.${var.domain}",
+    "${var.domain}",
+    "www.${var.domain_alias}",
+    "${var.domain_alias}",
     ] : [
-      "www.${var.domain}",
-      "global.${var.domain}",
-      "${var.domain}",
-    ]
+    "www.${var.domain}",
+    "global.${var.domain}",
+    "${var.domain}",
+  ]
 }
 
 // Enable Compute Engine API.
@@ -35,6 +35,10 @@ resource "google_project_service" "compute" {
 // Reserve a global static IP address.
 resource "google_compute_global_address" "global" {
   name = "address"
+
+  depends_on = [
+    google_project_service.compute
+  ]
 }
 
 resource "google_compute_global_forwarding_rule" "global" {
@@ -42,6 +46,9 @@ resource "google_compute_global_forwarding_rule" "global" {
   target     = google_compute_target_https_proxy.global.id
   port_range = "443"
   ip_address = google_compute_global_address.global.address
+  depends_on = [
+    google_project_service.compute
+  ]
 }
 
 resource "google_compute_target_https_proxy" "global" {
@@ -53,31 +60,44 @@ resource "google_compute_target_https_proxy" "global" {
 }
 
 resource "google_compute_url_map" "global" {
+
   provider = google-beta
 
   name            = "global"
   description     = "a description"
   default_service = google_compute_backend_service.global.id
-  
+
   // Create a host rule to match traffic to alias (gcpping.com)
-  host_rule {
-    hosts = [
+  dynamic "host_rule" {
+    for_each = var.domain_alias_flag ? [1] : []
+
+    content {
+      hosts = [
         var.domain_alias,
-        ]
-    path_matcher = "alt-redirect"
-  }
-
-  // 301 redirect traffic from gcpping.com to gcping.com
-  path_matcher {
-    name = "alt-redirect"
-
-    default_url_redirect {
-      host_redirect          = var.domain
-      https_redirect         = false
-      redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
-      strip_query            = false
+      ]
+      path_matcher = "alt-redirect"
     }
   }
+  // 301 redirect traffic from gcpping.com to gcping.com
+  dynamic "path_matcher" {
+    for_each = var.domain_alias_flag ? [1] : []
+
+    content {
+      name = "alt-redirect"
+
+
+
+      default_url_redirect {
+        host_redirect          = var.domain
+        https_redirect         = false
+        redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
+        strip_query            = false
+      }
+    }
+  }
+  depends_on = [
+    google_project_service.compute
+  ]
 }
 
 // Create a global backend service with a backend for each regional NEG.
@@ -103,6 +123,10 @@ resource "google_compute_url_map" "https_redirect" {
     redirect_response_code = "MOVED_PERMANENTLY_DEFAULT"
     strip_query            = false
   }
+  depends_on = [
+    google_project_service.compute
+  ]
+
 }
 
 resource "google_compute_target_http_proxy" "https_redirect" {
@@ -124,7 +148,7 @@ resource "random_id" "certificate" {
   byte_length = 2
   prefix      = "global-"
   keepers = {
-      domains = join(",", local.managed_domains)
+    domains = join(",", local.managed_domains)
   }
 }
 
@@ -139,4 +163,7 @@ resource "google_compute_managed_ssl_certificate" "global" {
   lifecycle {
     create_before_destroy = true
   }
+  depends_on = [
+    google_project_service.compute
+  ]
 }

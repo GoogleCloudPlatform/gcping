@@ -14,7 +14,7 @@
 
 terraform {
   backend "gcs" {
-    bucket  = "gcping-tf-state"
+    bucket = "gcping-tf-state"
   }
 }
 

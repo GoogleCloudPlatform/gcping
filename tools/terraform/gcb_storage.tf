@@ -12,22 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-variable "project" {
-  type    = string
-  default = "gcping-devrel"
-}
-
-variable "cloudbuild_logs_bucket" {
-  type    = string
-  default = "gcping-devrel_gcblogs"
-}
-
-variable "github_org" {
-  type    = string
-  default = "GoogleCloudPlatform"
-}
-
-variable "github_repo" {
-  type    = string
-  default = "gcping"
+// Create a bucket for Cloud Build Logs - required when GCB with custom SA
+resource "google_storage_bucket" "cloudbuild_logs" {
+  name                        = "${var.project}${var.cloudbuild_logs_bucket_suffix}"
+  uniform_bucket_level_access = true
+  location                    = "US"
 }

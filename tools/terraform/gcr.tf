@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module "cloudbuild" {
-    source = "./modules/cloudbuild"
-    cloudbuild_logs_bucket = "${var.cloudbuild_logs_bucket}"
-    project = "${var.project}"
+resource "google_project_service" "gcr" {
+  service = "containerregistry.googleapis.com"
 }

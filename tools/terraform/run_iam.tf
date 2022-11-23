@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-provider "google" {
-  project = var.project
-}
-
-provider "google-beta" {
-  project = var.project
+// Create a mininal priviledge service account for the Cloud Run services
+resource "google_service_account" "minimal" {
+  account_id   = "minimal-service-account"
+  display_name = "Minimal Service Account"
 }

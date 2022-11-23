@@ -14,7 +14,7 @@ Deploy Cloud Run site using Terraform
 $ gcloud auth login                      # Used by ko
 $ gcloud auth application-default login  # Used by Terraform
 ```
-- Run `terraform init` to fetch the Terraform state, etc.
+- Run `terraform -chdir=tools/terraform/ init` to fetch the Terraform state, etc.
 - In Cloud Shell, if you see errors about IPv6 addresses not resolving, run
   `./bin/prefer-ipv4.sh`
 
@@ -30,7 +30,7 @@ $ npm run build  # generate the frontend
 
 ```
 $ export KO_DOCKER_REPO=gcr.io/gcping-devrel # prod only, use other repo for dev
-$ terraform apply -var image=$(ko publish -P ./cmd/ping/)
+$ terraform -chdir=tools/terraform/ apply -var image=$(ko publish -P ./cmd/ping/)
 ```
 
 This deploys the ping service to all Cloud Run regions and configures a global
