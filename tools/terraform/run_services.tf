@@ -84,11 +84,14 @@ resource "google_cloud_run_service_iam_member" "allUsers" {
 resource "google_compute_region_network_endpoint_group" "regions" {
   for_each = google_cloud_run_service.regions
 
-  name                  = each.key
+  name                  = google_cloud_run_service.regions[each.key].name
   network_endpoint_type = "SERVERLESS"
   region                = each.key
   cloud_run {
     service = google_cloud_run_service.regions[each.key].name
+  }
+  lifecycle {
+    create_before_destroy = true
   }
 
   depends_on = [google_project_service.compute]
