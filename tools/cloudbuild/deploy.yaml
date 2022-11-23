@@ -38,6 +38,8 @@ steps:
     - |
       echo $(/ko publish ./cmd/ping > ./image.txt || exit 1
  
+  # requires the terraform community builder image to be built and loaded in the 
+  # project's container registry
 - name: 'gcr.io/${PROJECT_ID}/terraform'
   id: terraform-init
   args: ['-chdir=tools/terraform', '-backend', 'bucket="${PROJECT_ID}_tf-state' 'init', '-reconfigure']
