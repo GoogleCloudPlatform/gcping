@@ -81,7 +81,7 @@ resource "google_compute_url_map" "global" {
 
     content {
       hosts = [
-        var.domain_alias
+        var.domain_alias,
       ]
       path_matcher = "alt-redirect"
     }
