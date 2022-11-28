@@ -12,16 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "4.43.0"
-    }
-
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = "4.43.0"
-    }
-  }
+// Create a mininal priviledge service account for the Cloud Run services
+resource "google_service_account" "minimal" {
+  account_id   = "minimal-service-account"
+  display_name = "Minimal Service Account"
 }

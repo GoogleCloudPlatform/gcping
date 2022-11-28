@@ -1,0 +1,59 @@
+#   Copyright 2022 Google Inc. All Rights Reserved.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+logsBucket: "gs://${PROJECT_ID}_gcblogs"
+
+steps:
+- name: 'node'
+  id: npm-install
+  entrypoint: 'npm'
+  args: ['install', 'web/']
+
+- name: 'node'
+  id: npm-build
+  entrypoint: 'npm'
+  args: ['--prefix', 'web/', 'run', 'build']
+
+  # requires the ko community builder image to be built and loaded in the 
+  # project's container registry
+- name: gcr.io/$PROJECT_ID/ko
+  id: ko-build
+  entrypoint: /bin/sh
+  env:
+    - 'KO_DOCKER_REPO=gcr.io/$PROJECT_ID'
+  # write the newly created container image path to a file for use in another step
+  args:
+    - -c
+    - |
+      echo $(/ko publish ./cmd/ping > ./image.txt || exit 1
+ 
+  # requires the terraform community builder image to be built and loaded in the 
+  # project's container registry
+- name: 'gcr.io/${PROJECT_ID}/terraform'
+  id: terraform-init
+  args: ['-chdir=tools/terraform', '-backend', 'bucket="${PROJECT_ID}_tf-state' 'init', '-reconfigure']
+  waitFor:
+  - ko-build
+
+- name: 'gcr.io/${PROJECT_ID}/terraform'
+  id: terraform-plan-preview
+  entrypoint: /bin/bash
+  args:
+    - -c
+    - |
+      terraform -chdir=tools/terraform apply \
+      -auto-approve \
+      --var image=$(cat ./image.txt)
+  waitFor:
+  - terraform-init

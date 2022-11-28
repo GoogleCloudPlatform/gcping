@@ -12,15 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Create a bucket for CLI releases
-resource "google_storage_bucket" "releases" {
-  name = "${var.release_bucket}"
+// Create a bucket for Cloud Build Logs - required when GCB with custom SA
+resource "google_storage_bucket" "cloudbuild_logs" {
+  name                        = "${var.project}${var.cloudbuild_logs_bucket_suffix}"
   uniform_bucket_level_access = true
-}
-
-// Make the bucket publically accessible
-resource "google_storage_bucket_iam_member" "public_access" {
-  bucket = google_storage_bucket.releases.name
-  role = "roles/storage.objectViewer"
-  member = "allUsers"
+  location                    = "US"
 }

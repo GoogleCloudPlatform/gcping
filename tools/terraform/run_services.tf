@@ -13,17 +13,18 @@
 // limitations under the License.
 
 locals {
-    image = var.image != "" ? var.image : "gcr.io/${var.project}/${var.repository}:latest"
-    regions = jsondecode(file("${path.module}/regions.json"))
+  image   = var.image != "" ? var.image : "gcr.io/${var.project}/${var.repository}:latest"
+  regions = jsondecode(file("${path.module}/regions.json"))
 }
 
 // Enable Cloud Run API.
 resource "google_project_service" "run" {
   service = "run.googleapis.com"
-}
 
-// Get the list of all Cloud Run regions available
-data "google_cloud_run_locations" "available" {
+  // used to ensure gcr api is disabled on tf destroy
+  depends_on = [
+    google_project_service.gcr
+  ]
 }
 
 // Deploy a Cloud Run service in each region listed in the regions.json
@@ -61,7 +62,10 @@ resource "google_cloud_run_service" "regions" {
     latest_revision = true
   }
 
-  depends_on = [google_project_service.run]
+  depends_on = [
+    google_project_service.run,
+    google_project_service.gcr,
+  ]
 }
 
 // Make each Cloud Run service invokable by unauthenticated users.
@@ -80,11 +84,14 @@ resource "google_cloud_run_service_iam_member" "allUsers" {
 resource "google_compute_region_network_endpoint_group" "regions" {
   for_each = google_cloud_run_service.regions
 
-  name                  = each.key
+  name                  = google_cloud_run_service.regions[each.key].name
   network_endpoint_type = "SERVERLESS"
   region                = each.key
   cloud_run {
     service = google_cloud_run_service.regions[each.key].name
+  }
+  lifecycle {
+    create_before_destroy = true
   }
 
   depends_on = [google_project_service.compute]

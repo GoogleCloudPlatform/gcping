@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "4.43.0"
-    }
+locals {
+  release_bucket = var.release_bucket != "" ? var.release_bucket : "${var.project}${var.release_bucket_suffix}"
+}
 
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = "4.43.0"
-    }
-  }
+// Create a bucket for CLI releases
+resource "google_storage_bucket" "releases" {
+  name                        = local.release_bucket
+  uniform_bucket_level_access = true
+  location                    = "US"
+}
+
+// Make the bucket publically accessible
+resource "google_storage_bucket_iam_member" "public_access" {
+  bucket = google_storage_bucket.releases.name
+  role   = "roles/storage.objectViewer"
+  member = "allUsers"
 }

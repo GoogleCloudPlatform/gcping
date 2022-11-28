@@ -13,12 +13,12 @@
 // limitations under the License.
 
 variable "image" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "repository" {
-  type = string
+  type    = string
   default = "ping-b5e9c300f5e9cdafa118e623a88e6b97"
 }
 variable "project" {
@@ -44,4 +44,14 @@ variable "domain_alias" {
 variable "release_bucket" {
   type    = string
   default = "gcping-release"
+}
+
+variable "release_bucket_suffix" {
+  type    = string
+  default = "_release"
+}
+
+variable "cloudbuild_logs_bucket_suffix" {
+  type    = string
+  default = "_gcblogs"
 }
