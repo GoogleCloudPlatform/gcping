@@ -65,8 +65,7 @@ steps:
     - -c
     - |
       terraform -chdir=tools/terraform \
-      output -json config \
-      -var image=$(cat ./endpoints)
+      output -json config > ./endpoints
   waitFor:
   - terraform-apply
 
