@@ -23,19 +23,19 @@ resource "google_service_account" "gcb" {
   display_name = "Service account for Cloud Build jobs"
 }
 
-resource "google_project_iam_member" "gcb-run-admin" {
+resource "google_project_iam_member" "gcb_run_admin" {
   project = var.project
   role    = "roles/run.admin"
   member  = "serviceAccount:${google_service_account.gcb.email}"
 }
 
-resource "google_project_iam_member" "gcb-builder" {
+resource "google_project_iam_member" "gcb_builder" {
   project = var.project
   role    = "roles/cloudbuild.builds.builder"
   member  = "serviceAccount:${google_service_account.gcb.email}"
 }
 
-resource "google_project_iam_member" "gcb-sa-user" {
+resource "google_project_iam_member" "gcb_sa_user" {
   project = var.project
   role    = "roles/iam.serviceAccountUser"
   member  = "serviceAccount:${google_service_account.gcb.email}"

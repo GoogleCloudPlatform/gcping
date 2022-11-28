@@ -74,6 +74,6 @@ steps:
     - -c
     - |
       terraform -chdir=tools/terraform plan \
-      --var image=$(cat ./image.txt)
+      -var image=$(cat ./image.txt)
   waitFor:
   - terraform-init
