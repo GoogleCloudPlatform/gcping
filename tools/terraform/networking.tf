@@ -92,7 +92,7 @@ resource "google_compute_url_map" "global" {
     default_service = google_compute_backend_service.global.self_link
 
     path_rule {
-      paths   = ["/api/endpoints"]
+      paths   = ["/api/gcs-endpoints"]
       service = google_compute_backend_bucket.endpoints_backend.id
     }
   }
