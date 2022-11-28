@@ -67,15 +67,33 @@ resource "google_compute_url_map" "global" {
   description     = "a description"
   default_service = google_compute_backend_service.global.id
 
+
   // Create a host rule to match traffic to alias (gcpping.com)
+  host_rule {
+    hosts = [
+      var.domain
+    ]
+    path_matcher = "endpoints-config-bucket"
+  }
+
   dynamic "host_rule" {
     for_each = var.domain_alias_flag ? [1] : []
 
     content {
       hosts = [
-        var.domain_alias,
+        var.domain_alias
       ]
       path_matcher = "alt-redirect"
+    }
+  }
+
+  path_matcher {
+    name            = "endpoints-config-bucket"
+    default_service = google_compute_backend_service.global.self_link
+
+    path_rule {
+      paths   = ["/api/endpoints"]
+      service = google_compute_backend_bucket.endpoints_backend.id
     }
   }
   // 301 redirect traffic from gcpping.com to gcping.com

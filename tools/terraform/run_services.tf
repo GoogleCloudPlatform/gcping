@@ -38,6 +38,7 @@ resource "google_cloud_run_service" "regions" {
       annotations = {
         "autoscaling.knative.dev/maxScale" = "3" // Control costs.
         "run.googleapis.com/launch-stage"  = "BETA"
+        "gcping.com/region-name"   = each.value
       }
     }
     spec {
