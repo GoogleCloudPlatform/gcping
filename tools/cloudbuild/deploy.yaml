@@ -36,7 +36,7 @@ steps:
   args:
     - -c
     - |
-      echo $(/ko publish ./cmd/ping > ./image.txt || exit 1
+      echo $(/ko publish ./cmd/ping) > ./image.txt || exit 1
  
   # requires the terraform community builder image to be built and loaded in the 
   # project's container registry
