@@ -20,10 +20,6 @@ output "services" {
   }
 }
 
-// Prepares a config output in JSON format compatible with output of /api/endpoints
-output "config" {
-  value = merge(zipmap(keys(google_cloud_run_service.regions), [for k, v in google_cloud_run_service.regions : { URL = v.status[0].url, RegionName = google_cloud_run_service.regions[k].template[0].metadata[0].annotations["gcping.com/region-name"], Region = k }]), zipmap(["global"], [{ URL = "https://global.${var.domain}", Region = "global", RegionName = "Global External HTTPS Load Balancer" }]))
-}
 
 // Print global LB IP address.
 output "global" {

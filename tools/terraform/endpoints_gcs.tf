@@ -13,11 +13,15 @@
 // limitations under the License.
 
 
-// Create a bucket for CLI releases
+// Create a bucket for config storage and serving
 resource "google_storage_bucket" "config" {
   name                        = "${var.project}_config"
   uniform_bucket_level_access = true
   location                    = "US"
+
+  versioning {
+    enabled = true
+  }
 }
 
 // Make the bucket publically accessible

@@ -70,9 +70,7 @@ resource "google_compute_url_map" "global" {
 
   // Create a host rule to match traffic to alias (gcpping.com)
   host_rule {
-    hosts = [
-      var.domain
-    ]
+    hosts        = ["*"]
     path_matcher = "endpoints-config-bucket"
   }
 
@@ -92,6 +90,7 @@ resource "google_compute_url_map" "global" {
     default_service = google_compute_backend_service.global.self_link
 
     path_rule {
+      // TODO: set path to /api/endpoints once LB url maps and configs validated
       paths   = ["/api/gcs-endpoints"]
       service = google_compute_backend_bucket.endpoints_backend.id
     }
