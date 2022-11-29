@@ -80,6 +80,7 @@ resource "google_compute_url_map" "global" {
     content {
       hosts = [
         var.domain_alias,
+        "*.${var.domain_alias}",
       ]
       path_matcher = "alt-redirect"
     }
@@ -102,8 +103,6 @@ resource "google_compute_url_map" "global" {
     content {
       name = "alt-redirect"
 
-
-
       default_url_redirect {
         host_redirect          = var.domain
         https_redirect         = false
@@ -112,6 +111,61 @@ resource "google_compute_url_map" "global" {
       }
     }
   }
+
+  test {
+    service = google_compute_backend_bucket.endpoints_backend.id
+    host    = var.domain
+    path    = "/api/gcs-endpoints"
+  }
+
+  test {
+    service = google_compute_backend_bucket.endpoints_backend.id
+    host    = "www.${var.domain}"
+    path    = "/api/gcs-endpoints"
+  }
+
+  test {
+    service = google_compute_backend_bucket.endpoints_backend.id
+    host    = "global.${var.domain}"
+    path    = "/api/gcs-endpoints"
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = var.domain
+    path    = "/api/ping"
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = "www.${var.domain}"
+    path    = "/api/ping"
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = "global.${var.domain}"
+    path    = "/api/ping"
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = var.domain
+    path    = ""
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = "www.${var.domain}"
+    path    = ""
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = "global.${var.domain}"
+    path    = ""
+  }
+
   depends_on = [
     google_project_service.compute
   ]
