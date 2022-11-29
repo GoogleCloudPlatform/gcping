@@ -103,7 +103,6 @@ async function pingSingleRegion(url) {
     const start = new Date().getTime();
 
     fetch(url, {
-      mode: "no-cors",
       cache: "no-cache",
     }).then(async (resp) => {
       const latency = new Date().getTime() - start;

@@ -131,7 +131,6 @@ function pingSingleRegion(regionKey) {
     const start = new Date().getTime();
 
     fetch(gcpZone.pingUrl, {
-      mode: "no-cors",
       cache: "no-cache",
     }).then(async (resp) => {
       const latency = new Date().getTime() - start;
