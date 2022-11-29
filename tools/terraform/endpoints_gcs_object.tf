@@ -23,11 +23,11 @@ resource "google_storage_bucket_object" "endpoints_config" {
   content = jsonencode(
     merge(
       zipmap(
-        keys(google_cloud_run_service.regions),
-        [for k, v in google_cloud_run_service.regions :
+        keys(local.regions),
+        [for k, v in local.regions :
           {
-            URL        = v.status[0].url,
-            RegionName = google_cloud_run_service.regions[k].template[0].metadata[0].annotations["gcping.com/region-name"],
+            URL        = google_cloud_run_service.regions[k].status[0].url,
+            RegionName = v,
             Region     = k
           }
         ]
