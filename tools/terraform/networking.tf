@@ -67,15 +67,33 @@ resource "google_compute_url_map" "global" {
   description     = "a description"
   default_service = google_compute_backend_service.global.id
 
+
   // Create a host rule to match traffic to alias (gcpping.com)
+  host_rule {
+    hosts        = ["*"]
+    path_matcher = "endpoints-config-bucket"
+  }
+
   dynamic "host_rule" {
     for_each = var.domain_alias_flag ? [1] : []
 
     content {
       hosts = [
         var.domain_alias,
+        "*.${var.domain_alias}",
       ]
       path_matcher = "alt-redirect"
+    }
+  }
+
+  path_matcher {
+    name            = "endpoints-config-bucket"
+    default_service = google_compute_backend_service.global.self_link
+
+    path_rule {
+      // TODO: set path to /api/endpoints once LB url maps and configs validated
+      paths   = ["/api/gcs-endpoints"]
+      service = google_compute_backend_bucket.endpoints_backend.id
     }
   }
   // 301 redirect traffic from gcpping.com to gcping.com
@@ -85,8 +103,6 @@ resource "google_compute_url_map" "global" {
     content {
       name = "alt-redirect"
 
-
-
       default_url_redirect {
         host_redirect          = var.domain
         https_redirect         = false
@@ -95,6 +111,61 @@ resource "google_compute_url_map" "global" {
       }
     }
   }
+
+  test {
+    service = google_compute_backend_bucket.endpoints_backend.id
+    host    = var.domain
+    path    = "/api/gcs-endpoints"
+  }
+
+  test {
+    service = google_compute_backend_bucket.endpoints_backend.id
+    host    = "www.${var.domain}"
+    path    = "/api/gcs-endpoints"
+  }
+
+  test {
+    service = google_compute_backend_bucket.endpoints_backend.id
+    host    = "global.${var.domain}"
+    path    = "/api/gcs-endpoints"
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = var.domain
+    path    = "/api/ping"
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = "www.${var.domain}"
+    path    = "/api/ping"
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = "global.${var.domain}"
+    path    = "/api/ping"
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = var.domain
+    path    = ""
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = "www.${var.domain}"
+    path    = ""
+  }
+
+  test {
+    service = google_compute_backend_service.global.id
+    host    = "global.${var.domain}"
+    path    = ""
+  }
+
   depends_on = [
     google_project_service.compute
   ]
