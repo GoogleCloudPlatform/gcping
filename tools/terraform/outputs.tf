@@ -20,7 +20,6 @@ output "services" {
   }
 }
 
-
 // Print global LB IP address.
 output "global" {
   value = google_compute_global_address.global.address
