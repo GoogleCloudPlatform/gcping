@@ -15,8 +15,7 @@
 
 // Create a bucket for CLI releases
 resource "google_storage_bucket_object" "endpoints_config" {
-  // TODO: set path to /api/endpoints once LB url maps and configs validated
-  name         = "api/gcs-endpoints"
+  name         = "api/endpoints"
   bucket       = google_storage_bucket.config.id
   content_type = "application/json"
 
