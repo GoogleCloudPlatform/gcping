@@ -33,6 +33,7 @@ type input struct {
 func (i *input) HTTP() output {
 	return i.benchmark(func() error {
 		req, _ := http.NewRequest("GET", i.endpoint+"/api/ping", nil)
+		req.Header.Add("User-Agent", "GCPing-CLI")
 		res, err := client.Do(req)
 		if err != nil {
 			return err
