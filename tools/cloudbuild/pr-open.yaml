@@ -15,12 +15,12 @@
 logsBucket: "gs://${PROJECT_ID}_gcblogs"
 
 steps:
-- name: 'node'
+- name: 'node:18.12.1'
   id: npm-install
   entrypoint: 'npm'
   args: ['install', 'web/']
 
-- name: 'node'
+- name: 'node:18.12.1'
   id: npm-build
   entrypoint: 'npm'
   args: ['--prefix', 'web/', 'run', 'build']
