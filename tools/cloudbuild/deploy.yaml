@@ -18,7 +18,7 @@ steps:
 - name: 'node:19'
   id: npm-install
   entrypoint: 'npm'
-  args: ['--prefix', 'web/', install']
+  args: ['--prefix', 'web/', 'install']
 
 - name: 'node:19'
   id: npm-build
