@@ -91,8 +91,7 @@ resource "google_compute_url_map" "global" {
     default_service = google_compute_backend_service.global.self_link
 
     path_rule {
-      // TODO: set path to /api/endpoints once LB url maps and configs validated
-      paths   = ["/api/gcs-endpoints"]
+      paths   = ["/api/endpoints"]
       service = google_compute_backend_bucket.endpoints_backend.id
     }
   }
@@ -115,19 +114,19 @@ resource "google_compute_url_map" "global" {
   test {
     service = google_compute_backend_bucket.endpoints_backend.id
     host    = var.domain
-    path    = "/api/gcs-endpoints"
+    path    = "/api/endpoints"
   }
 
   test {
     service = google_compute_backend_bucket.endpoints_backend.id
     host    = "www.${var.domain}"
-    path    = "/api/gcs-endpoints"
+    path    = "/api/endpoints"
   }
 
   test {
     service = google_compute_backend_bucket.endpoints_backend.id
     host    = "global.${var.domain}"
-    path    = "/api/gcs-endpoints"
+    path    = "/api/endpoints"
   }
 
   test {

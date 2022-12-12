@@ -49,7 +49,9 @@ func New(opts *Options) *Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", s.StaticHandler())
 
+	// TODO: clean up after PR#138 is merged and tested https://github.com/GoogleCloudPlatform/gcping/pull/138
 	mux.HandleFunc("/api/endpoints", s.HandleEndpoints)
+
 	mux.HandleFunc("/api/ping", s.HandlePing)
 
 	// Serve /ping with region response to fix issue#96 on older cli versions.
