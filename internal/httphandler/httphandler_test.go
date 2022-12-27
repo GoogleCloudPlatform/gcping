@@ -112,7 +112,6 @@ func TestRouting(t *testing.T) {
 		{"/index.html", http.StatusOK, "<html></html>"},
 		{"/api", http.StatusNotFound, "404 page not found\n"},
 		{"/api/ping", http.StatusOK, "test-region\n"},
-		{"/api/endpoints", http.StatusOK, `{"test-region":{"URL":"https://test-region","Region":"test-region","RegionName":"Test Region"}}` + "\n"},
 		{"/ping", http.StatusOK, "test-region\n"},
 	}
 	for _, tc := range testCases {
