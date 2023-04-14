@@ -88,5 +88,3 @@ steps:
     - |
       terraform -chdir=tools/terraform plan \
       -var image=$(cat ./image.txt)
-  waitFor:
-  - ko-build
