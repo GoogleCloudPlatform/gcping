@@ -30,7 +30,9 @@ steps:
   id: ko-prefetch
   entrypoint: /bin/sh
   args:
-    - version
+    - -c 
+    - |
+      ko version
   waitFor: ['-']
 
 - name: gcr.io/$PROJECT_ID/ko
