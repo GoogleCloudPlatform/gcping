@@ -25,8 +25,14 @@ steps:
   entrypoint: 'npm'
   args: ['--prefix', 'web/', 'run', 'build']
 
-  # requires the ko community builder image to be built and loaded in the 
-  # project's container registry
+# prefetch the ko builder image
+- name: gcr.io/$PROJECT_ID/ko
+  id: ko-prefetch
+  entrypoint: /bin/sh
+  args:
+    - version
+  waitFor: ['-']
+
 - name: gcr.io/$PROJECT_ID/ko
   id: ko-build
   entrypoint: /bin/sh
@@ -37,6 +43,12 @@ steps:
     - -c
     - |
       echo $(/ko publish ./cmd/ping --tags pr-$_PR_NUMBER,pr-$_PR_NUMBER-$SHORT_SHA) > ./image.txt || exit 1
+
+# prefetch the cloud-sdk builder
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  id: cloud-sdk-prefetch
+  args: ['gcloud', '--version'] 
+  waitFor: ['-']
 
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   id: run-deploy-image
@@ -64,8 +76,7 @@ steps:
 - name: 'gcr.io/${PROJECT_ID}/terraform'
   id: terraform-init
   args: ['-chdir=tools/terraform', 'init', '-reconfigure']
-  waitFor:
-  - ko-build
+  waitFor: ['-']
 
 - name: 'gcr.io/${PROJECT_ID}/terraform'
   id: terraform-plan-preview
@@ -76,4 +87,4 @@ steps:
       terraform -chdir=tools/terraform plan \
       -var image=$(cat ./image.txt)
   waitFor:
-  - terraform-init
+  - ko-build
