@@ -32,7 +32,7 @@ steps:
   args:
     - -c 
     - |
-      ko version
+      /ko version
   waitFor: ['-']
 
 - name: gcr.io/$PROJECT_ID/ko
