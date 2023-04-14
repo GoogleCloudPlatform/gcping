@@ -25,8 +25,16 @@ steps:
   entrypoint: 'npm'
   args: ['--prefix', 'web/', 'run', 'build']
 
-  # requires the ko community builder image to be built and loaded in the 
-  # project's container registry
+# prefetch the ko builder image
+- name: gcr.io/$PROJECT_ID/ko
+  id: ko-prefetch
+  entrypoint: /bin/sh
+  args:
+    - -c 
+    - |
+      /ko version
+  waitFor: ['-']
+
 - name: gcr.io/$PROJECT_ID/ko
   id: ko-build
   entrypoint: /bin/sh
@@ -43,8 +51,7 @@ steps:
 - name: 'gcr.io/${PROJECT_ID}/terraform'
   id: terraform-init
   args: ['-chdir=tools/terraform', 'init', '-reconfigure']
-  waitFor:
-  - ko-build
+  waitFor: ['-']
 
 - name: 'gcr.io/${PROJECT_ID}/terraform'
   id: terraform-apply
@@ -55,5 +62,3 @@ steps:
       terraform -chdir=tools/terraform apply \
       -auto-approve \
       -var image=$(cat ./image.txt)
-  waitFor:
-  - terraform-init
