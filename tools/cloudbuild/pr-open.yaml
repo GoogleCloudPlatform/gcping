@@ -90,4 +90,4 @@ steps:
       -var image=$(cat ./image.txt)
 
 images:
-- 'gcr.io/${PROJECT_ID}/ping-b5e9c300f5e9cdafa118e623a88e6b97:$pr-{_PR_NUMBER}-${SHORT_SHA}'
+- 'gcr.io/${PROJECT_ID}/ping-b5e9c300f5e9cdafa118e623a88e6b97:pr-${_PR_NUMBER}-${SHORT_SHA}'
