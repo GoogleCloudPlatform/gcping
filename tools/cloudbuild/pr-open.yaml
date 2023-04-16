@@ -46,9 +46,6 @@ steps:
     - |
       echo $(/ko publish ./cmd/ping --tags pr-$_PR_NUMBER,pr-$_PR_NUMBER-$SHORT_SHA) > ./image.txt || exit 1
 
-images:
-- 'gcr.io/${PROJECT_ID}/ping-b5e9c300f5e9cdafa118e623a88e6b97'
-
 # prefetch the cloud-sdk builder
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   id: cloud-sdk-prefetch
@@ -91,3 +88,6 @@ images:
     - |
       terraform -chdir=tools/terraform plan \
       -var image=$(cat ./image.txt)
+
+images:
+- 'gcr.io/${PROJECT_ID}/ping-b5e9c300f5e9cdafa118e623a88e6b97'
