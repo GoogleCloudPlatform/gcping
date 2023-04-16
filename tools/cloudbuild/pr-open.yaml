@@ -89,5 +89,5 @@ steps:
       terraform -chdir=tools/terraform plan \
       -var image=$(cat ./image.txt)
 
-# images:
-# - 'gcr.io/${PROJECT_ID}/ping-b5e9c300f5e9cdafa118e623a88e6b97/ping:pr-${_PR_NUMBER}-${SHORT_SHA}'
+images:
+- 'gcr.io/${PROJECT_ID}/ping-b5e9c300f5e9cdafa118e623a88e6b97/ping:pr-${_PR_NUMBER}-${SHORT_SHA}'
