@@ -39,12 +39,12 @@ steps:
   id: ko-build
   entrypoint: /bin/sh
   env:
-    - 'KO_DOCKER_REPO=gcr.io/$PROJECT_ID'
+    - 'KO_DOCKER_REPO=gcr.io/$PROJECT_ID/ping'
   # write the newly created container image path to a file for use in another step
   args:
     - -c
     - |
-      echo $(/ko publish ./cmd/ping --tags pr-$_PR_NUMBER,pr-$_PR_NUMBER-$SHORT_SHA) > ./image.txt || exit 1
+      echo $(/ko build ./cmd/ping --bare --tags pr-$_PR_NUMBER,pr-$_PR_NUMBER-$SHORT_SHA) > ./image.txt || exit 1
 
 # prefetch the cloud-sdk builder
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -89,5 +89,5 @@ steps:
       terraform -chdir=tools/terraform plan \
       -var image=$(cat ./image.txt)
 
-images:
-- 'gcr.io/${PROJECT_ID}/ping-b5e9c300f5e9cdafa118e623a88e6b97:pr-${_PR_NUMBER}-${SHORT_SHA}'
+# images:
+# - 'gcr.io/${PROJECT_ID}/ping-b5e9c300f5e9cdafa118e623a88e6b97/ping:pr-${_PR_NUMBER}-${SHORT_SHA}'
