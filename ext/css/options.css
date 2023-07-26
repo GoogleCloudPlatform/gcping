@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://github.com/material-components/material-components-web/blob/master/LICENSE
+ */
 :root {
   --mdc-theme-primary: rgb(26, 115, 232);
   --mdc-theme-secondary: rgba(0, 0, 0, 0.04);
