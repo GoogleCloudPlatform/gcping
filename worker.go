@@ -33,6 +33,7 @@ type input struct {
 func (i *input) HTTP() output {
 	return i.benchmark(func() error {
 		req, _ := http.NewRequest("GET", i.endpoint+"/api/ping", nil)
+		req.Header.Add("User-Agent", "GCPing-CLI")
 		res, err := client.Do(req)
 		if err != nil {
 			return err
@@ -108,9 +109,9 @@ func (w *worker) start() {
 	}
 }
 
-func (w *worker) sortOutput() []output {
+func (w *worker) sortOutput(em map[string]config.Endpoint) []output {
 	m := make(map[string]output)
-	for i := 0; i < w.size(region); i++ {
+	for i := 0; i < w.size(em, region); i++ {
 		o := <-w.outputs
 
 		a := m[o.region]
@@ -133,17 +134,17 @@ func (w *worker) sortOutput() []output {
 	return all
 }
 
-func (w *worker) reportAll() {
+func (w *worker) reportAll(em map[string]config.Endpoint) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region))
+	w.outputs = make(chan output, w.size(em, region))
 	for i := 0; i < number; i++ {
-		for r, e := range config.AllEndpoints {
+		for r, e := range em {
 			w.inputs <- input{region: r, endpoint: e.URL}
 		}
 	}
 	close(w.inputs)
 
-	sorted := w.sortOutput()
+	sorted := w.sortOutput(em)
 	tr := tabwriter.NewWriter(os.Stdout, 3, 2, 2, ' ', 0)
 	for i, a := range sorted {
 		fmt.Fprintf(tr, "%2d.\t[%v]\t%v", i+1, a.region, a.median())
@@ -155,59 +156,58 @@ func (w *worker) reportAll() {
 	tr.Flush()
 }
 
-func (w *worker) reportCSV() {
+func (w *worker) reportCSV(em map[string]config.Endpoint) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region))
+	w.outputs = make(chan output, w.size(em, region))
 	for i := 0; i < number; i++ {
-		for r, e := range config.AllEndpoints {
+		for r, e := range em {
 			w.inputs <- input{region: r, endpoint: e.URL}
 		}
 	}
 	close(w.inputs)
 
-	sorted := w.sortOutput()
+	sorted := w.sortOutput(em)
 	fmt.Println("region,latency_ns,errors")
 	for _, a := range sorted {
 		fmt.Printf("%v,%v,%v\n", a.region, a.median().Nanoseconds(), a.errors)
 	}
 }
 
-func (w *worker) reportTop() {
+func (w *worker) reportTop(em map[string]config.Endpoint) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region))
+	w.outputs = make(chan output, w.size(em, region))
 	for i := 0; i < number; i++ {
-		for r, e := range config.AllEndpoints {
+		for r, e := range em {
 			w.inputs <- input{region: r, endpoint: e.URL}
 		}
 	}
 	close(w.inputs)
 
-	sorted := w.sortOutput()
+	sorted := w.sortOutput(em)
 	t := sorted[0].region
 	if t == "global" {
 		t = sorted[1].region
 	}
-	fmt.Println(t )
+	fmt.Println(t)
 	return
 }
 
-func (w *worker) reportRegion(region string) {
+func (w *worker) reportRegion(em map[string]config.Endpoint, region string) {
 	w.inputs = make(chan input, concurrency)
-	w.outputs = make(chan output, w.size(region))
+	w.outputs = make(chan output, w.size(em, region))
 	for i := 0; i < number; i++ {
-		e, _ := config.AllEndpoints[region]
+		e, _ := em[region]
 		w.inputs <- input{region: region, endpoint: e.URL}
 	}
 	close(w.inputs)
 
-	sorted := w.sortOutput()
+	sorted := w.sortOutput(em)
 	fmt.Println(sorted[0].median())
-
 }
 
-func (w *worker) size(region string) int {
+func (w *worker) size(em map[string]config.Endpoint, region string) int {
 	if region != "" {
 		return number
 	}
-	return number * len(config.AllEndpoints)
+	return number * len(em)
 }

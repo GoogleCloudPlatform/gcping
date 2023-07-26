@@ -15,17 +15,19 @@ Note: This is not an official Google product.
 gcping [options...]
 
 Options:
--n   Number of requests to be made to each region.
-     By default 10; can't be negative.
--c   Max number of requests to be made at any time.
-     By default 10; can't be negative or zero.
--r   Report latency for an individual region.
--t   Timeout. By default, no timeout.
-     Examples: "500ms", "1s", "1s500ms".
--top If true, only the top (non-global) region is printed.
+-n       Number of requests to be made to each region.
+         By default 10; can't be negative.
+-c       Max number of requests to be made at any time.
+         By default 10; can't be negative or zero.
+-r       Report latency for an individual region.
+-t       Timeout. By default, no timeout.
+         Examples: "500ms", "1s", "1s500ms".
+-top     If true, only the top (non-global) region is printed.
+-csv-cum If true, cumulative value is printed in CSV; disables default report.
+-url     URL of endpoint list. Default is https://global.gcping.com/api/endpoints
 
--csv CSV output; disables verbose output.
--v   Verbose output.
+-csv     CSV output; disables verbose output.
+-v       Verbose output.
 
 Need a website version? See gcping.com
 ```
