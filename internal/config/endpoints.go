@@ -72,6 +72,11 @@ var AllEndpoints = map[string]Endpoint{
 		Region:     "global",
 		RegionName: "Global External HTTPS Load Balancer",
 	},
+	"africa-south1": {
+		URL:        "https://africa-south1-5tkroniexa-bq.a.run.app",
+		Region:     "africa-south1",
+		RegionName: "Johannesburg",
+	},
 	"asia-east1": {
 		URL:        "https://asia-east1-5tkroniexa-de.a.run.app",
 		Region:     "asia-east1",
