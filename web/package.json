@@ -14,12 +14,12 @@
     "fix": "prettier --write src/ && eslint --fix src/ && stylelint --fix src/css"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "2.8.0",
+    "@parcel/transformer-sass": "2.13.3",
     "eslint": "8.27.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
-    "parcel": "2.8.0",
+    "parcel": "2.13.3",
     "prettier": "2.7.1",
     "stylelint": "15.10.1",
     "stylelint-config-standard-scss": "9.0.0"
