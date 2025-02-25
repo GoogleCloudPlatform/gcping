@@ -1,4 +1,5 @@
 {
+    "africa-south1": "Johannesburg",
     "asia-east1": "Taiwan",
     "asia-east2": "Hong Kong",
     "asia-northeast1": "Tokyo",
@@ -27,6 +28,7 @@
     "me-west1": "Tel Aviv",
     "northamerica-northeast1": "Montréal",
     "northamerica-northeast2": "Toronto",
+    "northamerica-south1": "México",
     "southamerica-east1": "São Paulo",
     "southamerica-west1": "Santiago",
     "us-central1": "Iowa",
