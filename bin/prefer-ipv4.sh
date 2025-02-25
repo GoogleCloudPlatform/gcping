@@ -32,6 +32,7 @@ europe-west2-run.googleapis.com
 europe-west3-run.googleapis.com
 europe-west3-run.googleapis.com
 europe-west4-run.googleapis.com
+europe-west10-run.googleapis.com
 northamerica-northeast1-run.googleapis.com
 southamerica-east1-run.googleapis.com
 southamerica-east1.googleapis.com
