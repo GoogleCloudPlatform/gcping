@@ -48,14 +48,14 @@ steps:
  
   # requires the terraform community builder image to be built and loaded in the 
   # project's container registry
-- name: 'gcr.io/${PROJECT_ID}/terraform'
+- name: 'hashicorp/terraform:1.10'
   id: terraform-init
   args: ['-chdir=tools/terraform', 'init', '-reconfigure']
   waitFor: ['-']
 
-- name: 'gcr.io/${PROJECT_ID}/terraform'
+- name: 'hashicorp/terraform:1.10'
   id: terraform-apply
-  entrypoint: /bin/bash
+  entrypoint: /bin/sh
   args:
     - -c
     - |
