@@ -25,6 +25,11 @@ steps:
   entrypoint: 'npm'
   args: ['--prefix', 'web/', 'run', 'build']
 
+- name: 'docker'
+  id: 'docker-build-ko'
+  args: ['build', 'tools/cloudbuild/ko/']
+  waitFor: ['-']
+
 # prefetch the ko builder image
 - name: gcr.io/$PROJECT_ID/ko
   id: ko-prefetch
