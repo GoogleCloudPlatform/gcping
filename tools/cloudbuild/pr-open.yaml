@@ -32,14 +32,14 @@ steps:
     - tools/cloudbuild/ko/
     - --push
     - -t
-    - ${_KO_BUILDER_IMAGE}
+    - us.gcr.io/${PROJECT_ID}/ko-builder:${BUILD_ID}
     - --cache-to
     - type=registry,ref=us.gcr.io/$PROJECT_ID/ko-builder-cache
     - --cache-from
     - type=registry,ref=us.gcr.io/$PROJECT_ID/ko-builder-cache
   waitFor: ['-']
 
-- name: '${_KO_BUILDER_IMAGE}'
+- name: 'us.gcr.io/${PROJECT_ID}/ko-builder:${BUILD_ID}'
   id: 'ko-build-2'
   env:
     - 'KO_DOCKER_REPO=us.gcr.io/$PROJECT_ID'
@@ -108,8 +108,3 @@ steps:
     - |
       terraform -chdir=tools/terraform plan \
       -var image=$(cat ./image.txt)
-
-substitutions:
-  _KO_BUILDER_IMAGE: 'us.gcr.io/$PROJECT_ID/ko-builder:$BUILD_ID'
-options:
-  dynamicSubstitutions: true
