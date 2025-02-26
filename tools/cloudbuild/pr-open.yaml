@@ -82,7 +82,7 @@ steps:
 
 - name: 'hashicorp/terraform:1.10'
   id: terraform-plan-preview
-  entrypoint: /bin/bash
+  entrypoint: /bin/sh
   args:
     - -c
     - |
