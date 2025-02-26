@@ -75,12 +75,12 @@ steps:
       --role="roles/run.invoker" \
       --region=us-central1
  
-- name: 'gcr.io/${PROJECT_ID}/terraform'
+- name: 'hashicorp/terraform:1.10'
   id: terraform-init
   args: ['-chdir=tools/terraform', 'init', '-reconfigure']
   waitFor: ['-']
 
-- name: 'gcr.io/${PROJECT_ID}/terraform'
+- name: 'hashicorp/terraform:1.10'
   id: terraform-plan-preview
   entrypoint: /bin/bash
   args:
