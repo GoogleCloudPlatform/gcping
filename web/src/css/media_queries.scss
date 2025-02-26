@@ -1,7 +1,7 @@
 /*
 Add media queries/breakpoints related rules here.
 */
-@media screen and (max-width: 640px) {
+@media screen and (width <=640px) {
   .d-md-block {
     display: block;
   }
