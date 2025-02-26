@@ -26,14 +26,9 @@ steps:
   args: ['--prefix', 'web/', 'run', 'build']
 
 - name: 'docker'
-  id: 'docker-pull-dockerfile'
-  args: ['pull', 'docker/dockerfile:1']
-  waitFor: ['-']
-
-- name: 'docker'
   id: 'docker-build-ko'
   args: ['build', 'tools/cloudbuild/ko/']
-  waitFor: ['docker-pull-dockerfile']
+  waitFor: ['-']
 
 # prefetch the ko builder image
 - name: gcr.io/$PROJECT_ID/ko
