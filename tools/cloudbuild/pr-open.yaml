@@ -26,8 +26,14 @@ steps:
   args: ['--prefix', 'web/', 'run', 'build']
 
 - name: 'docker'
+  id: 'docker-buildx-create'
+  args: ['buildx', 'create', '--driver', 'docker-container', '--use']
+  waitFor: ['-']
+
+- name: 'docker'
   id: 'docker-build-ko'
   args:
+    - buildx
     - build
     - tools/cloudbuild/ko/
     - --push
@@ -37,7 +43,6 @@ steps:
     - type=registry,ref=us.gcr.io/$PROJECT_ID/ko-builder-cache
     - --cache-from
     - type=registry,ref=us.gcr.io/$PROJECT_ID/ko-builder-cache
-  waitFor: ['-']
 
 - name: 'us.gcr.io/${PROJECT_ID}/ko-builder:${BUILD_ID}'
   id: 'ko-build-2'
