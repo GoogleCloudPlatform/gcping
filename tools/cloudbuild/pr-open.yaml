@@ -28,6 +28,7 @@ steps:
 - name: 'docker'
   id: 'docker-pull-dockerfile'
   args: ['pull', 'docker/dockerfile:1']
+  waitFor: ['-']
 
 - name: 'docker'
   id: 'docker-build-ko'
