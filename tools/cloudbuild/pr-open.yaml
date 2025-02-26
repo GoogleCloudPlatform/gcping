@@ -27,8 +27,23 @@ steps:
 
 - name: 'docker'
   id: 'docker-build-ko'
-  args: ['build', 'tools/cloudbuild/ko/']
+  args:
+    - build
+    - tools/cloudbuild/ko/
+    - --push
+    - -t
+    - ${_KO_BUILDER_IMAGE}
+    - --cache-to
+    - type=registry,ref=us.gcr.io/$PROJECT_ID/ko-builder-cache
+    - --cache-from
+    - type=registry,ref=us.gcr.io/$PROJECT_ID/ko-builder-cache
   waitFor: ['-']
+
+- name: '${_KO_BUILDER_IMAGE}'
+  id: 'ko-build-2'
+  env:
+    - 'KO_DOCKER_REPO=us.gcr.io/$PROJECT_ID'
+  script: /ko build ./cmd/ping --tags pr-$_PR_NUMBER,pr-$_PR_NUMBER-$SHORT_SHA
 
 # prefetch the ko builder image
 - name: gcr.io/$PROJECT_ID/ko
@@ -93,3 +108,8 @@ steps:
     - |
       terraform -chdir=tools/terraform plan \
       -var image=$(cat ./image.txt)
+
+substitutions:
+  _KO_BUILDER_IMAGE: 'us.gcr.io/$PROJECT_ID/ko-builder:$BUILD_ID'
+options:
+  dynamicSubstitutions: true
