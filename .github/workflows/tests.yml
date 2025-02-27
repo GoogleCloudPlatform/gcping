@@ -15,36 +15,34 @@
 name: Tests
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 jobs:
   go:
     name: Go
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-go@v4
-      with:
-        go-version: 'stable'
-    - name: Build
-      run: go build -v ./...
-    - name: Test
-      run: go test -v ./...
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
+        with:
+          go-version: stable
+      - name: Build
+        run: go build -v ./...
+      - name: Test
+        run: go test -v ./...
   node:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 22
-    - name: Run lint
-      run: |
-        npm ci
-        npm run lint
-      working-directory: web
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run lint
+        run: |
+          npm ci
+          npm run lint
+        working-directory: web
   terraform:
     runs-on: ubuntu-latest
     defaults:
@@ -60,4 +58,5 @@ jobs:
         run: terraform init -backend=false -input=false
       - name: terraform validate
         run: terraform validate -no-color
-  
+permissions:
+  contents: read
