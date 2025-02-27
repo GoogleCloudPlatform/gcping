@@ -12,33 +12,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: CLI Build
+name: Tests
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
 jobs:
-  build:
+  go:
+    name: Go
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-go@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v4
       with:
-        go-version: ^1.19.3
+        go-version: 'stable'
     - name: Build
       run: go build -v ./...
     - name: Test
       run: go test -v ./...
-  lint:
+  node:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 22
     - name: Run lint
       run: |
-        cd web
         npm ci
         npm run lint
+      working-directory: web
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: terraform fmt
+        run: terraform fmt -check
+        continue-on-error: true
+      - name: terraform init
+        run: terraform init -backend=false -input=false
+      - name: terraform validate
+        run: terraform validate -no-color
+  
