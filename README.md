@@ -1,6 +1,6 @@
 # gcping
 
-[![Build Status](https://github.com/GoogleCloudPlatform/gcping/actions/workflows/tests.yml/badge.svg)](https://github.com/GoogleCloudPlatform/gcping/actions/workflows/tests.yml)
+[![Build Status](https://github.com/GoogleCloudPlatform/gcping/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/GoogleCloudPlatform/gcping/actions/workflows/tests.yml)
 
 
 gcpping is both a command line tool and a webapp that reports median latency to
