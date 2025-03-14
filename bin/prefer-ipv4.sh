@@ -27,6 +27,7 @@ australia-southeast1-run.googleapis.com
 australia-southeast2-run.googleapis.com
 europe-central2-run.googleapis.com
 europe-north1-run.googleapis.com
+europe-north2-run.googleapis.com
 europe-west1-run.googleapis.com
 europe-west2-run.googleapis.com
 europe-west3-run.googleapis.com
@@ -44,7 +45,7 @@ us-west3-run.googleapis.com
 us-west4-run.googleapis.com"
 
 for name in $APIS; do
-    echo Configuring IPv4 for $name...
-    ipv4=$(getent ahostsv4 "$name" | head -n 1 | awk '{ print $1 }')
-    grep -q "$name" /etc/hosts || ([ -n "$ipv4" ] && sudo sh -c "echo '$ipv4 $name' >> /etc/hosts")
+  echo Configuring IPv4 for $name...
+  ipv4=$(getent ahostsv4 "$name" | head -n 1 | awk '{ print $1 }')
+  grep -q "$name" /etc/hosts || ([ -n "$ipv4" ] && sudo sh -c "echo '$ipv4 $name' >> /etc/hosts")
 done

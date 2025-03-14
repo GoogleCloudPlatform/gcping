@@ -36,7 +36,6 @@ type Endpoint struct {
 // EndpointsFromServer is used by the cli to generate an Endpoint map
 // using json served by the gcping endpoints.
 func EndpointsFromServer(ctx context.Context, endpointsURL string) (map[string]Endpoint, error) {
-
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodGet,
@@ -136,6 +135,11 @@ var AllEndpoints = map[string]Endpoint{
 		URL:        "https://europe-north1-5tkroniexa-lz.a.run.app",
 		Region:     "europe-north1",
 		RegionName: "Finland",
+	},
+	"europe-north2": {
+		URL:        "https://europe-north2-5tkroniexa-ma.a.run.app",
+		Region:     "europe-north2",
+		RegionName: "Stockholm",
 	},
 	"europe-west1": {
 		URL:        "https://europe-west1-5tkroniexa-ew.a.run.app",
