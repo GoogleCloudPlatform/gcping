@@ -13,4 +13,4 @@ release:
 	cp ./out/gcping_darwin_arm64_$(version) ./out/gcping_darwin_arm64_latest
 
 push:
-	gsutil cp out/* gs://gcping-release
+	gcloud storage cp out/* gs://gcping-release
