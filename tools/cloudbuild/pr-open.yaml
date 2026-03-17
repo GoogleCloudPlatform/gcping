@@ -25,26 +25,32 @@ steps:
   entrypoint: 'npm'
   args: ['--prefix', 'web/', 'run', 'build']
 
-# prefetch the ko builder image
-- name: gcr.io/$PROJECT_ID/ko
-  id: ko-prefetch
-  entrypoint: /bin/sh
-  args:
-    - -c 
-    - |
-      /ko version
+- name: 'docker'
+  id: 'docker-buildx-create'
+  args: ['buildx', 'create', '--driver', 'docker-container', '--use']
   waitFor: ['-']
 
-- name: gcr.io/$PROJECT_ID/ko
-  id: ko-build
-  entrypoint: /bin/sh
-  env:
-    - 'KO_DOCKER_REPO=gcr.io/$PROJECT_ID'
-  # write the newly created container image path to a file for use in another step
+- name: 'docker'
+  id: 'docker-build-ko'
   args:
-    - -c
-    - |
-      echo $(/ko publish ./cmd/ping --tags pr-$_PR_NUMBER,pr-$_PR_NUMBER-$SHORT_SHA) > ./image.txt || exit 1
+    - buildx
+    - build
+    - tools/cloudbuild/ko/
+    - --push
+    - -t
+    - us.gcr.io/${PROJECT_ID}/ko-builder:${BUILD_ID}
+    - --cache-to
+    - type=registry,ref=us.gcr.io/$PROJECT_ID/ko-builder-cache
+    - --cache-from
+    - type=registry,ref=us.gcr.io/$PROJECT_ID/ko-builder-cache
+
+- name: 'us.gcr.io/${PROJECT_ID}/ko-builder:${BUILD_ID}'
+  id: 'ko-build'
+  env:
+    - 'KO_DOCKER_REPO=us.gcr.io/$PROJECT_ID'
+  # write the newly created container image path to a file for use in another step
+  script: /ko build ./cmd/ping --tags pr-$_PR_NUMBER,pr-$_PR_NUMBER-$SHORT_SHA > image.txt
+  automapSubstitutions: true
 
 # prefetch the cloud-sdk builder
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -63,6 +69,7 @@ steps:
       --image=$(cat ./image.txt) \
       --region=us-central1 \
       --labels="env=pr-${_PR_NUMBER}"
+  waitFor: ['cloud-sdk-prefetch', 'ko-build']
 
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   id: run-iam-allUsers
@@ -88,3 +95,4 @@ steps:
     - |
       terraform -chdir=tools/terraform plan \
       -var image=$(cat ./image.txt)
+  waitFor: ['terraform-init', 'ko-build']
