@@ -19,7 +19,7 @@
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
-    "parcel": "2.13.3",
+    "parcel": "2.16.4",
     "prettier": "2.7.1",
     "stylelint": "15.10.1",
     "stylelint-config-standard-scss": "9.0.0"
