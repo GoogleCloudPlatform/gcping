@@ -15,7 +15,6 @@
 package httphandler
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"sync"
@@ -49,9 +48,6 @@ func New(opts *Options) *Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", s.StaticHandler())
 
-	// TODO: clean up after PR#138 is merged and tested https://github.com/GoogleCloudPlatform/gcping/pull/138
-	mux.HandleFunc("/api/endpoints", s.HandleEndpoints)
-
 	mux.HandleFunc("/api/ping", s.HandlePing)
 
 	// Serve /ping with region response to fix issue#96 on older cli versions.
@@ -72,15 +68,6 @@ func (s *Handler) StaticHandler() http.HandlerFunc {
 		// TODO: add HTST header to static files.
 		// addHTSTHeader(w)
 		h.ServeHTTP(w, r)
-	}
-}
-
-// HandleEndpoints returns a list of available endpoints as JSON.
-func (s *Handler) HandleEndpoints(w http.ResponseWriter, r *http.Request) {
-	addHeaders(w)
-	w.Header().Add("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(s.Endpoints); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
 
