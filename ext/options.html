@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Run History | Gcping</title>
+    <link href="./css/material-web-14.0.0.css" rel="stylesheet">
+    <link href="./css/options.css" rel="stylesheet">
+    <script src="./js/material-web-14.0.0.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+<body>
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <a class="mdc-top-app-bar__title logo-container" href="https://gcping.com" target="_blank">
+                    <img src="./images/icon.png" alt="GCPing Logo" class="logo" />
+                    GCPing
+                </a>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                <a target="_blank" href="https://github.com/GoogleCloudPlatform/gcping" class="app-bar-link">
+                    <span class="d-flex flex-align-center">
+                        <i class="material-icons mdc-button__icon" aria-hidden="true">link</i>
+                        GitHub
+                    </span>
+                </a>
+            </section>
+        </div>
+    </header>
+    <div class="mdc-layout">
+        <main class="mdc-top-app-bar--fixed-adjust">
+            <div class="mdc-tab-bar" role="tablist">
+                <div class="mdc-tab-scroller">
+                    <div class="mdc-tab-scroller__scroll-area">
+                        <div class="mdc-tab-scroller__scroll-content">
+                            <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
+                                <span class="mdc-tab__content">
+                                    <span class="mdc-tab__icon material-icons" aria-hidden="true">info</span>
+                                    <span class="mdc-tab__text-label">Current Status</span>
+                                </span>
+                                <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                                    <span
+                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                </span>
+                                <span class="mdc-tab__ripple"></span>
+                            </button>
+
+                            <button class="mdc-tab" role="tab" aria-selected="false" tabindex="1">
+                                <span class="mdc-tab__content">
+                                    <span class="mdc-tab__icon material-icons" aria-hidden="true">timeline</span>
+                                    <span class="mdc-tab__text-label">Past Runs</span>
+                                </span>
+                                <span class="mdc-tab-indicator">
+                                    <span
+                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                </span>
+                                <span class="mdc-tab__ripple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabDetails">
+                <div class="tabSingle tabActive">
+                    <h1>Current Status</h1>
+                    <div id="statusContainer">
+                        <div class="statusRow">
+                            <span class="value">Not Running</span>
+                            <div class="btns mdc-touch-target-wrapper">
+                                <button class="mdc-button mdc-button--icon-leading mdc-button--raised runBtn">
+                                    <span class="mdc-button__ripple"></span>
+                                    <i class="material-icons mdc-button__icon" aria-hidden="true">play_circle</i>
+                                    <span class="mdc-button__label">Run</span>
+                                </button>
+
+                                <button class="mdc-button mdc-button--icon-leading mdc-button--raised stopBtn">
+                                    <span class="mdc-button__ripple"></span>
+                                    <i class="material-icons mdc-button__icon" aria-hidden="true">stop_circle</i>
+                                    <span class="mdc-button__label">Stop</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="progress">
+                            <div class="completedVal"></div>
+                            <div class="totalVal"></div>
+                            <div id="currentProgress" class="mdc-circular-progress" role="progressbar" aria-label="Current ping progress bar" aria-valuemin="0" aria-valuemax="1">
+                                <div class="mdc-circular-progress__determinate-container">
+                                <svg class="mdc-circular-progress__determinate-circle-graphic" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                    <circle class="mdc-circular-progress__determinate-track" cx="24" cy="24" r="18" stroke-width="4"/>
+                                    <circle class="mdc-circular-progress__determinate-circle" cx="24" cy="24" r="18" stroke-dasharray="113.097" stroke-dashoffset="113.097" stroke-width="4"/>
+                                </svg>
+                                </div>
+                                <div class="mdc-circular-progress__indeterminate-container">
+                                <div class="mdc-circular-progress__spinner-layer">
+                                    <div class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-left">
+                                    <svg class="mdc-circular-progress__indeterminate-circle-graphic" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="24" cy="24" r="18" stroke-dasharray="113.097" stroke-dashoffset="56.549" stroke-width="4"/>
+                                    </svg>
+                                    </div>
+                                    <div class="mdc-circular-progress__gap-patch">
+                                    <svg class="mdc-circular-progress__indeterminate-circle-graphic" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="24" cy="24" r="18" stroke-dasharray="113.097" stroke-dashoffset="56.549" stroke-width="3.2"/>
+                                    </svg>
+                                    </div>
+                                    <div class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-right">
+                                    <svg class="mdc-circular-progress__indeterminate-circle-graphic" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="24" cy="24" r="18" stroke-dasharray="113.097" stroke-dashoffset="56.549" stroke-width="4"/>
+                                    </svg>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tabSingle">
+                    <h1>Past Runs</h1>
+                    <div class="mdc-grid">
+                        <div class="mdc-data-table">
+                            <div class="mdc-data-table__table-container">
+                                <table class="mdc-data-table__table" aria-label="Ping results">
+                                    <thead>
+                                        <tr class="mdc-data-table__header-row">
+                                            <th class="
+                                    mdc-data-table__header-cell
+                                    mdc-data-table__header-cell--with-sort
+                                    " role="columnheader" scope="col" data-column-id="label" aria-sort="ascending">
+                                                <div class="mdc-data-table__header-cell-wrapper">
+                                                    <div class="mdc-data-table__header-cell-label">
+                                                        Time
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th class="
+                                    mdc-data-table__header-cell
+                                    mdc-data-table__header-cell--with-sort
+                                    d-md-none
+                                    " role="columnheader" scope="col" data-column-id="key">
+                                                <div class="mdc-data-table__header-cell-wrapper">
+                                                    <div class="mdc-data-table__header-cell-label">
+                                                        Fastest Region
+                                                    </div>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="mdc-data-table__content" id="runsListContainer"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/options.js"></script>
+</body>
+</html>
