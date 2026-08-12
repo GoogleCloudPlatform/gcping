@@ -32,7 +32,6 @@ type Endpoint struct {
 	RegionName string
 }
 
-// TODO: clean up after PR#138 is merged and tested https://github.com/GoogleCloudPlatform/gcping/pull/138
 // EndpointsFromServer is used by the cli to generate an Endpoint map
 // using json served by the gcping endpoints.
 func EndpointsFromServer(ctx context.Context, endpointsURL string) (map[string]Endpoint, error) {
