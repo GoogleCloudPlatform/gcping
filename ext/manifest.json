@@ -1,7 +1,7 @@
 {
   "name": "GCPing",
   "description": "Extension to run gcping.com functionality.",
-  "version": "0.1.2",
+  "version": "0.2",
   "manifest_version": 3,
   "permissions": [
     "notifications",
@@ -14,6 +14,7 @@
   "action": {
     "default_title": "GCPing"
   },
+  "options_page": "options.html",
   "icons": {
     "16": "images/icon.png",
     "32": "images/icon.png",
