@@ -178,6 +178,30 @@ p {
   margin-bottom: 4px;
 }
 
+.deprecation-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 5%;
+  background-color: #fef7e0;
+  border-bottom: 1px solid #fbbc04;
+  color: #3c4043;
+  font-size: 0.95rem;
+  line-height: 1.5;
+
+  .deprecation-banner__icon {
+    color: #ea8600;
+    margin-top: 2px;
+  }
+
+  a,
+  a:visited {
+    color: var(--mdc-theme-primary);
+    font-weight: 500;
+    text-decoration: underline;
+  }
+}
+
 #how-it-works-dialog-content {
   a:hover {
     text-decoration: underline;

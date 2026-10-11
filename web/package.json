@@ -14,7 +14,7 @@
     "fix": "prettier --write src/ && eslint --fix src/ && stylelint --fix src/css"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "2.13.3",
+    "@parcel/transformer-sass": "2.16.4",
     "eslint": "8.27.0",
     "eslint-config-google": "0.14.0",
     "eslint-config-prettier": "8.5.0",
