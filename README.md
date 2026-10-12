@@ -2,6 +2,9 @@
 
 [![Build Status](https://github.com/GoogleCloudPlatform/gcping/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/GoogleCloudPlatform/gcping/actions/workflows/tests.yml)
 
+> **⚠️ Deprecation Notice:** `gcping.com` (including the hosted `global.gcping.com/api/endpoints` endpoint and pre-built CLI binaries in `gs://gcping-release`) is being deprecated and will be shut down, and this repository will be archived.
+>
+> To measure network latency to Google Cloud regions, please use the official [Google Cloud Network Intelligence Center Performance Dashboard](https://docs.cloud.google.com/network-intelligence-center/docs/performance-dashboard/concepts/overview), or deploy and self-host your own instance from this repository.
 
 gcpping is both a command line tool and a webapp that reports median latency to
 Google Cloud regions. The webapp is hosted at [gcping.com](http://gcping.com).

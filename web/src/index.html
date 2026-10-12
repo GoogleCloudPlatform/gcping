@@ -59,6 +59,34 @@
     </header>
     <div class="mdc-layout">
       <main class="mdc-layout__content mdc-top-app-bar--fixed-adjust">
+        <div
+          class="deprecation-banner"
+          role="region"
+          aria-label="Deprecation Notice"
+        >
+          <i class="material-icons deprecation-banner__icon" aria-hidden="true"
+            >warning_amber</i
+          >
+          <div class="deprecation-banner__text">
+            <strong>Deprecation Notice:</strong> GCPing is being deprecated and
+            will be shut down. To measure network latency to Google Cloud
+            regions, please use the official
+            <a
+              target="_blank"
+              rel="noopener"
+              href="https://docs.cloud.google.com/network-intelligence-center/docs/performance-dashboard/concepts/overview"
+              >Network Intelligence Center Performance Dashboard</a
+            >. The
+            <a
+              target="_blank"
+              rel="noopener"
+              href="https://github.com/GoogleCloudPlatform/gcping"
+              >GitHub repository</a
+            >
+            will be archived, and the source code remains available if you wish
+            to self-host.
+          </div>
+        </div>
         <div class="subtitle">
           <h5>Measure your latency to Google Cloud regions</h5>
           <button id="stopstart" class="mdc-button mdc-button--touch running">
