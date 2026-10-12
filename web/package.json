@@ -21,8 +21,8 @@
     "eslint-plugin-prettier": "4.2.1",
     "parcel": "2.16.4",
     "prettier": "2.7.1",
-    "stylelint": "15.10.1",
-    "stylelint-config-standard-scss": "9.0.0"
+    "stylelint": "17.16.0",
+    "stylelint-config-standard-scss": "17.0.0"
   },
   "dependencies": {
     "@material/button": "14.0.0",
