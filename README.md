@@ -2,13 +2,12 @@
 
 [![Build Status](https://github.com/GoogleCloudPlatform/gcping/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/GoogleCloudPlatform/gcping/actions/workflows/tests.yml)
 
-> **⚠️ Deprecation Notice:** `gcping.com` (including the hosted `global.gcping.com/api/endpoints` endpoint and pre-built CLI binaries in `gs://gcping-release`) is being deprecated and will be shut down, and this repository will be archived.
+> **🛑 Service Discontinued & Repository Archived:** The hosted `gcping.com` web application, `global.gcping.com/api/endpoints` service, regional ping endpoints, and pre-built CLI binary downloads (`gs://gcping-release`) have been shut down, and this repository is now archived in read-only mode.
 >
-> To measure network latency to Google Cloud regions, please use the official [Google Cloud Network Intelligence Center Performance Dashboard](https://docs.cloud.google.com/network-intelligence-center/docs/performance-dashboard/concepts/overview), or deploy and self-host your own instance from this repository.
+> To measure network latency to Google Cloud regions, please use the official [Google Cloud Network Intelligence Center Performance Dashboard](https://docs.cloud.google.com/network-intelligence-center/docs/performance-dashboard/concepts/overview). If you wish to run GCPing yourself, the open-source code and Terraform configuration below remain available to deploy and self-host in your own Google Cloud project.
 
 gcpping is both a command line tool and a webapp that reports median latency to
-Google Cloud regions. The webapp is hosted at [gcping.com](http://gcping.com).
-To install the command line tool, see below.
+Google Cloud regions.
 
 Note: This is not an official Google product.
 
@@ -27,18 +26,16 @@ Options:
          Examples: "500ms", "1s", "1s500ms".
 -top     If true, only the top (non-global) region is printed.
 -csv-cum If true, cumulative value is printed in CSV; disables default report.
--url     URL of endpoint list. Default is https://global.gcping.com/api/endpoints
+-url     URL of endpoint list. (Self-hosted deployments must pass their own endpoints URL.)
 
 -csv     CSV output; disables verbose output.
 -v       Verbose output.
-
-Need a website version? See gcping.com
 ```
 
 An example output:
 
 ```
-$ gcping
+$ gcping -url https://example.com/api/endpoints
  1.  [global]                   11.17568ms
  2.  [us-central1]              12.373109ms
  3.  [us-west3]                 29.203499ms
@@ -72,26 +69,21 @@ $ gcping
 ```
 
 ```
-$ gcping -r us-east1
+$ gcping -url https://example.com/api/endpoints -r us-east1
 502.068712ms
 ```
 
 ```
-$ gcping -top
+$ gcping -url https://example.com/api/endpoints -top
 us-west2
 ```
 
-## Installation
+## Building from Source & Self-Hosting
 
-We build binaries for the following OS's and architectures:
-
-* Linux 64-bit: https://storage.googleapis.com/gcping-release/gcping_linux_amd64_latest
-* Mac 64-bit (x86): https://storage.googleapis.com/gcping-release/gcping_darwin_amd64_latest
-* Mac 64-bit (Apple Silicon): https://storage.googleapis.com/gcping-release/gcping_darwin_arm64_latest
-* Windows 64-bit: https://storage.googleapis.com/gcping-release/gcping_windows_amd64_latest
-
-Installation looks something like this (changing the URL for your system):
+Pre-built binaries at `storage.googleapis.com/gcping-release` have been retired. To build the CLI from source with Go 1.21+:
 
 ```
-curl https://storage.googleapis.com/gcping-release/gcping_linux_amd64_latest > gcping && chmod +x gcping
+go install github.com/GoogleCloudPlatform/gcping@latest
 ```
+
+See [DEVELOPMENT.md](DEVELOPMENT.md) and [`tools/terraform/`](tools/terraform/) for instructions on deploying your own regional Cloud Run services and endpoints configuration.
