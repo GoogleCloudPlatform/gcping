@@ -15,7 +15,6 @@
 package httphandler
 
 import (
-	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -25,39 +24,6 @@ import (
 	"github.com/GoogleCloudPlatform/gcping/internal/config"
 	"github.com/google/go-cmp/cmp"
 )
-
-func TestEndpoints(t *testing.T) {
-	t.Parallel()
-
-	handler := New(&Options{Endpoints: config.AllEndpoints})
-	req := httptest.NewRequest(http.MethodGet, "https://gcping.com/api/endpoints", nil)
-	w := httptest.NewRecorder()
-	handler.HandleEndpoints(w, req)
-	resp := w.Result()
-	t.Cleanup(func() { resp.Body.Close() })
-	wantHeader := http.Header{
-		"Content-Type":                {"application/json"},
-		"Cache-Control":               {"no-store"},
-		"Access-Control-Allow-Origin": {"*"},
-		"Strict-Transport-Security":   {"max-age=3600; includeSubdomains; preload"},
-	}
-
-	if got, want := resp.StatusCode, http.StatusOK; got != want {
-		t.Errorf("HandleEndpoints() Status Code: got %v, want %v", got, want)
-	}
-	if diff := cmp.Diff(wantHeader, resp.Header); diff != "" {
-		t.Errorf("HandleEndpoiints() Header (-want, +got):\n%s", diff)
-	}
-
-	var got map[string]config.Endpoint
-	err := json.NewDecoder(resp.Body).Decode(&got)
-	if err != nil {
-		t.Errorf("Failed to decode JSON: %v", err)
-	}
-	if diff := cmp.Diff(config.AllEndpoints, got); diff != "" {
-		t.Errorf("HandleEndpoints() = (-want, +got):\n%s", diff)
-	}
-}
 
 func TestPing(t *testing.T) {
 	t.Parallel()
@@ -146,7 +112,6 @@ func TestRouting(t *testing.T) {
 		{"/index.html", http.StatusOK, "<html></html>"},
 		{"/api", http.StatusNotFound, "404 page not found\n"},
 		{"/api/ping", http.StatusOK, "test-region\n"},
-		{"/api/endpoints", http.StatusOK, `{"test-region":{"URL":"https://test-region","Region":"test-region","RegionName":"Test Region"}}` + "\n"},
 		{"/ping", http.StatusOK, "test-region\n"},
 	}
 	for _, tc := range testCases {
